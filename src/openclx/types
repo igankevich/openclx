@@ -35,8 +35,8 @@ namespace clx {
 	typedef ::cl_bitfield bitfield_type;
 	typedef ::cl_device_mem_cache_type device_memory_cache_type;
 	typedef ::cl_device_local_mem_type device_local_memory_type;
-	typedef ::cl_device_exec_capabilities device_execution_capabilities_type;
-	typedef ::cl_device_fp_config device_floating_point_flags_type;
+	typedef ::cl_device_exec_capabilities execution_flags_type;
+	typedef ::cl_device_fp_config floating_point_flags_type;
 	typedef ::cl_command_queue_properties command_queue_flags_type;
 	typedef ::cl_device_type device_flags_type;
 	typedef ::cl_device_partition_property device_partition_type;
@@ -44,6 +44,7 @@ namespace clx {
 	typedef ::cl_context_properties context_properties_type;
 	#if CLX_OPENCL_VERSION >= 200
 	typedef ::cl_queue_properties queue_properties_type;
+	typedef ::cl_device_svm_capabilities svm_capabilities_type;
 	#endif
 	typedef ::cl_command_queue_properties command_queue_properties_type;
 	typedef ::cl_channel_order channel_order_type;
@@ -52,6 +53,11 @@ namespace clx {
 	typedef ::cl_build_status build_status_type;
 	typedef ::cl_command_type command_type;
 	typedef ::cl_int command_status_type;
+	typedef ::cl_mem_object_type memory_object_type_base;
+	typedef ::cl_mem_flags memory_flags_type;
+	typedef ::cl_mem_migration_flags migration_flags_type;
+	typedef ::cl_map_flags map_flags_type;
+	typedef ::cl_kernel_arg_type_qualifier argument_type_qualifiers_type;
 
 	class platform;
 	class device;
@@ -60,6 +66,7 @@ namespace clx {
 	class program;
 	class kernel;
 	class event;
+	class memory_object;
 
 }
 

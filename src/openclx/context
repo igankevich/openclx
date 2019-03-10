@@ -5,7 +5,11 @@
 #include <vector>
 
 #include <openclx/binary>
+#include <openclx/command_queue_flags>
 #include <openclx/error>
+#include <openclx/image_format>
+#include <openclx/memory_flags>
+#include <openclx/memory_object_type>
 #include <openclx/types>
 
 namespace clx {
@@ -24,7 +28,7 @@ namespace clx {
 		devices() const;
 
 		std::vector<command_queue>
-		command_queues(command_queue_flags_type flags) const;
+		command_queues(command_queue_flags flags) const;
 
 		::clx::program program(const std::string& src) const;
 		::clx::program program(const std::vector<binary>& binaries) const;
@@ -33,6 +37,9 @@ namespace clx {
 		::clx::program builtin_program(const std::string& kernel_names) const;
 		unsigned_int_type num_devices() const;
 		#endif
+
+		std::vector<image_format>
+		image_formats(memory_flags flags, memory_object_type type) const;
 
 		std::vector<context_properties_type>
 		properties() const;

@@ -84,15 +84,15 @@ clx::context clx::device::context() const {
 	return static_cast<clx::context>(ctx);
 }
 
-clx::command_queue clx::device::queue(
-	command_queue_flags_type flags
-) const {
+clx::command_queue
+clx::device::queue(command_queue_flags flags) const {
 	return this->queue(this->context().get(), flags);
 }
 
-clx::command_queue clx::device::queue(
+clx::command_queue
+clx::device::queue(
 	context_type ctx,
-	command_queue_flags_type flags
+	command_queue_flags flags
 ) const {
 	#if CLX_OPENCL_VERSION >= 200
 	std::vector<queue_properties_type> props{
@@ -106,7 +106,12 @@ clx::command_queue clx::device::queue(
 	auto result =
 		::clCreateCommandQueueWithProperties(ctx, this->_ptr, props.data(), &ret);
 	#else
-	auto result = ::clCreateCommandQueue(ctx, this->_ptr, flags, &ret);
+	auto result = ::clCreateCommandQueue(
+		ctx,
+		this->_ptr,
+		static_cast<command_queue_flags_type>(flags),
+		&ret
+	);
 	#endif
 	CLX_CHECK(ret);
 	return static_cast<::clx::command_queue>(result);
@@ -135,24 +140,24 @@ CLX_DEVICE_GET_SCALAR3(address_bits, CL_DEVICE_ADDRESS_BITS, unsigned_int_type)
 CLX_DEVICE_GET_SCALAR3(base_address_alignment, CL_DEVICE_MEM_BASE_ADDR_ALIGN, unsigned_int_type)
 CLX_DEVICE_GET_SCALAR3(min_data_alignment, CL_DEVICE_MIN_DATA_TYPE_ALIGN_SIZE, unsigned_int_type)
 
-CLX_DEVICE_GET_SCALAR3(execution_capabilities, CL_DEVICE_EXECUTION_CAPABILITIES, device_execution_capabilities_type)
+CLX_DEVICE_GET_SCALAR4(execution_capabilities, CL_DEVICE_EXECUTION_CAPABILITIES, execution_flags_type, execution_flags)
 
 template <>
-clx::device_floating_point_flags_type
+clx::floating_point_flags
 clx::device::floating_point_capabilities<clx::half_type>() const {
-	CLX_GET_SCALAR3(::clGetDeviceInfo, CL_DEVICE_HALF_FP_CONFIG, device_floating_point_flags_type)
+	CLX_GET_SCALAR4(::clGetDeviceInfo, CL_DEVICE_HALF_FP_CONFIG, floating_point_flags_type, floating_point_flags)
 }
 
 template <>
-clx::device_floating_point_flags_type
+clx::floating_point_flags
 clx::device::floating_point_capabilities<clx::float_type>() const {
-	CLX_GET_SCALAR3(::clGetDeviceInfo, CL_DEVICE_SINGLE_FP_CONFIG, device_floating_point_flags_type)
+	CLX_GET_SCALAR4(::clGetDeviceInfo, CL_DEVICE_SINGLE_FP_CONFIG, floating_point_flags_type, floating_point_flags)
 }
 
 template <>
-clx::device_floating_point_flags_type
+clx::floating_point_flags
 clx::device::floating_point_capabilities<clx::double_type>() const {
-	CLX_GET_SCALAR3(::clGetDeviceInfo, CL_DEVICE_DOUBLE_FP_CONFIG, device_floating_point_flags_type)
+	CLX_GET_SCALAR4(::clGetDeviceInfo, CL_DEVICE_DOUBLE_FP_CONFIG, floating_point_flags_type, floating_point_flags)
 }
 
 CLX_DEVICE_PREFERRED_VECTOR_WIDTH(char_type, CL_DEVICE_PREFERRED_VECTOR_WIDTH_CHAR)
@@ -200,8 +205,8 @@ clx::device::max_work_item_sizes() const {
 	return value;
 }
 
-CLX_DEVICE_GET_SCALAR3(queue_properties, CL_DEVICE_QUEUE_PROPERTIES, command_queue_flags_type)
-CLX_DEVICE_GET_SCALAR3(type, CL_DEVICE_TYPE, device_flags_type)
+CLX_DEVICE_GET_SCALAR4(queue_properties, CL_DEVICE_QUEUE_PROPERTIES, command_queue_flags_type, command_queue_flags)
+CLX_DEVICE_GET_SCALAR4(type, CL_DEVICE_TYPE, device_flags_type, device_flags)
 
 #if CLX_OPENCL_VERSION >= 120
 CLX_DEVICE_GET_SCALAR4(parent, CL_DEVICE_PARENT_DEVICE, device_type, device)

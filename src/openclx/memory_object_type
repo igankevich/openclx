@@ -1,0 +1,21 @@
+#ifndef OPENCLX_MEMORY_OBJECT_TYPE
+#define OPENCLX_MEMORY_OBJECT_TYPE
+
+#include <openclx/types>
+
+namespace clx {
+
+	enum class memory_object_type: memory_object_type_base {
+		buffer = CL_MEM_OBJECT_BUFFER,
+		image2d = CL_MEM_OBJECT_IMAGE2D,
+		image3d = CL_MEM_OBJECT_IMAGE3D,
+		image2d_array = CL_MEM_OBJECT_IMAGE2D_ARRAY,
+		image1d = CL_MEM_OBJECT_IMAGE1D,
+		image1d_array = CL_MEM_OBJECT_IMAGE1D_ARRAY,
+		image1d_buffer = CL_MEM_OBJECT_IMAGE1D_BUFFER,
+		pipe = CL_MEM_OBJECT_PIPE,
+	};
+
+}
+
+#endif // vim:filetype=cpp

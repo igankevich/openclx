@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include <openclx/device_flags>
 #include <openclx/error>
 #include <openclx/types>
 
@@ -29,10 +30,10 @@ namespace clx {
 		std::string extensions() const;
 
 		std::vector<device>
-		devices(device_flags_type types) const;
+		devices(device_flags types) const;
 
 		::clx::context context(const std::vector<device>& devices) const;
-		::clx::context context(device_flags_type types=CL_DEVICE_TYPE_ALL) const;
+		::clx::context context(device_flags types=device_flags::all) const;
 
 		#if CLX_OPENCL_VERSION >= 120
 		inline void

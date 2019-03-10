@@ -5,11 +5,15 @@
 #include <string>
 #include <vector>
 
+#include <openclx/command_queue_flags>
 #include <openclx/device_affinity_domain>
+#include <openclx/device_flags>
 #include <openclx/device_local_memory>
 #include <openclx/device_memory_cache>
 #include <openclx/device_partition>
 #include <openclx/error>
+#include <openclx/execution_flags>
+#include <openclx/floating_point_flags>
 #include <openclx/types>
 
 namespace clx {
@@ -63,7 +67,7 @@ namespace clx {
 		unsigned_int_type vendor_id() const;
 		::clx::platform platform() const;
 		::clx::context context() const;
-		::clx::command_queue queue(command_queue_flags_type flags) const;
+		::clx::command_queue queue(command_queue_flags flags) const;
 
 		bool available() const;
 		bool compiler_available() const;
@@ -88,10 +92,10 @@ namespace clx {
 		unsigned_int_type base_address_alignment() const;
 		unsigned_int_type min_data_alignment() const;
 
-		device_execution_capabilities_type execution_capabilities() const;
+		execution_flags execution_capabilities() const;
 
 		template <class T>
-		device_floating_point_flags_type
+		floating_point_flags
 		floating_point_capabilities() const;
 
 		template <class T>
@@ -114,8 +118,8 @@ namespace clx {
 		unsigned_int_type max_work_item_dimensions() const;
 		std::vector<size_t> max_work_item_sizes() const;
 
-		command_queue_flags_type queue_properties() const;
-		device_flags_type type() const;
+		command_queue_flags queue_properties() const;
+		device_flags type() const;
 
 		inline device_type
 		get() noexcept {
@@ -165,7 +169,7 @@ namespace clx {
 
 		::clx::command_queue queue(
 			context_type ctx,
-			command_queue_flags_type flags
+			command_queue_flags flags
 		) const;
 
 		friend class context;

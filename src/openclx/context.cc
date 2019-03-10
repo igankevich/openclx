@@ -10,7 +10,7 @@ clx::context::devices() const {
 }
 
 std::vector<clx::command_queue>
-clx::context::command_queues(command_queue_flags_type flags) const {
+clx::context::command_queues(command_queue_flags flags) const {
 	const auto& devices = this->devices();
 	std::vector<command_queue> result;
 	result.reserve(devices.size());
@@ -86,6 +86,30 @@ clx::context::builtin_program(const std::string& names) const {
 	return static_cast<::clx::program>(prg);
 }
 #endif
+
+std::vector<clx::image_format>
+clx::context::image_formats(memory_flags flags, memory_object_type type) const {
+	std::vector<image_format> result(4096 / sizeof(image_format));
+	int_type ret = 0;
+	bool success = false;
+	unsigned_int_type actual_size = 0;
+	while (!success) {
+		ret = ::clGetSupportedImageFormats(
+			this->_ptr,
+			static_cast<memory_flags_type>(flags),
+			static_cast<memory_object_type_base>(type),
+			result.size(),
+			reinterpret_cast<image_format_type*>(result.data()),
+			&actual_size
+		);
+		result.resize(actual_size);
+		if (errc(ret) != errc::invalid_value && result.size() <= actual_size) {
+			CLX_CHECK(ret);
+			success = true;
+		}
+	}
+	return result;
+}
 
 std::vector<clx::context_properties_type>
 clx::context::properties() const {

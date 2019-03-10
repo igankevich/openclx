@@ -1,0 +1,21 @@
+#ifndef OPENCLX_EXECUTION_FLAGS
+#define OPENCLX_EXECUTION_FLAGS
+
+#include <openclx/bits/flags>
+#include <openclx/types>
+
+namespace clx {
+
+	enum class execution_flags: execution_flags_type {
+		kernel=CL_EXEC_KERNEL,
+		native_kernel=CL_EXEC_NATIVE_KERNEL,
+	};
+
+	CLX_FLAGS(execution_flags, execution_flags_type)
+
+}
+
+#endif // vim:filetype=cpp
+
+
+

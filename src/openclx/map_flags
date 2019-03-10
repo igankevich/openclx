@@ -1,0 +1,22 @@
+#ifndef OPENCLX_MAP_FLAGS
+#define OPENCLX_MAP_FLAGS
+
+#include <openclx/bits/flags>
+#include <openclx/types>
+
+namespace clx {
+
+	enum class map_flags: map_flags_type {
+		read=CL_MAP_READ,
+		write=CL_MAP_WRITE,
+		write_invalidate_region=CL_MAP_WRITE_INVALIDATE_REGION,
+	};
+
+	CLX_FLAGS(map_flags, map_flags_type)
+
+}
+
+#endif // vim:filetype=cpp
+
+
+

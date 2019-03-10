@@ -6,6 +6,8 @@
 #include <openclx/platform>
 #include <openclx/types>
 #include <openclx/vector>
+#include <openclx/argument_type_qualifiers>
+#include <openclx/map_flags>
 
 #include <iostream>
 
@@ -13,7 +15,7 @@ int main() {
 	using namespace clx;
 	for (const auto& p : platforms()) {
 		std::clog << "p.name()=" << p.name() << std::endl;
-		for (const auto& d : p.devices(CL_DEVICE_TYPE_ALL)) {
+		for (const auto& d : p.devices(device_flags::all)) {
 			std::clog << "d.name()=" << d.name() << std::endl;
 		}
 	}

@@ -1,0 +1,21 @@
+#ifndef OPENCLX_MIGRATION_FLAGS
+#define OPENCLX_MIGRATION_FLAGS
+
+#include <openclx/bits/flags>
+#include <openclx/types>
+
+namespace clx {
+
+	enum class migration_flags: migration_flags_type {
+		host=CL_MIGRATE_MEM_OBJECT_HOST,
+		content_undefined=CL_MIGRATE_MEM_OBJECT_CONTENT_UNDEFINED,
+	};
+
+	CLX_FLAGS(migration_flags, migration_flags_type)
+
+}
+
+#endif // vim:filetype=cpp
+
+
+

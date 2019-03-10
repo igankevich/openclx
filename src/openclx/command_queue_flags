@@ -1,0 +1,23 @@
+#ifndef OPENCLX_COMMAND_QUEUE_FLAGS
+#define OPENCLX_COMMAND_QUEUE_FLAGS
+
+#include <openclx/bits/flags>
+#include <openclx/types>
+
+namespace clx {
+
+	enum class command_queue_flags: command_queue_flags_type {
+		out_of_order=CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE,
+		profiling=CL_QUEUE_PROFILING_ENABLE,
+		on_device=CL_QUEUE_ON_DEVICE,
+		on_device_default=CL_QUEUE_ON_DEVICE_DEFAULT,
+	};
+
+	CLX_FLAGS(command_queue_flags, command_queue_flags_type)
+
+}
+
+#endif // vim:filetype=cpp
+
+
+

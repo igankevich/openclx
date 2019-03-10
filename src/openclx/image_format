@@ -51,6 +51,9 @@ namespace clx {
 	struct image_format: private image_format_type {
 
 		inline
+		image_format(): image_format_type{} {}
+
+		inline
 		image_format(channel_order order, channel_data data):
 		image_format_type{
 			static_cast<channel_order_type>(order),
@@ -78,6 +81,8 @@ namespace clx {
 		}
 
 	};
+
+	static_assert(sizeof(image_format) == sizeof(image_format_type), "bad size");
 
 }
 

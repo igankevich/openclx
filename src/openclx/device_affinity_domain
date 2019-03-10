@@ -1,6 +1,7 @@
 #ifndef OPENCLX_DEVICE_AFFINITY_DOMAIN
 #define OPENCLX_DEVICE_AFFINITY_DOMAIN
 
+#include <openclx/bits/flags>
 #include <openclx/types>
 
 namespace clx {
@@ -14,9 +15,8 @@ namespace clx {
 		next=CL_DEVICE_AFFINITY_DOMAIN_NEXT_PARTITIONABLE,
 	};
 
+	CLX_FLAGS(device_affinity_domain, device_affinity_domain_type)
+
 }
 
 #endif // vim:filetype=cpp
-
-
-

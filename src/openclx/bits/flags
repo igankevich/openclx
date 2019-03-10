@@ -1,0 +1,28 @@
+#ifndef OPENCLX_BITS_FLAGS
+#define OPENCLX_BITS_FLAGS
+
+#define CLX_FLAGS_BINARY(op, tp1, tp2) \
+	inline constexpr tp1 \
+	operator op(tp1 lhs, tp1 rhs) noexcept { \
+		return tp1(tp2(lhs) op tp2(rhs)); \
+	}
+
+#define CLX_FLAGS_BINARY_EQ(op, tp1, tp2) \
+	inline tp1 \
+	operator op##=(tp1& lhs, tp1 rhs) noexcept { \
+		return lhs = tp1(tp2(lhs) op tp2(rhs)); \
+	}
+
+#define CLX_FLAGS(tp1, tp2) \
+	inline constexpr tp1 \
+	operator~(tp1 lhs) noexcept { \
+		return tp1(~tp2(lhs)); \
+	} \
+	CLX_FLAGS_BINARY(|, tp1, tp2) \
+	CLX_FLAGS_BINARY(&, tp1, tp2) \
+	CLX_FLAGS_BINARY(^, tp1, tp2) \
+	CLX_FLAGS_BINARY_EQ(|, tp1, tp2) \
+	CLX_FLAGS_BINARY_EQ(&, tp1, tp2) \
+	CLX_FLAGS_BINARY_EQ(^, tp1, tp2)
+
+#endif // vim:filetype=cpp

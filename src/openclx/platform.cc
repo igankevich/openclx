@@ -45,7 +45,7 @@ clx::platforms() {
 }
 
 std::vector<clx::device>
-clx::platform::devices(device_flags_type types) const {
+clx::platform::devices(device_flags types) const {
 	std::vector<device> result(4096 / sizeof(device));
 	unsigned_int_type actual_size = 0;
 	int_type ret;
@@ -53,7 +53,7 @@ clx::platform::devices(device_flags_type types) const {
 	while (!success) {
 		ret = ::clGetDeviceIDs(
 			this->_ptr,
-			types,
+			static_cast<device_flags_type>(types),
 			result.size(),
 			reinterpret_cast<device_type*>(result.data()),
 			&actual_size
@@ -86,7 +86,7 @@ clx::context clx::platform::context(const std::vector<device>& devices) const {
 	return static_cast<clx::context>(ctx);
 }
 
-clx::context clx::platform::context(device_flags_type types) const {
+clx::context clx::platform::context(device_flags types) const {
 	std::vector<context_properties_type> prop{
 		context_properties_type(CL_CONTEXT_PLATFORM),
 		context_properties_type(this->_ptr),
@@ -94,7 +94,13 @@ clx::context clx::platform::context(device_flags_type types) const {
 	};
 	int_type ret = 0;
 	auto ctx =
-		::clCreateContextFromType(prop.data(), types, nullptr, nullptr, &ret);
+		::clCreateContextFromType(
+			prop.data(),
+			static_cast<device_flags_type>(types),
+			nullptr,
+			nullptr,
+			&ret
+		);
 	CLX_CHECK(ret);
 	return static_cast<clx::context>(ctx);
 }

@@ -1,0 +1,27 @@
+#ifndef OPENCLX_FLOATING_POINT_FLAGS
+#define OPENCLX_FLOATING_POINT_FLAGS
+
+#include <openclx/bits/flags>
+#include <openclx/types>
+
+namespace clx {
+
+	enum class floating_point_flags: floating_point_flags_type {
+		denorm=CL_FP_DENORM,
+		inf_nan=CL_FP_INF_NAN,
+		round_to_nearest=CL_FP_ROUND_TO_NEAREST,
+		round_to_zero=CL_FP_ROUND_TO_ZERO,
+		round_to_inf=CL_FP_ROUND_TO_INF,
+		fma=CL_FP_FMA,
+		soft_float=CL_FP_SOFT_FLOAT,
+		correctly_rounded_divide_sqrt=CL_FP_CORRECTLY_ROUNDED_DIVIDE_SQRT,
+	};
+
+	CLX_FLAGS(floating_point_flags, floating_point_flags_type)
+
+}
+
+#endif // vim:filetype=cpp
+
+
+
