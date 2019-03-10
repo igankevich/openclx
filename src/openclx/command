@@ -1,0 +1,50 @@
+#ifndef OPENCLX_COMMAND
+#define OPENCLX_COMMAND
+
+#include <openclx/types>
+
+namespace clx {
+
+	enum class command: command_type {
+		ndrange_kernel=CL_COMMAND_NDRANGE_KERNEL,
+		task=CL_COMMAND_TASK,
+		native_kernel=CL_COMMAND_NATIVE_KERNEL,
+		read_buffer=CL_COMMAND_READ_BUFFER,
+		write_buffer=CL_COMMAND_WRITE_BUFFER,
+		copy_buffer=CL_COMMAND_COPY_BUFFER,
+		read_image=CL_COMMAND_READ_IMAGE,
+		write_image=CL_COMMAND_WRITE_IMAGE,
+		copy_image=CL_COMMAND_COPY_IMAGE,
+		copy_image_to_buffer=CL_COMMAND_COPY_IMAGE_TO_BUFFER,
+		copy_buffer_to_image=CL_COMMAND_COPY_BUFFER_TO_IMAGE,
+		map_buffer=CL_COMMAND_MAP_BUFFER,
+		map_image=CL_COMMAND_MAP_IMAGE,
+		unmap_mem_object=CL_COMMAND_UNMAP_MEM_OBJECT,
+		marker=CL_COMMAND_MARKER,
+		acquire_gl_objects=CL_COMMAND_ACQUIRE_GL_OBJECTS,
+		release_gl_objects=CL_COMMAND_RELEASE_GL_OBJECTS,
+		read_buffer_rect=CL_COMMAND_READ_BUFFER_RECT,
+		write_buffer_rect=CL_COMMAND_WRITE_BUFFER_RECT,
+		copy_buffer_rect=CL_COMMAND_COPY_BUFFER_RECT,
+		user=CL_COMMAND_USER,
+		barrier=CL_COMMAND_BARRIER,
+		migrate_mem_objects=CL_COMMAND_MIGRATE_MEM_OBJECTS,
+		fill_buffer=CL_COMMAND_FILL_BUFFER,
+		fill_image=CL_COMMAND_FILL_IMAGE,
+		svm_free=CL_COMMAND_SVM_FREE,
+		svm_memcpy=CL_COMMAND_SVM_MEMCPY,
+		svm_memfill=CL_COMMAND_SVM_MEMFILL,
+		svm_map=CL_COMMAND_SVM_MAP,
+		svm_unmap=CL_COMMAND_SVM_UNMAP,
+	};
+
+	enum class command_status: command_status_type {
+		complete = CL_COMPLETE,
+		running = CL_RUNNING,
+		submitted = CL_SUBMITTED,
+		queued = CL_QUEUED,
+	};
+
+}
+
+#endif // vim:filetype=cpp

@@ -1,0 +1,106 @@
+#ifndef OPENCLX_PLATFORM
+#define OPENCLX_PLATFORM
+
+#include <string>
+#include <vector>
+
+#include <openclx/error>
+#include <openclx/types>
+
+namespace clx {
+
+	class platform {
+
+	public:
+		typedef std::chrono::nanoseconds nanoseconds;
+
+	private:
+		platform_type _ptr = nullptr;
+
+	public:
+
+		inline explicit
+		platform(platform_type ptr): _ptr(ptr) {}
+
+		std::string profile() const;
+		std::string version() const;
+		std::string name() const;
+		std::string vendor() const;
+		std::string extensions() const;
+
+		std::vector<device>
+		devices(device_flags_type types) const;
+
+		::clx::context context(const std::vector<device>& devices) const;
+		::clx::context context(device_flags_type types=CL_DEVICE_TYPE_ALL) const;
+
+		#if CLX_OPENCL_VERSION >= 120
+		inline void
+		unload_compiler() {
+			CLX_CHECK(::clUnloadPlatformCompiler(this->_ptr));
+		}
+		#endif
+
+		#if CLX_OPENCL_VERSION >= 120
+		inline void*
+		extension_function_address(const char* name) const {
+			return ::clGetExtensionFunctionAddressForPlatform(this->_ptr, name);
+		}
+		#endif
+
+		#if CLX_OPENCL_VERSION >= 210
+		nanoseconds timer_resolution() const;
+		#endif
+
+		platform() = default;
+		~platform() = default;
+		platform(const platform&) = default;
+		platform& operator=(const platform&) = default;
+
+		inline
+		platform(platform&& rhs): _ptr(rhs._ptr) { rhs._ptr = nullptr; }
+
+		inline platform&
+		operator=(platform&& rhs) {
+			this->_ptr = rhs._ptr;
+			rhs._ptr = nullptr;
+			return *this;
+		}
+
+		inline void
+		swap(platform& rhs) {
+			std::swap(this->_ptr, rhs._ptr);
+		}
+
+		inline platform_type
+		get() noexcept {
+			return this->_ptr;
+		}
+
+		inline const platform_type
+		get() const noexcept {
+			return this->_ptr;
+		}
+
+	};
+
+	static_assert(sizeof(platform) == sizeof(platform_type), "bad size");
+
+	inline void
+	swap(platform& lhs, platform& rhs) {
+		lhs.swap(rhs);
+	}
+
+	std::vector<platform>
+	platforms();
+
+	#if CLX_OPENCL_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
+	inline void
+	unload_compiler() {
+		CLX_CHECK(::clUnloadCompiler());
+	}
+	#endif
+
+}
+
+#endif // vim:filetype=cpp

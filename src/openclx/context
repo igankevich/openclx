@@ -1,0 +1,97 @@
+#ifndef OPENCLX_CONTEXT
+#define OPENCLX_CONTEXT
+
+#include <string>
+#include <vector>
+
+#include <openclx/binary>
+#include <openclx/error>
+#include <openclx/types>
+
+namespace clx {
+
+	class context {
+
+	private:
+		context_type _ptr = nullptr;
+
+	public:
+
+		inline explicit
+		context(context_type ptr): _ptr(ptr) {}
+
+		std::vector<device>
+		devices() const;
+
+		std::vector<command_queue>
+		command_queues(command_queue_flags_type flags) const;
+
+		::clx::program program(const std::string& src) const;
+		::clx::program program(const std::vector<binary>& binaries) const;
+
+		#if CLX_OPENCL_VERSION >= 120
+		::clx::program builtin_program(const std::string& kernel_names) const;
+		unsigned_int_type num_devices() const;
+		#endif
+
+		std::vector<context_properties_type>
+		properties() const;
+
+		unsigned_int_type
+		num_references() const;
+
+		inline context_type
+		get() noexcept {
+			return this->_ptr;
+		}
+
+		inline const context_type
+		get() const noexcept {
+			return this->_ptr;
+		}
+
+		context() = default;
+
+		inline ~context() { this->release(); }
+		inline context(const context& rhs): _ptr(rhs._ptr) { this->retain(); }
+
+		inline context&
+		operator=(const context& rhs) {
+			context tmp(rhs);
+			this->swap(tmp);
+			return *this;
+		}
+
+		inline context(context&& rhs): _ptr(rhs._ptr) { rhs._ptr = nullptr; }
+		inline context& operator=(context&& rhs) { this->swap(rhs); return *this; }
+
+		inline void
+		release() {
+			if (this->_ptr) {
+				CLX_CHECK(::clReleaseContext(this->_ptr));
+				this->_ptr = nullptr;
+			}
+		}
+
+		inline void
+		retain() {
+			if (this->_ptr) {
+				CLX_CHECK(::clRetainContext(this->_ptr));
+			}
+		}
+
+		inline void
+		swap(context& rhs) {
+			std::swap(this->_ptr, rhs._ptr);
+		}
+
+	};
+
+	inline void
+	swap(context& lhs, context& rhs) {
+		lhs.swap(rhs);
+	}
+
+}
+
+#endif // vim:filetype=cpp

@@ -1,0 +1,184 @@
+#ifndef OPENCLX_DEVICE
+#define OPENCLX_DEVICE
+
+#include <chrono>
+#include <string>
+#include <vector>
+
+#include <openclx/device_affinity_domain>
+#include <openclx/device_local_memory>
+#include <openclx/device_memory_cache>
+#include <openclx/device_partition>
+#include <openclx/error>
+#include <openclx/types>
+
+namespace clx {
+
+	class device {
+
+	public:
+		typedef std::chrono::nanoseconds nanoseconds;
+
+	private:
+		device_type _ptr = nullptr;
+
+	public:
+
+		inline explicit
+		device(device_type ptr): _ptr(ptr) {}
+
+		#if CLX_OPENCL_VERSION >= 120
+		device parent() const;
+
+		unsigned_int_type max_subordinate_devices() const;
+		device_affinity_domain affinity_domain() const;
+
+		std::vector<device>
+		partition(unsigned int num_compute_units) const;
+
+		std::vector<device>
+		partition(const std::vector<unsigned int>& num_compute_units) const;
+
+		std::vector<device_partition>
+		supported_partitions() const;
+
+		std::vector<device_partition>
+		partitions() const;
+		#endif
+
+		#if CLX_OPENCL_VERSION >= 210
+		nanoseconds host_time() const;
+		std::pair<nanoseconds,nanoseconds> device_and_host_time() const;
+		#endif
+
+		nanoseconds timer_resolution() const;
+
+		std::string name() const;
+		std::string profile() const;
+		std::string vendor() const;
+		std::string version() const;
+		std::string driver_version() const;
+		std::string extensions() const;
+
+		unsigned_int_type vendor_id() const;
+		::clx::platform platform() const;
+		::clx::context context() const;
+		::clx::command_queue queue(command_queue_flags_type flags) const;
+
+		bool available() const;
+		bool compiler_available() const;
+		bool little_endian() const;
+		bool supports_error_correction() const;
+		bool supports_images() const;
+
+		size_t image2d_max_width() const;
+		size_t image2d_max_height() const;
+		size_t image3d_max_width() const;
+		size_t image3d_max_height() const;
+		size_t image3d_max_depth() const;
+
+		unsigned_long_type global_memory_size() const;
+		unsigned_long_type global_memory_cache_size() const;
+		unsigned_int_type global_memory_cacheline_size() const;
+		device_memory_cache global_memory_cache_type() const;
+		unsigned_long_type local_memory_size() const;
+		device_local_memory local_memory_type() const;
+
+		unsigned_int_type address_bits() const;
+		unsigned_int_type base_address_alignment() const;
+		unsigned_int_type min_data_alignment() const;
+
+		device_execution_capabilities_type execution_capabilities() const;
+
+		template <class T>
+		device_floating_point_flags_type
+		floating_point_capabilities() const;
+
+		template <class T>
+		unsigned_int_type
+		preferred_vector_width() const;
+
+		unsigned_int_type max_clock_frequency() const;
+		unsigned_int_type max_compute_units() const;
+
+		unsigned_int_type max_constant_arguments() const;
+		unsigned_int_type max_read_image_arguments() const;
+		unsigned_int_type max_write_image_arguments() const;
+		unsigned_int_type max_samplers() const;
+		size_t max_parameter_size() const;
+
+		unsigned_long_type max_constant_buffer_size() const;
+		unsigned_long_type max_memory_allocation_size() const;
+
+		size_t max_work_group_size() const;
+		unsigned_int_type max_work_item_dimensions() const;
+		std::vector<size_t> max_work_item_sizes() const;
+
+		command_queue_flags_type queue_properties() const;
+		device_flags_type type() const;
+
+		inline device_type
+		get() noexcept {
+			return this->_ptr;
+		}
+
+		inline const device_type
+		get() const noexcept {
+			return this->_ptr;
+		}
+
+		device() = default;
+		inline ~device() { this->release(); }
+		inline device(const device& rhs): _ptr(rhs._ptr) { this->retain(); }
+
+		inline device&
+		operator=(const device& rhs) {
+			device tmp(rhs);
+			this->swap(tmp);
+			return *this;
+		}
+
+		inline device(device&& rhs): _ptr(rhs._ptr) { rhs._ptr = nullptr; }
+		inline device& operator=(device&& rhs) { this->swap(rhs); return *this; }
+
+		inline void
+		release() {
+			if (this->_ptr) {
+				CLX_CHECK(::clReleaseDevice(this->_ptr));
+				this->_ptr = nullptr;
+			}
+		}
+
+		inline void
+		retain() {
+			if (this->_ptr) {
+				CLX_CHECK(::clRetainDevice(this->_ptr));
+			}
+		}
+
+		inline void
+		swap(device& rhs) {
+			std::swap(this->_ptr, rhs._ptr);
+		}
+
+	private:
+
+		::clx::command_queue queue(
+			context_type ctx,
+			command_queue_flags_type flags
+		) const;
+
+		friend class context;
+
+	};
+
+	static_assert(sizeof(device) == sizeof(device_type), "bad size");
+
+	inline void
+	swap(device& lhs, device& rhs) {
+		lhs.swap(rhs);
+	}
+
+}
+
+#endif // vim:filetype=cpp

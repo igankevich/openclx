@@ -1,0 +1,19 @@
+#ifndef OPENCLX_DEVICE_PARTITION
+#define OPENCLX_DEVICE_PARTITION
+
+#include <openclx/types>
+
+namespace clx {
+
+	enum class device_partition: device_partition_type {
+		equally=CL_DEVICE_PARTITION_EQUALLY,
+		by_counts=CL_DEVICE_PARTITION_BY_COUNTS,
+		by_counts_end=CL_DEVICE_PARTITION_BY_COUNTS_LIST_END,
+		by_affinity_domain=CL_DEVICE_PARTITION_BY_AFFINITY_DOMAIN,
+	};
+
+}
+
+#endif // vim:filetype=cpp
+
+

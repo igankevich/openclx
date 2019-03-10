@@ -1,0 +1,81 @@
+#ifndef OPENCLX_PROGRAM
+#define OPENCLX_PROGRAM
+
+#include <string>
+#include <vector>
+
+#include <openclx/binary>
+#include <openclx/build_status>
+#include <openclx/error>
+#include <openclx/types>
+
+namespace clx {
+
+	class program {
+
+	private:
+		program_type _ptr = nullptr;
+
+	public:
+
+		inline explicit
+		program(program_type ptr): _ptr(ptr) {}
+
+		void build(const std::string& options);
+		::clx::build_status build_status(const device& dev) const;
+		std::string options(const device& dev) const;
+		std::string build_log(const device& dev) const;
+		std::vector<binary> binaries() const;
+
+		std::vector<::clx::kernel> kernels() const;
+		::clx::kernel kernel(const char* name) const;
+		::clx::context context() const;
+		unsigned_int_type num_references() const;
+		unsigned_int_type num_devices() const;
+		std::vector<device> devices() const;
+		std::string source() const;
+
+		program() = default;
+		inline ~program() { this->release(); }
+		inline program(const program& rhs): _ptr(rhs._ptr) { this->retain(); }
+
+		inline program&
+		operator=(const program& rhs) {
+			program tmp(rhs);
+			this->swap(tmp);
+			return *this;
+		}
+
+		inline program(program&& rhs): _ptr(rhs._ptr) { rhs._ptr = nullptr; }
+		inline program& operator=(program&& rhs) { this->swap(rhs); return *this; }
+
+		inline void
+		release() {
+			if (this->_ptr) {
+				CLX_CHECK(::clReleaseProgram(this->_ptr));
+				this->_ptr = nullptr;
+			}
+		}
+
+		inline void
+		retain() {
+			if (this->_ptr) {
+				CLX_CHECK(::clRetainProgram(this->_ptr));
+			}
+		}
+
+		inline void
+		swap(program& rhs) {
+			std::swap(this->_ptr, rhs._ptr);
+		}
+
+	};
+
+	inline void
+	swap(program& lhs, program& rhs) {
+		lhs.swap(rhs);
+	}
+
+}
+
+#endif // vim:filetype=cpp

@@ -1,0 +1,52 @@
+#ifndef OPENCLX_BINARY
+#define OPENCLX_BINARY
+
+#include <iosfwd>
+#include <vector>
+
+namespace clx {
+
+	class binary {
+
+	public:
+		typedef unsigned char value_type;
+		typedef size_t size_type;
+
+	private:
+		std::vector<value_type> _bytes;
+
+	public:
+
+		binary() = default;
+
+		inline explicit
+		binary(const value_type* bytes, size_type n):
+		_bytes(bytes, bytes+n) {}
+
+		void
+		write(std::ostream& out) const;
+
+		void
+		read(std::istream& in);
+
+		inline const value_type*
+		data() const {
+			return this->_bytes.data();
+		}
+
+		inline size_type
+		size() const {
+			return this->_bytes.size();
+		}
+
+	};
+
+	std::ostream&
+	operator<<(std::ostream& out, const binary& rhs);
+
+	std::istream&
+	operator>>(std::istream& in, binary& rhs);
+
+}
+
+#endif // vim:filetype=cpp

@@ -1,0 +1,104 @@
+#ifndef OPENCLX_KERNEL
+#define OPENCLX_KERNEL
+
+#include <string>
+
+#include <openclx/error>
+#include <openclx/types>
+
+namespace clx {
+
+	template <class T>
+	struct local {
+		typedef T value_type;
+		size_t size = 0;
+	};
+
+	struct work_group {
+		size_t size = 0;
+		size_t size_hint[3]{};
+		size_t size_multiple = 0;
+		#if CLX_OPENCL_VERSION >= 110
+		unsigned_long_type local_memory_size = 0;
+		unsigned_long_type private_memory_size = 0;
+		#endif
+	};
+
+	class kernel {
+
+	private:
+		kernel_type _ptr = nullptr;
+
+	public:
+
+		inline explicit
+		kernel(kernel_type ptr): _ptr(ptr) {}
+
+		kernel
+		copy() const;
+
+		template <class T>
+		void
+		argument(unsigned_int_type i, const T& value) {
+			CLX_CHECK(::clSetKernelArg(this->_ptr, i, sizeof(T), &value));
+		}
+
+		template <class T>
+		void
+		argument(unsigned_int_type i, const local<T>& value) {
+			CLX_CHECK(::clSetKernelArg(this->_ptr, i, value.size*sizeof(T), nullptr));
+		}
+
+		std::string name() const;
+		unsigned_int_type num_arguments() const;
+		unsigned_int_type num_references() const;
+		::clx::context context() const;
+		::clx::program program() const;
+		::clx::work_group work_group(const device& dev) const;
+
+		kernel() = default;
+		inline ~kernel() { this->release(); }
+		inline kernel(const kernel& rhs): _ptr(rhs._ptr) { this->retain(); }
+
+		inline kernel&
+		operator=(const kernel& rhs) {
+			kernel tmp(rhs);
+			this->swap(tmp);
+			return *this;
+		}
+
+		inline kernel(kernel&& rhs): _ptr(rhs._ptr) { rhs._ptr = nullptr; }
+		inline kernel& operator=(kernel&& rhs) { this->swap(rhs); return *this; }
+
+		inline void
+		release() {
+			if (this->_ptr) {
+				CLX_CHECK(::clReleaseKernel(this->_ptr));
+				this->_ptr = nullptr;
+			}
+		}
+
+		inline void
+		retain() {
+			if (this->_ptr) {
+				CLX_CHECK(::clRetainKernel(this->_ptr));
+			}
+		}
+
+		inline void
+		swap(kernel& rhs) {
+			std::swap(this->_ptr, rhs._ptr);
+		}
+
+	};
+
+	static_assert(sizeof(kernel) == sizeof(kernel_type), "bad size");
+
+	inline void
+	swap(kernel& lhs, kernel& rhs) {
+		lhs.swap(rhs);
+	}
+
+}
+
+#endif // vim:filetype=cpp

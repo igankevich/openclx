@@ -1,0 +1,22 @@
+#ifndef OPENCLX_DEVICE_AFFINITY_DOMAIN
+#define OPENCLX_DEVICE_AFFINITY_DOMAIN
+
+#include <openclx/types>
+
+namespace clx {
+
+	enum class device_affinity_domain: device_affinity_domain_type {
+		numa=CL_DEVICE_AFFINITY_DOMAIN_NUMA,
+		L4_cache=CL_DEVICE_AFFINITY_DOMAIN_L4_CACHE,
+		L3_cache=CL_DEVICE_AFFINITY_DOMAIN_L3_CACHE,
+		L2_cache=CL_DEVICE_AFFINITY_DOMAIN_L2_CACHE,
+		L1_cache=CL_DEVICE_AFFINITY_DOMAIN_L1_CACHE,
+		next=CL_DEVICE_AFFINITY_DOMAIN_NEXT_PARTITIONABLE,
+	};
+
+}
+
+#endif // vim:filetype=cpp
+
+
+

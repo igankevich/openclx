@@ -1,0 +1,16 @@
+#ifndef OPENCLX_DEVICE_MEMORY_CACHE
+#define OPENCLX_DEVICE_MEMORY_CACHE
+
+#include <openclx/types>
+
+namespace clx {
+
+	enum class device_memory_cache: device_memory_cache_type {
+		none=CL_NONE,
+		read_only=CL_READ_ONLY_CACHE,
+		read_write=CL_READ_WRITE_CACHE,
+	};
+
+}
+
+#endif // vim:filetype=cpp

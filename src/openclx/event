@@ -1,0 +1,102 @@
+#ifndef OPENCLX_EVENT
+#define OPENCLX_EVENT
+
+#include <chrono>
+#include <vector>
+
+#include <openclx/command>
+#include <openclx/types>
+
+namespace clx {
+
+	class event {
+
+	public:
+		typedef std::chrono::nanoseconds nanoseconds;
+
+	private:
+		event_type _ptr = nullptr;
+
+	public:
+
+		inline explicit
+		event(event_type ptr): _ptr(ptr) {}
+
+		explicit
+		event(const context& ctx);
+
+		::clx::command_queue queue() const;
+		::clx::command command() const;
+		::clx::command_status status() const;
+		unsigned_int_type num_references() const;
+
+		nanoseconds time_queued() const;
+		nanoseconds time_submitted() const;
+		nanoseconds time_started() const;
+		nanoseconds time_ended() const;
+		nanoseconds time_completed() const;
+
+		inline void
+		status(int_type s) {
+			CLX_CHECK(::clSetUserEventStatus(this->_ptr, s));
+		}
+
+		inline void
+		wait() {
+			CLX_CHECK(::clWaitForEvents(1, &this->_ptr));
+		}
+
+		event() = default;
+		inline ~event() { this->release(); }
+		inline event(const event& rhs): _ptr(rhs._ptr) { this->retain(); }
+
+		inline event&
+		operator=(const event& rhs) {
+			event tmp(rhs);
+			this->swap(tmp);
+			return *this;
+		}
+
+		inline event(event&& rhs): _ptr(rhs._ptr) { rhs._ptr = nullptr; }
+		inline event& operator=(event&& rhs) { this->swap(rhs); return *this; }
+
+		inline void
+		release() {
+			if (this->_ptr) {
+				CLX_CHECK(::clReleaseEvent(this->_ptr));
+				this->_ptr = nullptr;
+			}
+		}
+
+		inline void
+		retain() {
+			if (this->_ptr) {
+				CLX_CHECK(::clRetainEvent(this->_ptr));
+			}
+		}
+
+		inline void
+		swap(event& rhs) {
+			std::swap(this->_ptr, rhs._ptr);
+		}
+
+	};
+
+	static_assert(sizeof(event) == sizeof(event_type), "bad size");
+
+	inline void
+	swap(event& lhs, event& rhs) {
+		lhs.swap(rhs);
+	}
+
+	inline void
+	wait(const std::vector<event>& events) {
+		CLX_CHECK(::clWaitForEvents(
+			events.size(),
+			reinterpret_cast<const event_type*>(events.data())
+		));
+	}
+
+}
+
+#endif // vim:filetype=cpp

@@ -1,0 +1,48 @@
+#ifndef OPENCLX_CL
+#define OPENCLX_CL
+
+#if !defined(CLX_OPENCL_VERSION)
+#define CLX_OPENCL_VERSION 220
+#endif
+
+#if CLX_OPENCL_VERSION <= 100
+#define CL_USE_DEPRECATED_OPENCL_1_0_APIS
+#endif
+#if CLX_OPENCL_VERSION <= 110
+#define CL_USE_DEPRECATED_OPENCL_1_1_APIS
+#endif
+#if CLX_OPENCL_VERSION <= 120
+#define CL_USE_DEPRECATED_OPENCL_1_2_APIS
+#endif
+#if CLX_OPENCL_VERSION <= 200
+#define CL_USE_DEPRECATED_OPENCL_2_0_APIS
+#endif
+#if CLX_OPENCL_VERSION <= 210
+#define CL_USE_DEPRECATED_OPENCL_2_1_APIS
+#endif
+#if CLX_OPENCL_VERSION <= 220
+#define CL_USE_DEPRECATED_OPENCL_2_2_APIS
+#endif
+
+#include <CL/opencl.h>
+
+#if CLX_OPENCL_VERSION >= 220 && !defined(CL_VERSION_2_2)
+#error "CLX_OPENCL_VERSION is " CLX_OPENCL_VERSION " but CL_VERSION_2_2 is not defined"
+#endif
+#if CLX_OPENCL_VERSION >= 210 && !defined(CL_VERSION_2_1)
+#error "CLX_OPENCL_VERSION is " CLX_OPENCL_VERSION " but CL_VERSION_2_1 is not defined"
+#endif
+#if CLX_OPENCL_VERSION >= 200 && !defined(CL_VERSION_2_0)
+#error "CLX_OPENCL_VERSION is " CLX_OPENCL_VERSION " but CL_VERSION_2_0 is not defined"
+#endif
+#if CLX_OPENCL_VERSION >= 120 && !defined(CL_VERSION_1_2)
+#error "CLX_OPENCL_VERSION is " CLX_OPENCL_VERSION " but CL_VERSION_1_2 is not defined"
+#endif
+#if CLX_OPENCL_VERSION >= 110 && !defined(CL_VERSION_1_1)
+#error "CLX_OPENCL_VERSION is " CLX_OPENCL_VERSION " but CL_VERSION_1_1 is not defined"
+#endif
+#if CLX_OPENCL_VERSION >= 100 && !defined(CL_VERSION_1_0)
+#error "CLX_OPENCL_VERSION is " CLX_OPENCL_VERSION " but CL_VERSION_1_0 is not defined"
+#endif
+
+#endif // vim:filetype=cpp
