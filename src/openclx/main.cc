@@ -8,6 +8,7 @@
 #include <openclx/vector>
 #include <openclx/argument_type_qualifiers>
 #include <openclx/map_flags>
+#include <openclx/event_stack>
 
 #include <iostream>
 

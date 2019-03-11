@@ -1,0 +1,83 @@
+#ifndef OPENCLX_EVENT_STACK
+#define OPENCLX_EVENT_STACK
+
+#include <vector>
+
+#include <openclx/command_queue>
+#include <openclx/event>
+
+namespace clx {
+
+	class event_stack {
+
+	public:
+		struct frame_type {
+			size_t offset = 0;
+			size_t size = 0;
+			frame_type() = default;
+			frame_type(size_t offset, size_t size):
+			offset(offset), size(size) {}
+		};
+
+	public:
+		typedef std::vector<event> event_array;
+		typedef std::vector<event_array> frame_array;
+
+	private:
+		command_queue _queue;
+		frame_array _frames;
+		bool _sync = false;
+
+	public:
+
+		event_stack() = default;
+
+		inline explicit
+		event_stack(command_queue queue): _queue(queue) {}
+
+		void
+		wait();
+
+		void
+		barrier();
+
+		void
+		marker();
+
+		inline void
+		step() {
+			this->_sync = true;
+		}
+
+		inline void
+		insert(event&& ev) {
+			this->frame().emplace_back(std::forward<event>(ev));
+		}
+
+	private:
+
+		inline void
+		step_in() {
+			this->_frames.emplace_back();
+		}
+
+		inline void
+		step_out() {
+			this->_frames.pop_back();
+		}
+
+		inline const event_array&
+		frame() const {
+			return this->_frames.back();
+		}
+
+		inline event_array&
+		frame() {
+			return this->_frames.back();
+		}
+
+	};
+
+}
+
+#endif // vim:filetype=cpp
