@@ -1,0 +1,25 @@
+#ifndef OPENCLX_BUFFER
+#define OPENCLX_BUFFER
+
+#include <openclx/memory_object>
+
+namespace clx {
+
+	class buffer: public memory_object {
+
+	public:
+
+		inline explicit
+		buffer(memory_object_type ptr): memory_object(ptr) {}
+
+		#if CL_TARGET_VERSION >= 110
+		buffer
+		subbuffer(size_t origin, size_t size, memory_flags flags);
+		#endif
+
+	};
+
+}
+
+#endif // vim:filetype=cpp
+

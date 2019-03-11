@@ -1,0 +1,78 @@
+#ifndef OPENCLX_SAMPLER
+#define OPENCLX_SAMPLER
+
+#include <openclx/types>
+#include <openclx/error>
+
+namespace clx {
+
+	class sampler {
+
+	private:
+		sampler_type _ptr = nullptr;
+
+	public:
+
+		inline explicit
+		sampler(sampler_type ptr): _ptr(ptr) {}
+
+		unsigned_int_type num_references() const;
+		::clx::context context() const;
+		bool normalised_coordinates() const;
+		::clx::addressing_mode addressing_mode() const;
+		::clx::filter_mode filter_mode() const;
+
+		inline sampler_type
+		get() noexcept {
+			return this->_ptr;
+		}
+
+		inline const sampler_type
+		get() const noexcept {
+			return this->_ptr;
+		}
+
+		sampler() = default;
+		inline ~sampler() { this->release(); }
+		inline sampler(const sampler& rhs): _ptr(rhs._ptr) { this->retain(); }
+
+		inline sampler&
+		operator=(const sampler& rhs) {
+			sampler tmp(rhs);
+			this->swap(tmp);
+			return *this;
+		}
+
+		inline sampler(sampler&& rhs): _ptr(rhs._ptr) { rhs._ptr = nullptr; }
+		inline sampler& operator=(sampler&& rhs) { this->swap(rhs); return *this; }
+
+		inline void
+		release() {
+			if (this->_ptr) {
+				CLX_CHECK(::clReleaseSampler(this->_ptr));
+				this->_ptr = nullptr;
+			}
+		}
+
+		inline void
+		retain() {
+			if (this->_ptr) {
+				CLX_CHECK(::clRetainSampler(this->_ptr));
+			}
+		}
+
+		inline void
+		swap(sampler& rhs) {
+			std::swap(this->_ptr, rhs._ptr);
+		}
+
+	};
+
+	inline void
+	swap(sampler& lhs, sampler& rhs) {
+		lhs.swap(rhs);
+	}
+
+}
+
+#endif // vim:filetype=cpp

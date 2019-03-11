@@ -1,5 +1,6 @@
 openclx_src = files([
 	'binary.cc',
+	'buffer.cc',
 	'command_queue.cc',
 	'context.cc',
 	'device.cc',
@@ -11,6 +12,7 @@ openclx_src = files([
 	'memory_object.cc',
 	'platform.cc',
 	'program.cc',
+	'sampler.cc',
 ])
 
 openclx_deps = [

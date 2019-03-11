@@ -13,6 +13,9 @@ namespace clx {
 
 	class program {
 
+	public:
+		typedef void (*callback_type)(program_type, void *);
+
 	private:
 		program_type _ptr = nullptr;
 

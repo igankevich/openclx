@@ -60,6 +60,10 @@ namespace clx {
 	typedef ::cl_mem_migration_flags migration_flags_type;
 	typedef ::cl_map_flags map_flags_type;
 	typedef ::cl_kernel_arg_type_qualifier argument_type_qualifiers_type;
+	typedef ::cl_buffer_region buffer_region_type;
+	typedef ::cl_addressing_mode addressing_mode_type;
+	typedef ::cl_filter_mode filter_mode_type;
+	typedef ::cl_sampler_properties sampler_properties_type;
 
 	class platform;
 	class device;
@@ -69,6 +73,13 @@ namespace clx {
 	class kernel;
 	class event;
 	class memory_object;
+	class image;
+	class buffer;
+	class sampler;
+	class binary;
+
+	enum class addressing_mode: addressing_mode_type;
+	enum class filter_mode: filter_mode_type;
 
 }
 

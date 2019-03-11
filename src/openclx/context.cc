@@ -1,8 +1,18 @@
+#include <openclx/addressing_mode>
+#include <openclx/binary>
 #include <openclx/bits/macros>
+#include <openclx/bits/pragmas>
+#include <openclx/buffer>
 #include <openclx/command_queue>
 #include <openclx/context>
 #include <openclx/device>
+#include <openclx/event>
+#include <openclx/image>
 #include <openclx/program>
+#include <openclx/sampler>
+
+CLX_WARNING_PUSH
+CLX_IGNORED_ATTRIBUTES
 
 std::vector<clx::device>
 clx::context::devices() const {
@@ -164,3 +174,55 @@ clx::context::event() const {
 	return static_cast<::clx::event>(ev);
 }
 
+clx::buffer
+clx::context::buffer(
+	memory_flags flags,
+	size_t size,
+	void* host_pointer
+) const {
+	int_type ret = 0;
+	auto buf =
+		::clCreateBuffer(
+			this->_ptr,
+			static_cast<memory_flags_type>(flags),
+			size,
+			host_pointer,
+			&ret
+		);
+	CLX_CHECK(ret);
+	return static_cast<::clx::buffer>(buf);
+}
+
+clx::sampler
+clx::context::sampler(
+	bool normalised,
+	addressing_mode amode,
+	filter_mode fmode
+) const {
+	int_type ret = 0;
+	#if CL_TARGET_VERSION <= 120
+	auto sm =
+		::clCreateSampler(
+			this->_ptr,
+			static_cast<bool_type>(normalised),
+			static_cast<addressing_mode_type>(amode),
+			static_cast<filter_mode_type>(fmode),
+			&ret
+		);
+	#else
+	std::vector<sampler_properties_type> props{
+		sampler_properties_type(CL_SAMPLER_NORMALIZED_COORDS),
+		sampler_properties_type(normalised),
+		sampler_properties_type(CL_SAMPLER_ADDRESSING_MODE),
+		sampler_properties_type(amode),
+		sampler_properties_type(CL_SAMPLER_FILTER_MODE),
+		sampler_properties_type(fmode),
+		sampler_properties_type(0)
+	};
+	auto sm = ::clCreateSamplerWithProperties(this->_ptr, props.data(), &ret);
+	#endif
+	CLX_CHECK(ret);
+	return static_cast<::clx::sampler>(sm);
+}
+
+CLX_WARNING_POP

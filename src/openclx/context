@@ -4,11 +4,8 @@
 #include <string>
 #include <vector>
 
-#include <openclx/binary>
 #include <openclx/command_queue_flags>
 #include <openclx/error>
-#include <openclx/event>
-#include <openclx/image>
 #include <openclx/image_descriptor>
 #include <openclx/image_format>
 #include <openclx/memory_flags>
@@ -40,11 +37,12 @@ namespace clx {
 		::clx::program builtin_program(const std::string& kernel_names) const;
 		unsigned_int_type num_devices() const;
 
-		::clx::image image(
+		::clx::image
+		image(
 			memory_flags flags,
 			const image_format& format,
 			const image_descriptor& descriptor,
-			void* host_pointer
+			void* host_pointer=nullptr
 		) const;
 		#endif
 
@@ -54,6 +52,20 @@ namespace clx {
 		#if CL_TARGET_VERSION >= 110
 		::clx::event event() const;
 		#endif
+
+		::clx::buffer
+		buffer(
+			memory_flags flags,
+			size_t size,
+			void* host_pointer=nullptr
+		) const;
+
+		::clx::sampler
+		sampler(
+			bool normalised,
+			addressing_mode amode,
+			filter_mode fmode
+		) const;
 
 		std::vector<context_properties_type>
 		properties() const;

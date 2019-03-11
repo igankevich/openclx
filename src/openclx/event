@@ -5,6 +5,7 @@
 #include <vector>
 
 #include <openclx/command>
+#include <openclx/error>
 #include <openclx/types>
 
 namespace clx {
