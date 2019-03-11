@@ -36,7 +36,7 @@ namespace clx {
 		::clx::program program(const std::string& src) const;
 		::clx::program program(const std::vector<binary>& binaries) const;
 
-		#if CLX_OPENCL_VERSION >= 120
+		#if CL_TARGET_VERSION >= 120
 		::clx::program builtin_program(const std::string& kernel_names) const;
 		unsigned_int_type num_devices() const;
 
@@ -51,7 +51,7 @@ namespace clx {
 		std::vector<image_format>
 		image_formats(memory_flags flags, memory_objects type) const;
 
-		#if CLX_OPENCL_VERSION >= 110
+		#if CL_TARGET_VERSION >= 110
 		::clx::event event() const;
 		#endif
 

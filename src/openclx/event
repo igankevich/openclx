@@ -44,7 +44,7 @@ namespace clx {
 			CLX_CHECK(::clWaitForEvents(1, &this->_ptr));
 		}
 
-		#if CLX_OPENCL_VERSION >= 110
+		#if CL_TARGET_VERSION >= 110
 		inline void
 		callback(callback_type cb, execution_status status, void* data=nullptr) {
 			CLX_CHECK(::clSetEventCallback(

@@ -26,7 +26,7 @@ clx::command_queue::properties() const {
 	);
 }
 
-#if CLX_OPENCL_VERSION >= 210
+#if CL_TARGET_VERSION >= 210
 void
 clx::command_queue::make_default() {
 	CLX_CHECK(::clSetDefaultDeviceCommandQueue(

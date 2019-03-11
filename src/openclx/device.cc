@@ -45,7 +45,7 @@ CLX_DEVICE_GET_STRING(version, CL_DEVICE_VERSION)
 CLX_DEVICE_GET_STRING(driver_version, CL_DRIVER_VERSION)
 CLX_DEVICE_GET_STRING(extensions, CL_DEVICE_EXTENSIONS)
 
-#if CLX_OPENCL_VERSION >= 210
+#if CL_TARGET_VERSION >= 210
 auto
 clx::device::host_time() const -> nanoseconds {
 	unsigned_long_type value = 0;
@@ -54,7 +54,7 @@ clx::device::host_time() const -> nanoseconds {
 }
 #endif
 
-#if CLX_OPENCL_VERSION >= 210
+#if CL_TARGET_VERSION >= 210
 auto
 clx::device::device_and_host_time() const -> std::pair<nanoseconds,nanoseconds> {
 	unsigned_long_type value1 = 0, value2 = 0;
@@ -94,7 +94,7 @@ clx::device::queue(
 	context_type ctx,
 	command_queue_flags flags
 ) const {
-	#if CLX_OPENCL_VERSION >= 200
+	#if CL_TARGET_VERSION >= 200
 	std::vector<queue_properties_type> props{
 		queue_properties_type(CL_QUEUE_PROPERTIES),
 		queue_properties_type(flags),
@@ -102,7 +102,7 @@ clx::device::queue(
 	};
 	#endif
 	int_type ret = 0;
-	#if CLX_OPENCL_VERSION >= 200
+	#if CL_TARGET_VERSION >= 200
 	auto result =
 		::clCreateCommandQueueWithProperties(ctx, this->_ptr, props.data(), &ret);
 	#else
@@ -208,7 +208,7 @@ clx::device::max_work_item_sizes() const {
 CLX_DEVICE_GET_SCALAR4(queue_properties, CL_DEVICE_QUEUE_PROPERTIES, command_queue_flags_type, command_queue_flags)
 CLX_DEVICE_GET_SCALAR4(type, CL_DEVICE_TYPE, device_flags_type, device_flags)
 
-#if CLX_OPENCL_VERSION >= 120
+#if CL_TARGET_VERSION >= 120
 CLX_DEVICE_GET_SCALAR4(parent, CL_DEVICE_PARENT_DEVICE, device_type, device)
 CLX_DEVICE_GET_SCALAR3(max_subordinate_devices, CL_DEVICE_PARTITION_MAX_SUB_DEVICES, unsigned_int_type)
 CLX_DEVICE_GET_SCALAR4(affinity_domain, CL_DEVICE_PARTITION_AFFINITY_DOMAIN, device_affinity_domain_type, device_affinity_domain)
@@ -216,7 +216,7 @@ CLX_DEVICE_GET_ARRAY(supported_partitions, CL_DEVICE_PARTITION_PROPERTIES, devic
 CLX_DEVICE_GET_ARRAY(partitions, CL_DEVICE_PARTITION_TYPE, device_partition_type, device_partition)
 #endif
 
-#if CLX_OPENCL_VERSION >= 120
+#if CL_TARGET_VERSION >= 120
 std::vector<clx::device>
 clx::device::partition(unsigned int num_compute_units) const {
 	std::vector<device_partition_type> properties{
@@ -247,7 +247,7 @@ clx::device::partition(unsigned int num_compute_units) const {
 }
 #endif
 
-#if CLX_OPENCL_VERSION >= 120
+#if CL_TARGET_VERSION >= 120
 std::vector<clx::device>
 clx::device::partition(const std::vector<unsigned int>& num_compute_units) const {
 	std::vector<device_partition_type> properties;

@@ -70,7 +70,7 @@ clx::context::program(const std::vector<binary>& binaries) const {
 	return static_cast<::clx::program>(prg);
 }
 
-#if CLX_OPENCL_VERSION >= 120
+#if CL_TARGET_VERSION >= 120
 clx::program
 clx::context::builtin_program(const std::string& names) const {
 	const auto& devices = this->devices();
@@ -126,14 +126,14 @@ clx::context::num_references() const {
 	CLX_GET_SCALAR3(::clGetContextInfo, CL_CONTEXT_REFERENCE_COUNT, unsigned_int_type)
 }
 
-#if CLX_OPENCL_VERSION >= 120
+#if CL_TARGET_VERSION >= 120
 clx::unsigned_int_type
 clx::context::num_devices() const {
 	CLX_GET_SCALAR3(::clGetContextInfo, CL_CONTEXT_NUM_DEVICES, unsigned_int_type)
 }
 #endif
 
-#if CLX_OPENCL_VERSION >= 120
+#if CL_TARGET_VERSION >= 120
 clx::image
 clx::context::image(
 	memory_flags flags,

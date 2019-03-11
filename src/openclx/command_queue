@@ -32,14 +32,14 @@ namespace clx {
 			CLX_CHECK(::clFinish(this->_ptr));
 		}
 
-		#if CLX_OPENCL_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
+		#if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
 		inline void
 		barrier() {
 			CLX_CHECK(::clEnqueueBarrier(this->_ptr));
 		}
 		#endif
 
-		#if CLX_OPENCL_VERSION >= 210
+		#if CL_TARGET_VERSION >= 210
 		void
 		make_default();
 		#endif

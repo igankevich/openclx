@@ -42,7 +42,7 @@ namespace clx {
 	typedef ::cl_device_partition_property device_partition_type;
 	typedef ::cl_device_affinity_domain device_affinity_domain_type;
 	typedef ::cl_context_properties context_properties_type;
-	#if CLX_OPENCL_VERSION >= 200
+	#if CL_TARGET_VERSION >= 200
 	typedef ::cl_queue_properties queue_properties_type;
 	typedef ::cl_device_svm_capabilities svm_capabilities_type;
 	#endif

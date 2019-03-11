@@ -11,7 +11,7 @@ namespace clx {
 	class memory_object {
 
 	public:
-		#if CLX_OPENCL_VERSION >= 110
+		#if CL_TARGET_VERSION >= 110
 		typedef void (*destructor_callback_type)(memory_object_type, void*);
 		#endif
 
@@ -31,7 +31,7 @@ namespace clx {
 		unsigned_int_type num_references() const;
 		::clx::context context() const;
 
-		#if CLX_OPENCL_VERSION >= 110
+		#if CL_TARGET_VERSION >= 110
 		inline void
 		destructor_callback(destructor_callback_type callback, void* data=nullptr) {
 			CLX_CHECK(::clSetMemObjectDestructorCallback(this->_ptr, callback, data));

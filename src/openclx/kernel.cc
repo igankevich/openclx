@@ -57,7 +57,7 @@ clx::kernel::work_group(const device& dev) const {
 	OPENCLX_WG_FIELD(wg.size, CL_KERNEL_WORK_GROUP_SIZE);
 	OPENCLX_WG_FIELD(wg.size_hint, CL_KERNEL_COMPILE_WORK_GROUP_SIZE);
 	OPENCLX_WG_FIELD(wg.local_memory_size, CL_KERNEL_LOCAL_MEM_SIZE);
-	#if CLX_OPENCL_VERSION >= 110
+	#if CL_TARGET_VERSION >= 110
 	OPENCLX_WG_FIELD(wg.private_memory_size, CL_KERNEL_PRIVATE_MEM_SIZE);
 	OPENCLX_WG_FIELD(wg.size_multiple, CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE);
 	#endif

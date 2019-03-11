@@ -35,21 +35,21 @@ namespace clx {
 		::clx::context context(const std::vector<device>& devices) const;
 		::clx::context context(device_flags types=device_flags::all) const;
 
-		#if CLX_OPENCL_VERSION >= 120
+		#if CL_TARGET_VERSION >= 120
 		inline void
 		unload_compiler() {
 			CLX_CHECK(::clUnloadPlatformCompiler(this->_ptr));
 		}
 		#endif
 
-		#if CLX_OPENCL_VERSION >= 120
+		#if CL_TARGET_VERSION >= 120
 		inline void*
 		extension_function_address(const char* name) const {
 			return ::clGetExtensionFunctionAddressForPlatform(this->_ptr, name);
 		}
 		#endif
 
-		#if CLX_OPENCL_VERSION >= 210
+		#if CL_TARGET_VERSION >= 210
 		nanoseconds timer_resolution() const;
 		#endif
 
@@ -95,7 +95,7 @@ namespace clx {
 	std::vector<platform>
 	platforms();
 
-	#if CLX_OPENCL_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
+	#if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
 	inline void
 	unload_compiler() {
 		CLX_CHECK(::clUnloadCompiler());
