@@ -1,0 +1,103 @@
+#ifndef OPENCLX_MEMORY_OBJECT
+#define OPENCLX_MEMORY_OBJECT
+
+#include <openclx/error>
+#include <openclx/memory_flags>
+#include <openclx/memory_objects>
+#include <openclx/types>
+
+namespace clx {
+
+	class memory_object {
+
+	public:
+		#if CLX_OPENCL_VERSION >= 110
+		typedef void (*destructor_callback_type)(memory_object_type, void*);
+		#endif
+
+	protected:
+		memory_object_type _ptr = nullptr;
+
+	public:
+
+		inline explicit
+		memory_object(memory_object_type ptr): _ptr(ptr) {}
+
+		memory_objects type() const;
+		memory_flags flags() const;
+		size_t size() const;
+		void* host_pointer() const;
+		unsigned_int_type num_maps() const;
+		unsigned_int_type num_references() const;
+		::clx::context context() const;
+
+		#if CLX_OPENCL_VERSION >= 110
+		inline void
+		destructor_callback(destructor_callback_type callback, void* data=nullptr) {
+			CLX_CHECK(::clSetMemObjectDestructorCallback(this->_ptr, callback, data));
+		}
+		#endif
+
+		inline memory_object_type
+		get() noexcept {
+			return this->_ptr;
+		}
+
+		inline const memory_object_type
+		get() const noexcept {
+			return this->_ptr;
+		}
+
+		memory_object() = default;
+
+		inline
+		~memory_object() { this->release(); }
+
+		inline
+		memory_object(const memory_object& rhs):
+		_ptr(rhs._ptr) { this->retain(); }
+
+		inline memory_object&
+		operator=(const memory_object& rhs) {
+			memory_object tmp(rhs);
+			this->swap(tmp);
+			return *this;
+		}
+
+		inline
+		memory_object(memory_object&& rhs):
+		_ptr(rhs._ptr) { rhs._ptr = nullptr; }
+
+		inline memory_object&
+		operator=(memory_object&& rhs) { this->swap(rhs); return *this; }
+
+		inline void
+		release() {
+			if (this->_ptr) {
+				CLX_CHECK(::clReleaseMemObject(this->_ptr));
+				this->_ptr = nullptr;
+			}
+		}
+
+		inline void
+		retain() {
+			if (this->_ptr) {
+				CLX_CHECK(::clRetainMemObject(this->_ptr));
+			}
+		}
+
+		inline void
+		swap(memory_object& rhs) {
+			std::swap(this->_ptr, rhs._ptr);
+		}
+
+	};
+
+	inline void
+	swap(memory_object& lhs, memory_object& rhs) {
+		lhs.swap(rhs);
+	}
+
+}
+
+#endif // vim:filetype=cpp

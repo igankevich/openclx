@@ -38,7 +38,7 @@ namespace clx {
 		svm_unmap=CL_COMMAND_SVM_UNMAP,
 	};
 
-	enum class command_status: command_status_type {
+	enum class execution_status: execution_status_type {
 		complete = CL_COMPLETE,
 		running = CL_RUNNING,
 		submitted = CL_SUBMITTED,

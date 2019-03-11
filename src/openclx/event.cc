@@ -3,12 +3,6 @@
 #include <openclx/context>
 #include <openclx/event>
 
-clx::event::event(const context& ctx) {
-	int_type ret = 0;
-	this->_ptr = ::clCreateUserEvent(ctx.get(), &ret);
-	CLX_CHECK(ret);
-}
-
 CLX_GET_SCALAR5(
 	clx::event::queue,
 	::clGetEventInfo,
@@ -29,8 +23,8 @@ CLX_GET_SCALAR5(
 	clx::event::status,
 	::clGetEventInfo,
 	CL_EVENT_COMMAND_EXECUTION_STATUS,
-	command_status_type,
-	::clx::command_status
+	execution_status_type,
+	::clx::execution_status
 );
 
 CLX_GET_SCALAR5(

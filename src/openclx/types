@@ -50,10 +50,12 @@ namespace clx {
 	typedef ::cl_channel_order channel_order_type;
 	typedef ::cl_channel_type channel_data_type;
 	typedef ::cl_image_format image_format_type;
+	typedef ::cl_image_desc image_descriptor_type;
 	typedef ::cl_build_status build_status_type;
 	typedef ::cl_command_type command_type;
-	typedef ::cl_int command_status_type;
-	typedef ::cl_mem_object_type memory_object_type_base;
+	typedef ::cl_int execution_status_type;
+	typedef ::cl_mem_object_type memory_objects_type;
+	typedef ::cl_mem memory_object_type;
 	typedef ::cl_mem_flags memory_flags_type;
 	typedef ::cl_mem_migration_flags migration_flags_type;
 	typedef ::cl_map_flags map_flags_type;

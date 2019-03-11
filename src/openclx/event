@@ -13,6 +13,7 @@ namespace clx {
 
 	public:
 		typedef std::chrono::nanoseconds nanoseconds;
+		typedef void (*callback_type)(event_type, int_type, void*);
 
 	private:
 		event_type _ptr = nullptr;
@@ -22,12 +23,9 @@ namespace clx {
 		inline explicit
 		event(event_type ptr): _ptr(ptr) {}
 
-		explicit
-		event(const context& ctx);
-
 		::clx::command_queue queue() const;
 		::clx::command command() const;
-		::clx::command_status status() const;
+		::clx::execution_status status() const;
 		unsigned_int_type num_references() const;
 
 		nanoseconds time_queued() const;
@@ -45,6 +43,18 @@ namespace clx {
 		wait() {
 			CLX_CHECK(::clWaitForEvents(1, &this->_ptr));
 		}
+
+		#if CLX_OPENCL_VERSION >= 110
+		inline void
+		callback(callback_type cb, execution_status status, void* data=nullptr) {
+			CLX_CHECK(::clSetEventCallback(
+				this->_ptr,
+				static_cast<int_type>(status),
+				cb,
+				data
+			));
+		}
+		#endif
 
 		event() = default;
 		inline ~event() { this->release(); }

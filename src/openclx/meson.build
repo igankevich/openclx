@@ -5,8 +5,10 @@ openclx_src = files([
 	'device.cc',
 	'error.cc',
 	'event.cc',
+	'image.cc',
 	'kernel.cc',
 	'main.cc',
+	'memory_object.cc',
 	'platform.cc',
 	'program.cc',
 ])

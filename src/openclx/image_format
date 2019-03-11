@@ -48,7 +48,7 @@ namespace clx {
 		uint32_norm_101010_2 = CL_UNORM_INT_101010_2,
 	};
 
-	struct image_format: private image_format_type {
+	struct image_format: public image_format_type {
 
 		inline
 		image_format(): image_format_type{} {}

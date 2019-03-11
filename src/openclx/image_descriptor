@@ -1,0 +1,65 @@
+#ifndef OPENCLX_IMAGE_DESCRIPTOR
+#define OPENCLX_IMAGE_DESCRIPTOR
+
+#include <openclx/image_format>
+#include <openclx/memory_objects>
+
+namespace clx {
+
+	#define CLX_IMAGE_FIELD(type, name) \
+		inline type name() const noexcept { \
+			return this->image_##name; \
+		} \
+		inline void name(type rhs) noexcept { \
+			this->image_##name = rhs; \
+		}
+
+	struct image_descriptor: public image_descriptor_type {
+
+		inline
+		image_descriptor(): image_descriptor_type{} {}
+
+		inline memory_objects
+		type() const noexcept {
+			return static_cast<memory_objects>(this->image_type);
+		}
+
+		inline void
+		type(memory_objects rhs) noexcept {
+			this->image_type = static_cast<memory_objects_type>(rhs);
+		}
+
+		inline void
+		buffer(memory_object_type rhs) {
+			this->image_descriptor_type::buffer = rhs;
+		}
+
+		inline memory_object_type
+		buffer() {
+			return this->image_descriptor_type::buffer;
+		}
+
+		inline const memory_object_type
+		buffer() const {
+			return this->image_descriptor_type::buffer;
+		}
+
+		CLX_IMAGE_FIELD(size_t, width)
+		CLX_IMAGE_FIELD(size_t, height)
+		CLX_IMAGE_FIELD(size_t, depth)
+		CLX_IMAGE_FIELD(size_t, array_size)
+		CLX_IMAGE_FIELD(size_t, row_pitch)
+		CLX_IMAGE_FIELD(size_t, slice_pitch)
+
+	};
+
+	static_assert(
+		sizeof(image_descriptor) == sizeof(image_descriptor_type),
+		"bad size"
+	);
+
+	#undef CLX_IMAGE_FIELD
+
+}
+
+#endif // vim:filetype=cpp

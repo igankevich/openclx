@@ -7,9 +7,12 @@
 #include <openclx/binary>
 #include <openclx/command_queue_flags>
 #include <openclx/error>
+#include <openclx/event>
+#include <openclx/image>
+#include <openclx/image_descriptor>
 #include <openclx/image_format>
 #include <openclx/memory_flags>
-#include <openclx/memory_object_type>
+#include <openclx/memory_objects>
 #include <openclx/types>
 
 namespace clx {
@@ -36,10 +39,21 @@ namespace clx {
 		#if CLX_OPENCL_VERSION >= 120
 		::clx::program builtin_program(const std::string& kernel_names) const;
 		unsigned_int_type num_devices() const;
+
+		::clx::image image(
+			memory_flags flags,
+			const image_format& format,
+			const image_descriptor& descriptor,
+			void* host_pointer
+		) const;
 		#endif
 
 		std::vector<image_format>
-		image_formats(memory_flags flags, memory_object_type type) const;
+		image_formats(memory_flags flags, memory_objects type) const;
+
+		#if CLX_OPENCL_VERSION >= 110
+		::clx::event event() const;
+		#endif
 
 		std::vector<context_properties_type>
 		properties() const;

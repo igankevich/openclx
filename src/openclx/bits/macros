@@ -63,4 +63,12 @@
 		CLX_GET_SCALAR4(function, key, type, return_type) \
 	}
 
+#define CLX_GET_STRUCT4(name, function, key, type) \
+	auto \
+	name() const -> type { \
+		type value{}; \
+		CLX_CHECK(function(this->_ptr, key, sizeof(type), &value, nullptr)); \
+		return value; \
+	}
+
 #endif // vim:filetype=cpp

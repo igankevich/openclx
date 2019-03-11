@@ -88,7 +88,7 @@ clx::context::builtin_program(const std::string& names) const {
 #endif
 
 std::vector<clx::image_format>
-clx::context::image_formats(memory_flags flags, memory_object_type type) const {
+clx::context::image_formats(memory_flags flags, memory_objects type) const {
 	std::vector<image_format> result(4096 / sizeof(image_format));
 	int_type ret = 0;
 	bool success = false;
@@ -97,7 +97,7 @@ clx::context::image_formats(memory_flags flags, memory_object_type type) const {
 		ret = ::clGetSupportedImageFormats(
 			this->_ptr,
 			static_cast<memory_flags_type>(flags),
-			static_cast<memory_object_type_base>(type),
+			static_cast<memory_objects_type>(type),
 			result.size(),
 			reinterpret_cast<image_format_type*>(result.data()),
 			&actual_size
@@ -132,3 +132,35 @@ clx::context::num_devices() const {
 	CLX_GET_SCALAR3(::clGetContextInfo, CL_CONTEXT_NUM_DEVICES, unsigned_int_type)
 }
 #endif
+
+#if CLX_OPENCL_VERSION >= 120
+clx::image
+clx::context::image(
+	memory_flags flags,
+	const image_format& format,
+	const image_descriptor& descriptor,
+	void* host_pointer
+) const {
+	int_type ret = 0;
+	auto img =
+		::clCreateImage(
+			this->_ptr,
+			static_cast<memory_flags_type>(flags),
+			&format,
+			&descriptor,
+			host_pointer,
+			&ret
+		);
+	CLX_CHECK(ret);
+	return static_cast<::clx::image>(img);
+}
+#endif
+
+clx::event
+clx::context::event() const {
+	int_type ret = 0;
+	auto ev = ::clCreateUserEvent(this->_ptr, &ret);
+	CLX_CHECK(ret);
+	return static_cast<::clx::event>(ev);
+}
+
