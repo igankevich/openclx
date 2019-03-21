@@ -3,75 +3,66 @@
 #include <openclx/context>
 #include <openclx/event>
 
-CLX_GET_SCALAR5(
+CLX_METHOD_SCALAR(
 	clx::event::queue,
 	::clGetEventInfo,
 	CL_EVENT_COMMAND_QUEUE,
-	command_queue_type,
 	::clx::command_queue
 );
 
-CLX_GET_SCALAR5(
+CLX_METHOD_SCALAR(
 	clx::event::command,
 	::clGetEventInfo,
 	CL_EVENT_COMMAND_TYPE,
-	command_type,
 	::clx::command
 );
 
-CLX_GET_SCALAR5(
+CLX_METHOD_SCALAR(
 	clx::event::status,
 	::clGetEventInfo,
 	CL_EVENT_COMMAND_EXECUTION_STATUS,
-	execution_status_type,
 	::clx::execution_status
 );
 
-CLX_GET_SCALAR5(
+CLX_METHOD_SCALAR(
 	clx::event::num_references,
 	::clGetEventInfo,
 	CL_EVENT_REFERENCE_COUNT,
-	unsigned_int_type,
 	unsigned_int_type
 );
 
-CLX_GET_SCALAR5(
+CLX_METHOD_SCALAR(
 	clx::event::time_queued,
 	::clGetEventProfilingInfo,
 	CL_PROFILING_COMMAND_QUEUED,
-	unsigned_long_type,
 	nanoseconds
 );
 
-CLX_GET_SCALAR5(
+CLX_METHOD_SCALAR(
 	clx::event::time_submitted,
 	::clGetEventProfilingInfo,
 	CL_PROFILING_COMMAND_SUBMIT,
-	unsigned_long_type,
 	nanoseconds
 );
 
-CLX_GET_SCALAR5(
+CLX_METHOD_SCALAR(
 	clx::event::time_started,
 	::clGetEventProfilingInfo,
 	CL_PROFILING_COMMAND_START,
-	unsigned_long_type,
 	nanoseconds
 );
 
-CLX_GET_SCALAR5(
+CLX_METHOD_SCALAR(
 	clx::event::time_ended,
 	::clGetEventProfilingInfo,
 	CL_PROFILING_COMMAND_END,
-	unsigned_long_type,
 	nanoseconds
 );
 
-CLX_GET_SCALAR5(
+CLX_METHOD_SCALAR(
 	clx::event::time_completed,
 	::clGetEventProfilingInfo,
 	CL_PROFILING_COMMAND_COMPLETE,
-	unsigned_long_type,
 	nanoseconds
 );
 

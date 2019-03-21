@@ -36,6 +36,7 @@ namespace clx {
 		#if CL_TARGET_VERSION >= 120
 		::clx::program builtin_program(const std::string& kernel_names) const;
 		unsigned_int_type num_devices() const;
+		#endif
 
 		::clx::image
 		image(
@@ -44,7 +45,6 @@ namespace clx {
 			const image_descriptor& descriptor,
 			void* host_pointer=nullptr
 		) const;
-		#endif
 
 		std::vector<image_format>
 		image_formats(memory_flags flags, memory_objects type) const;

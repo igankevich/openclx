@@ -54,6 +54,16 @@ namespace clx {
 			this->frame().emplace_back(std::forward<event>(ev));
 		}
 
+		inline const command_queue&
+		queue() const {
+			return this->_queue;
+		}
+
+		inline command_queue
+		queue() {
+			return this->_queue;
+		}
+
 	private:
 
 		inline void

@@ -14,10 +14,11 @@
 CLX_WARNING_PUSH
 CLX_IGNORED_ATTRIBUTES
 
-std::vector<clx::device>
-clx::context::devices() const {
-	CLX_GET_ARRAY(::clGetContextInfo, CL_CONTEXT_DEVICES, device_type, device);
-}
+CLX_METHOD_ARRAY(
+	clx::context::devices,
+	::clGetContextInfo, CL_CONTEXT_DEVICES,
+	device
+)
 
 std::vector<clx::command_queue>
 clx::context::command_queues(command_queue_flags flags) const {
@@ -121,29 +122,26 @@ clx::context::image_formats(memory_flags flags, memory_objects type) const {
 	return result;
 }
 
-std::vector<clx::context_properties_type>
-clx::context::properties() const {
-	CLX_GET_ARRAY(
-		::clGetContextInfo,
-		CL_CONTEXT_PROPERTIES,
-		context_properties_type,
-		context_properties_type
-	);
-}
+CLX_METHOD_ARRAY(
+	clx::context::properties,
+	::clGetContextInfo, CL_CONTEXT_PROPERTIES,
+	context_properties_type
+);
 
-clx::unsigned_int_type
-clx::context::num_references() const {
-	CLX_GET_SCALAR3(::clGetContextInfo, CL_CONTEXT_REFERENCE_COUNT, unsigned_int_type)
-}
+CLX_METHOD_SCALAR(
+	clx::context::num_references,
+	::clGetContextInfo, CL_CONTEXT_REFERENCE_COUNT,
+	unsigned_int_type
+)
 
 #if CL_TARGET_VERSION >= 120
-clx::unsigned_int_type
-clx::context::num_devices() const {
-	CLX_GET_SCALAR3(::clGetContextInfo, CL_CONTEXT_NUM_DEVICES, unsigned_int_type)
-}
+CLX_METHOD_SCALAR(
+	clx::context::num_devices,
+	::clGetContextInfo, CL_CONTEXT_NUM_DEVICES,
+	unsigned_int_type
+)
 #endif
 
-#if CL_TARGET_VERSION >= 120
 clx::image
 clx::context::image(
 	memory_flags flags,
@@ -152,7 +150,9 @@ clx::context::image(
 	void* host_pointer
 ) const {
 	int_type ret = 0;
-	auto img =
+	memory_type img = nullptr;
+	#if CL_TARGET_VERSION >= 120
+	img =
 		::clCreateImage(
 			this->_ptr,
 			static_cast<memory_flags_type>(flags),
@@ -161,10 +161,36 @@ clx::context::image(
 			host_pointer,
 			&ret
 		);
+	#else
+	if (descriptor.depth() == 0) {
+		img = ::clCreateImage2D(
+			this->_ptr,
+			static_cast<memory_flags_type>(flags),
+			&format,
+			descriptor.width(),
+			descriptor.height(),
+			descriptor.row_pitch(),
+			host_pointer,
+			&ret
+		);
+	} else {
+		img = ::clCreateImage3D(
+			this->_ptr,
+			static_cast<memory_flags_type>(flags),
+			&format,
+			descriptor.width(),
+			descriptor.height(),
+			descriptor.depth(),
+			descriptor.row_pitch(),
+			descriptor.slice_pitch(),
+			host_pointer,
+			&ret
+		);
+	}
+	#endif
 	CLX_CHECK(ret);
 	return static_cast<::clx::image>(img);
 }
-#endif
 
 clx::event
 clx::context::event() const {
@@ -200,16 +226,7 @@ clx::context::sampler(
 	filter_mode fmode
 ) const {
 	int_type ret = 0;
-	#if CL_TARGET_VERSION <= 120
-	auto sm =
-		::clCreateSampler(
-			this->_ptr,
-			static_cast<bool_type>(normalised),
-			static_cast<addressing_mode_type>(amode),
-			static_cast<filter_mode_type>(fmode),
-			&ret
-		);
-	#else
+	#if CL_TARGET_VERSION >= 200
 	std::vector<sampler_properties_type> props{
 		sampler_properties_type(CL_SAMPLER_NORMALIZED_COORDS),
 		sampler_properties_type(normalised),
@@ -220,6 +237,15 @@ clx::context::sampler(
 		sampler_properties_type(0)
 	};
 	auto sm = ::clCreateSamplerWithProperties(this->_ptr, props.data(), &ret);
+	#else
+	auto sm =
+		::clCreateSampler(
+			this->_ptr,
+			static_cast<bool_type>(normalised),
+			static_cast<addressing_mode_type>(amode),
+			static_cast<filter_mode_type>(fmode),
+			&ret
+		);
 	#endif
 	CLX_CHECK(ret);
 	return static_cast<::clx::sampler>(sm);

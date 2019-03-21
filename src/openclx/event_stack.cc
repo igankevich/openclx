@@ -58,6 +58,9 @@ clx::event_stack::barrier() {
 	auto& frame = this->frame();
 	event_type ret;
 	{
+		#if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
+		CLX_CHECK(::clEnqueueBarrier(this->_queue.get(), &ret));
+		#else
 		step_guard g(this->_sync, frame);
 		CLX_CHECK(::clEnqueueBarrierWithWaitList(
 			this->_queue.get(),
@@ -65,6 +68,7 @@ clx::event_stack::barrier() {
 			g.events,
 			&ret
 		));
+		#endif
 	}
 	frame.emplace_back(std::move(ret));
 }
@@ -74,6 +78,9 @@ clx::event_stack::marker() {
 	auto& frame = this->frame();
 	event_type ret;
 	{
+		#if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
+		CLX_CHECK(::clEnqueueMarker(this->_queue.get(), &ret));
+		#else
 		step_guard g(this->_sync, frame);
 		CLX_CHECK(::clEnqueueMarkerWithWaitList(
 			this->_queue.get(),
@@ -81,6 +88,7 @@ clx::event_stack::marker() {
 			g.events,
 			&ret
 		));
+		#endif
 	}
 	frame.emplace_back(std::move(ret));
 }

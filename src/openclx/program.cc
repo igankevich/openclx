@@ -4,24 +4,6 @@
 #include <openclx/kernel>
 #include <openclx/program>
 
-#define CLX_PROGRAM_GET_STRING(name, key) \
-	std::string \
-	clx::program::name() const { \
-		CLX_GET_STRING(::clGetProgramInfo, key); \
-	}
-
-#define CLX_PROGRAM_GET_SCALAR4(name, key, type, return_type) \
-	auto \
-	clx::program::name() const -> return_type { \
-		CLX_GET_SCALAR4(::clGetProgramInfo, key, type, return_type) \
-	}
-
-#define CLX_PROGRAM_GET_ARRAY(name, key, type, return_type) \
-	auto \
-	clx::program::name() const -> std::vector<return_type> { \
-		CLX_GET_ARRAY(::clGetProgramInfo, key, type, return_type) \
-	}
-
 void
 clx::program::build(const std::string& options) {
 	const auto& devices = this->devices();
@@ -37,16 +19,10 @@ clx::program::build(const std::string& options) {
 
 clx::build_status
 clx::program::build_status(const device& dev) const {
-	::clx::build_status value = ::clx::build_status::none;
-	CLX_CHECK(::clGetProgramBuildInfo(
-		this->_ptr,
-		dev.get(),
-		CL_PROGRAM_BUILD_STATUS,
-		sizeof(value),
-		&value,
-		nullptr
-	));
-	return value;
+	CLX_GET_SCALAR_ARG(
+		::clGetProgramBuildInfo, dev.get(), CL_PROGRAM_BUILD_STATUS,
+		::clx::build_status
+	)
 }
 
 std::string
@@ -56,7 +32,7 @@ clx::program::options(const device& dev) const {
 	bool success = false;
 	size_t actual_size = 0;
 	while (!success) {
-		ret = clGetProgramBuildInfo(
+		ret = ::clGetProgramBuildInfo(
 			this->_ptr,
 			dev.get(),
 			CL_PROGRAM_BUILD_OPTIONS,
@@ -80,7 +56,7 @@ clx::program::build_log(const device& dev) const {
 	bool success = false;
 	size_t actual_size = 0;
 	while (!success) {
-		ret = clGetProgramBuildInfo(
+		ret = ::clGetProgramBuildInfo(
 			this->_ptr,
 			dev.get(),
 			CL_PROGRAM_BUILD_LOG,
@@ -154,8 +130,8 @@ clx::program::kernel(const char* name) const {
 	return static_cast<::clx::kernel>(krnl);
 }
 
-CLX_PROGRAM_GET_SCALAR4(context, CL_PROGRAM_CONTEXT, context_type, ::clx::context)
-CLX_PROGRAM_GET_SCALAR4(num_references, CL_PROGRAM_REFERENCE_COUNT, unsigned_int_type, unsigned_int_type)
-CLX_PROGRAM_GET_SCALAR4(num_devices, CL_PROGRAM_NUM_DEVICES, unsigned_int_type, unsigned_int_type)
-CLX_PROGRAM_GET_ARRAY(devices, CL_PROGRAM_DEVICES, device_type, device)
-CLX_PROGRAM_GET_STRING(source, CL_PROGRAM_SOURCE)
+CLX_METHOD_SCALAR(clx::program::context, ::clGetProgramInfo, CL_PROGRAM_CONTEXT, ::clx::context)
+CLX_METHOD_SCALAR(clx::program::num_references, ::clGetProgramInfo, CL_PROGRAM_REFERENCE_COUNT, unsigned_int_type)
+CLX_METHOD_SCALAR(clx::program::num_devices, ::clGetProgramInfo, CL_PROGRAM_NUM_DEVICES, unsigned_int_type)
+CLX_METHOD_ARRAY(clx::program::devices, ::clGetProgramInfo, CL_PROGRAM_DEVICES, device)
+CLX_METHOD_STRING(clx::program::source, ::clGetProgramInfo, CL_PROGRAM_SOURCE)

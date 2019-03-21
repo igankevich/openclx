@@ -102,6 +102,13 @@ namespace clx {
 	}
 	#endif
 
+	#if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
+	inline void*
+	extension_function_address(const char* name) {
+		return ::clGetExtensionFunctionAddress(name);
+	}
+	#endif
+
 }
 
 #endif // vim:filetype=cpp

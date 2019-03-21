@@ -7,43 +7,20 @@
 CLX_WARNING_PUSH
 CLX_IGNORED_ATTRIBUTES
 
-#define CLX_DEVICE_GET_STRING(name, key) \
-	std::string \
-	clx::device::name() const { \
-		CLX_GET_STRING(::clGetDeviceInfo, key); \
-	}
-
-#define CLX_DEVICE_GET_SCALAR3(name, key, type) \
-	auto \
-	clx::device::name() const -> type { \
-		CLX_GET_SCALAR3(::clGetDeviceInfo, key, type) \
-	}
-
-#define CLX_DEVICE_GET_SCALAR4(name, key, type, return_type) \
-	auto \
-	clx::device::name() const -> return_type { \
-		CLX_GET_SCALAR4(::clGetDeviceInfo, key, type, return_type) \
-	}
-
 #define CLX_DEVICE_PREFERRED_VECTOR_WIDTH(type, type2) \
 	template <> \
 	clx::unsigned_int_type \
 	clx::device::preferred_vector_width<clx::type>() const { \
-		CLX_GET_SCALAR3(::clGetDeviceInfo, type2, unsigned_int_type) \
+		CLX_BODY_SCALAR(::clGetDeviceInfo, \
+			CL_DEVICE_PREFERRED_VECTOR_WIDTH_##type2, unsigned_int_type) \
 	}
 
-#define CLX_DEVICE_GET_ARRAY(name, key, type, return_type) \
-	auto \
-	clx::device::name() const -> std::vector<return_type> { \
-		CLX_GET_ARRAY(::clGetDeviceInfo, key, type, return_type) \
-	}
-
-CLX_DEVICE_GET_STRING(name, CL_DEVICE_NAME)
-CLX_DEVICE_GET_STRING(profile, CL_DEVICE_PROFILE)
-CLX_DEVICE_GET_STRING(vendor, CL_DEVICE_VENDOR)
-CLX_DEVICE_GET_STRING(version, CL_DEVICE_VERSION)
-CLX_DEVICE_GET_STRING(driver_version, CL_DRIVER_VERSION)
-CLX_DEVICE_GET_STRING(extensions, CL_DEVICE_EXTENSIONS)
+CLX_METHOD_STRING(clx::device::name, ::clGetDeviceInfo, CL_DEVICE_NAME)
+CLX_METHOD_STRING(clx::device::profile, ::clGetDeviceInfo, CL_DEVICE_PROFILE)
+CLX_METHOD_STRING(clx::device::vendor, ::clGetDeviceInfo, CL_DEVICE_VENDOR)
+CLX_METHOD_STRING(clx::device::version, ::clGetDeviceInfo, CL_DEVICE_VERSION)
+CLX_METHOD_STRING(clx::device::driver_version, ::clGetDeviceInfo, CL_DRIVER_VERSION)
+CLX_METHOD_STRING(clx::device::extensions, ::clGetDeviceInfo, CL_DEVICE_EXTENSIONS)
 
 #if CL_TARGET_VERSION >= 210
 auto
@@ -66,10 +43,10 @@ clx::device::device_and_host_time() const -> std::pair<nanoseconds,nanoseconds> 
 }
 #endif
 
-CLX_DEVICE_GET_SCALAR4(timer_resolution, CL_DEVICE_PROFILING_TIMER_RESOLUTION, size_t, nanoseconds)
+CLX_METHOD_SCALAR(clx::device::timer_resolution, ::clGetDeviceInfo, CL_DEVICE_PROFILING_TIMER_RESOLUTION, nanoseconds)
 
-CLX_DEVICE_GET_SCALAR3(vendor_id, CL_DEVICE_VENDOR_ID, unsigned_int_type)
-CLX_DEVICE_GET_SCALAR4(platform, CL_DEVICE_PLATFORM, platform_type, ::clx::platform)
+CLX_METHOD_SCALAR(clx::device::vendor_id, ::clGetDeviceInfo, CL_DEVICE_VENDOR_ID, unsigned_int_type)
+CLX_METHOD_SCALAR(clx::device::platform, ::clGetDeviceInfo, CL_DEVICE_PLATFORM, ::clx::platform)
 
 
 clx::context clx::device::context() const {
@@ -117,70 +94,70 @@ clx::device::queue(
 	return static_cast<::clx::command_queue>(result);
 }
 
-CLX_DEVICE_GET_SCALAR4(available, CL_DEVICE_AVAILABLE, cl_bool, bool)
-CLX_DEVICE_GET_SCALAR4(compiler_available, CL_DEVICE_COMPILER_AVAILABLE, cl_bool, bool)
-CLX_DEVICE_GET_SCALAR4(little_endian, CL_DEVICE_ENDIAN_LITTLE, cl_bool, bool)
-CLX_DEVICE_GET_SCALAR4(supports_error_correction, CL_DEVICE_ERROR_CORRECTION_SUPPORT, cl_bool, bool)
-CLX_DEVICE_GET_SCALAR4(supports_images, CL_DEVICE_IMAGE_SUPPORT, cl_bool, bool)
+CLX_METHOD_BOOL(clx::device::available, ::clGetDeviceInfo, CL_DEVICE_AVAILABLE)
+CLX_METHOD_BOOL(clx::device::compiler_available, ::clGetDeviceInfo, CL_DEVICE_COMPILER_AVAILABLE)
+CLX_METHOD_BOOL(clx::device::little_endian, ::clGetDeviceInfo, CL_DEVICE_ENDIAN_LITTLE)
+CLX_METHOD_BOOL(clx::device::supports_error_correction, ::clGetDeviceInfo, CL_DEVICE_ERROR_CORRECTION_SUPPORT)
+CLX_METHOD_BOOL(clx::device::supports_images, ::clGetDeviceInfo, CL_DEVICE_IMAGE_SUPPORT)
 
-CLX_DEVICE_GET_SCALAR3(image2d_max_width, CL_DEVICE_IMAGE2D_MAX_WIDTH, size_t)
-CLX_DEVICE_GET_SCALAR3(image2d_max_height, CL_DEVICE_IMAGE2D_MAX_HEIGHT, size_t)
-CLX_DEVICE_GET_SCALAR3(image3d_max_width, CL_DEVICE_IMAGE3D_MAX_WIDTH, size_t)
-CLX_DEVICE_GET_SCALAR3(image3d_max_height, CL_DEVICE_IMAGE3D_MAX_HEIGHT, size_t)
-CLX_DEVICE_GET_SCALAR3(image3d_max_depth, CL_DEVICE_IMAGE3D_MAX_DEPTH, size_t)
+CLX_METHOD_SCALAR(clx::device::image2d_max_width, ::clGetDeviceInfo, CL_DEVICE_IMAGE2D_MAX_WIDTH, size_t)
+CLX_METHOD_SCALAR(clx::device::image2d_max_height, ::clGetDeviceInfo, CL_DEVICE_IMAGE2D_MAX_HEIGHT, size_t)
+CLX_METHOD_SCALAR(clx::device::image3d_max_width, ::clGetDeviceInfo, CL_DEVICE_IMAGE3D_MAX_WIDTH, size_t)
+CLX_METHOD_SCALAR(clx::device::image3d_max_height, ::clGetDeviceInfo, CL_DEVICE_IMAGE3D_MAX_HEIGHT, size_t)
+CLX_METHOD_SCALAR(clx::device::image3d_max_depth, ::clGetDeviceInfo, CL_DEVICE_IMAGE3D_MAX_DEPTH, size_t)
 
-CLX_DEVICE_GET_SCALAR3(global_memory_size, CL_DEVICE_GLOBAL_MEM_SIZE, unsigned_long_type)
-CLX_DEVICE_GET_SCALAR3(global_memory_cache_size, CL_DEVICE_GLOBAL_MEM_CACHE_SIZE, unsigned_long_type)
-CLX_DEVICE_GET_SCALAR3(global_memory_cacheline_size, CL_DEVICE_GLOBAL_MEM_CACHELINE_SIZE, unsigned_int_type)
-CLX_DEVICE_GET_SCALAR4(global_memory_cache_type, CL_DEVICE_GLOBAL_MEM_CACHE_TYPE, device_memory_cache_type, device_memory_cache)
-CLX_DEVICE_GET_SCALAR3(local_memory_size, CL_DEVICE_LOCAL_MEM_SIZE, unsigned_long_type)
-CLX_DEVICE_GET_SCALAR4(local_memory_type, CL_DEVICE_LOCAL_MEM_TYPE, device_local_memory_type, device_local_memory)
+CLX_METHOD_SCALAR(clx::device::global_memory_size, ::clGetDeviceInfo, CL_DEVICE_GLOBAL_MEM_SIZE, unsigned_long_type)
+CLX_METHOD_SCALAR(clx::device::global_memory_cache_size, ::clGetDeviceInfo, CL_DEVICE_GLOBAL_MEM_CACHE_SIZE, unsigned_long_type)
+CLX_METHOD_SCALAR(clx::device::global_memory_cacheline_size, ::clGetDeviceInfo, CL_DEVICE_GLOBAL_MEM_CACHELINE_SIZE, unsigned_int_type)
+CLX_METHOD_SCALAR(clx::device::global_memory_cache_type, ::clGetDeviceInfo, CL_DEVICE_GLOBAL_MEM_CACHE_TYPE, device_memory_cache)
+CLX_METHOD_SCALAR(clx::device::local_memory_size, ::clGetDeviceInfo, CL_DEVICE_LOCAL_MEM_SIZE, unsigned_long_type)
+CLX_METHOD_SCALAR(clx::device::local_memory_type, ::clGetDeviceInfo, CL_DEVICE_LOCAL_MEM_TYPE, device_local_memory)
 
-CLX_DEVICE_GET_SCALAR3(address_bits, CL_DEVICE_ADDRESS_BITS, unsigned_int_type)
-CLX_DEVICE_GET_SCALAR3(base_address_alignment, CL_DEVICE_MEM_BASE_ADDR_ALIGN, unsigned_int_type)
-CLX_DEVICE_GET_SCALAR3(min_data_alignment, CL_DEVICE_MIN_DATA_TYPE_ALIGN_SIZE, unsigned_int_type)
+CLX_METHOD_SCALAR(clx::device::address_bits, ::clGetDeviceInfo, CL_DEVICE_ADDRESS_BITS, unsigned_int_type)
+CLX_METHOD_SCALAR(clx::device::base_address_alignment, ::clGetDeviceInfo, CL_DEVICE_MEM_BASE_ADDR_ALIGN, unsigned_int_type)
+CLX_METHOD_SCALAR(clx::device::min_data_alignment, ::clGetDeviceInfo, CL_DEVICE_MIN_DATA_TYPE_ALIGN_SIZE, unsigned_int_type)
 
-CLX_DEVICE_GET_SCALAR4(execution_capabilities, CL_DEVICE_EXECUTION_CAPABILITIES, execution_flags_type, execution_flags)
+CLX_METHOD_SCALAR(clx::device::execution_capabilities, ::clGetDeviceInfo, CL_DEVICE_EXECUTION_CAPABILITIES, execution_flags)
 
 template <>
 clx::floating_point_flags
 clx::device::floating_point_capabilities<clx::half_type>() const {
-	CLX_GET_SCALAR4(::clGetDeviceInfo, CL_DEVICE_HALF_FP_CONFIG, floating_point_flags_type, floating_point_flags)
+	CLX_BODY_SCALAR(::clGetDeviceInfo, CL_DEVICE_HALF_FP_CONFIG, floating_point_flags)
 }
 
 template <>
 clx::floating_point_flags
 clx::device::floating_point_capabilities<clx::float_type>() const {
-	CLX_GET_SCALAR4(::clGetDeviceInfo, CL_DEVICE_SINGLE_FP_CONFIG, floating_point_flags_type, floating_point_flags)
+	CLX_BODY_SCALAR(::clGetDeviceInfo, CL_DEVICE_SINGLE_FP_CONFIG, floating_point_flags)
 }
 
 template <>
 clx::floating_point_flags
 clx::device::floating_point_capabilities<clx::double_type>() const {
-	CLX_GET_SCALAR4(::clGetDeviceInfo, CL_DEVICE_DOUBLE_FP_CONFIG, floating_point_flags_type, floating_point_flags)
+	CLX_BODY_SCALAR(::clGetDeviceInfo, CL_DEVICE_DOUBLE_FP_CONFIG, floating_point_flags)
 }
 
-CLX_DEVICE_PREFERRED_VECTOR_WIDTH(char_type, CL_DEVICE_PREFERRED_VECTOR_WIDTH_CHAR)
-CLX_DEVICE_PREFERRED_VECTOR_WIDTH(short_type, CL_DEVICE_PREFERRED_VECTOR_WIDTH_SHORT)
-CLX_DEVICE_PREFERRED_VECTOR_WIDTH(int_type, CL_DEVICE_PREFERRED_VECTOR_WIDTH_INT)
-CLX_DEVICE_PREFERRED_VECTOR_WIDTH(long_type, CL_DEVICE_PREFERRED_VECTOR_WIDTH_LONG)
-CLX_DEVICE_PREFERRED_VECTOR_WIDTH(float_type, CL_DEVICE_PREFERRED_VECTOR_WIDTH_FLOAT)
-CLX_DEVICE_PREFERRED_VECTOR_WIDTH(double_type, CL_DEVICE_PREFERRED_VECTOR_WIDTH_DOUBLE)
+CLX_DEVICE_PREFERRED_VECTOR_WIDTH(char_type, CHAR)
+CLX_DEVICE_PREFERRED_VECTOR_WIDTH(short_type, SHORT)
+CLX_DEVICE_PREFERRED_VECTOR_WIDTH(int_type, INT)
+CLX_DEVICE_PREFERRED_VECTOR_WIDTH(long_type, LONG)
+CLX_DEVICE_PREFERRED_VECTOR_WIDTH(float_type, FLOAT)
+CLX_DEVICE_PREFERRED_VECTOR_WIDTH(double_type, DOUBLE)
 
-CLX_DEVICE_GET_SCALAR3(max_clock_frequency, CL_DEVICE_MAX_CLOCK_FREQUENCY, unsigned_int_type)
-CLX_DEVICE_GET_SCALAR3(max_compute_units, CL_DEVICE_MAX_COMPUTE_UNITS, unsigned_int_type)
+CLX_METHOD_SCALAR(clx::device::max_clock_frequency, ::clGetDeviceInfo, CL_DEVICE_MAX_CLOCK_FREQUENCY, unsigned_int_type)
+CLX_METHOD_SCALAR(clx::device::max_compute_units, ::clGetDeviceInfo, CL_DEVICE_MAX_COMPUTE_UNITS, unsigned_int_type)
 
-CLX_DEVICE_GET_SCALAR3(max_constant_arguments, CL_DEVICE_MAX_CONSTANT_ARGS, unsigned_int_type)
-CLX_DEVICE_GET_SCALAR3(max_read_image_arguments, CL_DEVICE_MAX_READ_IMAGE_ARGS, unsigned_int_type)
-CLX_DEVICE_GET_SCALAR3(max_write_image_arguments, CL_DEVICE_MAX_WRITE_IMAGE_ARGS, unsigned_int_type)
-CLX_DEVICE_GET_SCALAR3(max_samplers, CL_DEVICE_MAX_SAMPLERS, unsigned_int_type)
-CLX_DEVICE_GET_SCALAR3(max_parameter_size, CL_DEVICE_MAX_PARAMETER_SIZE, size_t)
+CLX_METHOD_SCALAR(clx::device::max_constant_arguments, ::clGetDeviceInfo, CL_DEVICE_MAX_CONSTANT_ARGS, unsigned_int_type)
+CLX_METHOD_SCALAR(clx::device::max_read_image_arguments, ::clGetDeviceInfo, CL_DEVICE_MAX_READ_IMAGE_ARGS, unsigned_int_type)
+CLX_METHOD_SCALAR(clx::device::max_write_image_arguments, ::clGetDeviceInfo, CL_DEVICE_MAX_WRITE_IMAGE_ARGS, unsigned_int_type)
+CLX_METHOD_SCALAR(clx::device::max_samplers, ::clGetDeviceInfo, CL_DEVICE_MAX_SAMPLERS, unsigned_int_type)
+CLX_METHOD_SCALAR(clx::device::max_parameter_size, ::clGetDeviceInfo, CL_DEVICE_MAX_PARAMETER_SIZE, size_t)
 
-CLX_DEVICE_GET_SCALAR3(max_constant_buffer_size, CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE, unsigned_long_type)
-CLX_DEVICE_GET_SCALAR3(max_memory_allocation_size, CL_DEVICE_MAX_MEM_ALLOC_SIZE, unsigned_long_type)
+CLX_METHOD_SCALAR(clx::device::max_constant_buffer_size, ::clGetDeviceInfo, CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE, unsigned_long_type)
+CLX_METHOD_SCALAR(clx::device::max_memory_allocation_size, ::clGetDeviceInfo, CL_DEVICE_MAX_MEM_ALLOC_SIZE, unsigned_long_type)
 
-CLX_DEVICE_GET_SCALAR3(max_work_group_size, CL_DEVICE_MAX_WORK_GROUP_SIZE, size_t)
-CLX_DEVICE_GET_SCALAR3(max_work_item_dimensions, CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS, unsigned_int_type)
+CLX_METHOD_SCALAR(clx::device::max_work_group_size, ::clGetDeviceInfo, CL_DEVICE_MAX_WORK_GROUP_SIZE, size_t)
+CLX_METHOD_SCALAR(clx::device::max_work_item_dimensions, ::clGetDeviceInfo, CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS, unsigned_int_type)
 
 std::vector<size_t>
 clx::device::max_work_item_sizes() const {
@@ -205,15 +182,15 @@ clx::device::max_work_item_sizes() const {
 	return value;
 }
 
-CLX_DEVICE_GET_SCALAR4(queue_properties, CL_DEVICE_QUEUE_PROPERTIES, command_queue_flags_type, command_queue_flags)
-CLX_DEVICE_GET_SCALAR4(type, CL_DEVICE_TYPE, device_flags_type, device_flags)
+CLX_METHOD_SCALAR(clx::device::queue_properties, ::clGetDeviceInfo, CL_DEVICE_QUEUE_PROPERTIES, command_queue_flags)
+CLX_METHOD_SCALAR(clx::device::type, ::clGetDeviceInfo, CL_DEVICE_TYPE, device_flags)
 
 #if CL_TARGET_VERSION >= 120
-CLX_DEVICE_GET_SCALAR4(parent, CL_DEVICE_PARENT_DEVICE, device_type, device)
-CLX_DEVICE_GET_SCALAR3(max_subordinate_devices, CL_DEVICE_PARTITION_MAX_SUB_DEVICES, unsigned_int_type)
-CLX_DEVICE_GET_SCALAR4(affinity_domain, CL_DEVICE_PARTITION_AFFINITY_DOMAIN, device_affinity_domain_type, device_affinity_domain)
-CLX_DEVICE_GET_ARRAY(supported_partitions, CL_DEVICE_PARTITION_PROPERTIES, device_partition_type, device_partition)
-CLX_DEVICE_GET_ARRAY(partitions, CL_DEVICE_PARTITION_TYPE, device_partition_type, device_partition)
+CLX_METHOD_SCALAR(clx::device::parent, ::clGetDeviceInfo, CL_DEVICE_PARENT_DEVICE, device)
+CLX_METHOD_SCALAR(clx::device::max_subordinate_devices, ::clGetDeviceInfo, CL_DEVICE_PARTITION_MAX_SUB_DEVICES, unsigned_int_type)
+CLX_METHOD_SCALAR(clx::device::affinity_domain, ::clGetDeviceInfo, CL_DEVICE_PARTITION_AFFINITY_DOMAIN, device_affinity_domain)
+CLX_METHOD_ARRAY(clx::device::supported_partitions, ::clGetDeviceInfo, CL_DEVICE_PARTITION_PROPERTIES, device_partition)
+CLX_METHOD_ARRAY(clx::device::partitions, ::clGetDeviceInfo, CL_DEVICE_PARTITION_TYPE, device_partition)
 #endif
 
 #if CL_TARGET_VERSION >= 120
