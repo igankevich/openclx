@@ -6,14 +6,16 @@
 
 namespace clx {
 
-	enum class svm_capabilities: svm_capabilities_type {
+	#if CL_TARGET_VERSION >= 200
+	enum class svm_flags: svm_flags_type {
 		cl_device_svm_coarse_grain_buffer=CL_DEVICE_SVM_COARSE_GRAIN_BUFFER,
 		cl_device_svm_fine_grain_buffer=CL_DEVICE_SVM_FINE_GRAIN_BUFFER,
 		cl_device_svm_fine_grain_system=CL_DEVICE_SVM_FINE_GRAIN_SYSTEM,
 		cl_device_svm_atomics=CL_DEVICE_SVM_ATOMICS,
 	};
 
-	CLX_FLAGS(svm_capabilities, svm_capabilities_type)
+	CLX_FLAGS(svm_flags, svm_flags_type)
+	#endif
 
 }
 

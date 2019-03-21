@@ -46,7 +46,7 @@ namespace clx {
 
 		::clx::device device() const;
 		::clx::context context() const;
-		std::vector<command_queue_properties_type> properties() const;
+		std::vector<command_queue_flags_type> properties() const;
 		unsigned_int_type num_references() const;
 
 		inline command_queue_type

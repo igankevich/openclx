@@ -9,8 +9,10 @@ namespace clx {
 	enum class command_queue_flags: command_queue_flags_type {
 		out_of_order=CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE,
 		profiling=CL_QUEUE_PROFILING_ENABLE,
+		#if CL_TARGET_VERSION >= 200
 		on_device=CL_QUEUE_ON_DEVICE,
 		on_device_default=CL_QUEUE_ON_DEVICE_DEFAULT,
+		#endif
 	};
 
 	CLX_FLAGS(command_queue_flags, command_queue_flags_type)

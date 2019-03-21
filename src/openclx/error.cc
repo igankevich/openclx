@@ -31,10 +31,13 @@ clx::to_string(errc rhs) {
 			return "Build program failure";
 		case errc::map_failure:
 			return "Map failure";
+		#if CL_TARGET_VERSION >= 110
 		case errc::misaligned_sub_buffer_offset:
 			return "Misaligned sub buffer offset";
 		case errc::exec_status_error_for_events_in_wait_list:
 			return "Exec status error for events in wait list";
+		#endif
+		#if CL_TARGET_VERSION >= 120
 		case errc::compile_program_failure:
 			return "Compile program failure";
 		case errc::linker_not_available:
@@ -45,6 +48,7 @@ clx::to_string(errc rhs) {
 			return "Device partition failed";
 		case errc::kernel_arg_info_not_available:
 			return "Kernel argument information not available";
+		#endif
 		case errc::invalid_value:
 			return "Invalid value";
 		case errc::invalid_device_type:
@@ -113,8 +117,11 @@ clx::to_string(errc rhs) {
 			return "Invalid mip level";
 		case errc::invalid_global_work_size:
 			return "Invalid global work size";
+		#if CL_TARGET_VERSION >= 110
 		case errc::invalid_property:
 			return "Invalid property";
+		#endif
+		#if CL_TARGET_VERSION >= 120
 		case errc::invalid_image_descriptor:
 			return "Invalid image descriptor";
 		case errc::invalid_compiler_options:
@@ -123,24 +130,37 @@ clx::to_string(errc rhs) {
 			return "Invalid linker options";
 		case errc::invalid_device_partition_count:
 			return "Invalid device partition count";
+		#endif
+		#if CL_TARGET_VERSION >= 200
 		case errc::invalid_pipe_size:
 			return "Invalid pipe size";
 		case errc::invalid_device_queue:
 			return "Invalid device queue";
+		#endif
+		#if CL_TARGET_VERSION >= 220
 		case errc::invalid_spec_id:
 			return "Invalid spec id";
 		case errc::max_size_restriction_exceeded:
 			return "Max size restriction exceeded";
+		#endif
 		case errc::illegal_read_or_write_to_a_buffer:
 			return "Illegal read or write to a buffer";
+		#if defined(CL_INVALID_GL_SHAREGROUP_REFERENCE_KHR)
 		case errc::invalid_gl_sharegroup_reference:
 			return "Invalid GL share group references";
+		#endif
+		#if defined(CL_PLATFORM_NOT_FOUND_KHR)
 		case errc::platform_not_found:
 			return "Platform not found";
+		#endif
+		#if defined(CL_INVALID_PARTITION_COUNT_EXT)
 		case errc::invalid_partition_count:
 			return "Invalid partition count";
+		#endif
+		#if defined(CL_INVALID_PARTITION_NAME_EXT)
 		case errc::invalid_partition_name:
 			return "Invalid partition name";
+		#endif
 		default:
 			return nullptr;
 	}
@@ -163,9 +183,7 @@ std::string
 clx::error_category::message(int ev) const noexcept {
 	auto cond = static_cast<errc>(ev);
 	const char* str = to_string(cond);
-	if (str) {
-		return str;
-	}
+	if (str) { return str; }
 	std::stringstream msg;
 	msg << static_cast<int_type>(cond);
 	return msg.str();

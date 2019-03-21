@@ -23,19 +23,25 @@ namespace clx {
 		marker=CL_COMMAND_MARKER,
 		acquire_gl_objects=CL_COMMAND_ACQUIRE_GL_OBJECTS,
 		release_gl_objects=CL_COMMAND_RELEASE_GL_OBJECTS,
+		#if CL_TARGET_VERSION >= 110
 		read_buffer_rect=CL_COMMAND_READ_BUFFER_RECT,
 		write_buffer_rect=CL_COMMAND_WRITE_BUFFER_RECT,
 		copy_buffer_rect=CL_COMMAND_COPY_BUFFER_RECT,
 		user=CL_COMMAND_USER,
+		#endif
+		#if CL_TARGET_VERSION >= 120
 		barrier=CL_COMMAND_BARRIER,
 		migrate_mem_objects=CL_COMMAND_MIGRATE_MEM_OBJECTS,
 		fill_buffer=CL_COMMAND_FILL_BUFFER,
 		fill_image=CL_COMMAND_FILL_IMAGE,
+		#endif
+		#if CL_TARGET_VERSION >= 200
 		svm_free=CL_COMMAND_SVM_FREE,
 		svm_memcpy=CL_COMMAND_SVM_MEMCPY,
 		svm_memfill=CL_COMMAND_SVM_MEMFILL,
 		svm_map=CL_COMMAND_SVM_MAP,
 		svm_unmap=CL_COMMAND_SVM_UNMAP,
+		#endif
 	};
 
 	enum class execution_status: execution_status_type {

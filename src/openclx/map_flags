@@ -9,7 +9,9 @@ namespace clx {
 	enum class map_flags: map_flags_type {
 		read=CL_MAP_READ,
 		write=CL_MAP_WRITE,
+		#if CL_TARGET_VERSION >= 120
 		write_invalidate_region=CL_MAP_WRITE_INVALIDATE_REGION,
+		#endif
 	};
 
 	CLX_FLAGS(map_flags, map_flags_type)

@@ -23,13 +23,17 @@ namespace clx {
 		image_format_not_supported=CL_IMAGE_FORMAT_NOT_SUPPORTED,
 		build_program_failure=CL_BUILD_PROGRAM_FAILURE,
 		map_failure=CL_MAP_FAILURE,
+		#if CL_TARGET_VERSION >= 110
 		misaligned_sub_buffer_offset=CL_MISALIGNED_SUB_BUFFER_OFFSET,
 		exec_status_error_for_events_in_wait_list=CL_EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST,
+		#endif
+		#if CL_TARGET_VERSION >= 120
 		compile_program_failure=CL_COMPILE_PROGRAM_FAILURE,
 		linker_not_available=CL_LINKER_NOT_AVAILABLE,
 		link_program_failure=CL_LINK_PROGRAM_FAILURE,
 		device_partition_failed=CL_DEVICE_PARTITION_FAILED,
 		kernel_arg_info_not_available=CL_KERNEL_ARG_INFO_NOT_AVAILABLE,
+		#endif
 		invalid_value=CL_INVALID_VALUE,
 		invalid_device_type=CL_INVALID_DEVICE_TYPE,
 		invalid_platform=CL_INVALID_PLATFORM,
@@ -64,20 +68,36 @@ namespace clx {
 		invalid_buffer_size=CL_INVALID_BUFFER_SIZE,
 		invalid_mip_level=CL_INVALID_MIP_LEVEL,
 		invalid_global_work_size=CL_INVALID_GLOBAL_WORK_SIZE,
+		#if CL_TARGET_VERSION >= 110
 		invalid_property=CL_INVALID_PROPERTY,
+		#endif
+		#if CL_TARGET_VERSION >= 120
 		invalid_image_descriptor=CL_INVALID_IMAGE_DESCRIPTOR,
 		invalid_compiler_options=CL_INVALID_COMPILER_OPTIONS,
 		invalid_linker_options=CL_INVALID_LINKER_OPTIONS,
 		invalid_device_partition_count=CL_INVALID_DEVICE_PARTITION_COUNT,
+		#endif
+		#if CL_TARGET_VERSION >= 200
 		invalid_pipe_size=CL_INVALID_PIPE_SIZE,
 		invalid_device_queue=CL_INVALID_DEVICE_QUEUE,
+		#endif
+		#if CL_TARGET_VERSION >= 220
 		invalid_spec_id=CL_INVALID_SPEC_ID,
 		max_size_restriction_exceeded=CL_MAX_SIZE_RESTRICTION_EXCEEDED,
+		#endif
 		illegal_read_or_write_to_a_buffer=-9999,
+		#if defined(CL_INVALID_GL_SHAREGROUP_REFERENCE_KHR)
 		invalid_gl_sharegroup_reference=CL_INVALID_GL_SHAREGROUP_REFERENCE_KHR,
+		#endif
+		#if defined(CL_PLATFORM_NOT_FOUND_KHR)
 		platform_not_found=CL_PLATFORM_NOT_FOUND_KHR,
+		#endif
+		#if defined(CL_INVALID_PARTITION_COUNT_EXT)
 		invalid_partition_count=CL_INVALID_PARTITION_COUNT_EXT,
+		#endif
+		#if defined(CL_INVALID_PARTITION_NAME_EXT)
 		invalid_partition_name=CL_INVALID_PARTITION_NAME_EXT,
+		#endif
 	};
 
 	const char*

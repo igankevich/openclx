@@ -16,16 +16,22 @@ namespace clx {
 		argb = CL_ARGB,
 		intensity = CL_INTENSITY,
 		luminance = CL_LUMINANCE,
+		#if CL_TARGET_VERSION >= 110
 		rx = CL_Rx,
 		rgx = CL_RGx,
 		rgbx = CL_RGBx,
+		#endif
+		#if CL_TARGET_VERSION >= 120
 		depth = CL_DEPTH,
 		depth_stencil = CL_DEPTH_STENCIL,
+		#endif
+		#if CL_TARGET_VERSION >= 200
 		srgb = CL_sRGB,
 		srgbx = CL_sRGBx,
 		srgba = CL_sRGBA,
 		sbgra = CL_sBGRA,
 		abgr = CL_ABGR,
+		#endif
 	};
 
 	enum class channel_data: channel_data_type {
@@ -42,10 +48,14 @@ namespace clx {
 		uint16_norm = CL_UNORM_INT16,
 		uint16_norm_555 = CL_UNORM_SHORT_555,
 		uint16_norm_565 = CL_UNORM_SHORT_565,
+		#if CL_TARGET_VERSION >= 120
 		uint24_norm = CL_UNORM_INT24,
+		#endif
 		uint32 = CL_UNSIGNED_INT32,
 		uint32_norm_101010 = CL_UNORM_INT_101010,
+		#if CL_TARGET_VERSION >= 210
 		uint32_norm_101010_2 = CL_UNORM_INT_101010_2,
+		#endif
 	};
 
 	struct image_format: public image_format_type {

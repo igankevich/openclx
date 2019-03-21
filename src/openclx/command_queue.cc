@@ -16,13 +16,13 @@ CLX_QUEUE_GET_SCALAR4(context, CL_QUEUE_CONTEXT, context_type, ::clx::context)
 CLX_QUEUE_GET_SCALAR4(device, CL_QUEUE_DEVICE, device_type, ::clx::device)
 CLX_QUEUE_GET_SCALAR4(num_references, CL_QUEUE_DEVICE, unsigned_int_type, unsigned_int_type)
 
-std::vector<clx::command_queue_properties_type>
+std::vector<clx::command_queue_flags_type>
 clx::command_queue::properties() const {
 	CLX_GET_ARRAY(
 		::clGetCommandQueueInfo,
 		CL_QUEUE_PROPERTIES,
-		command_queue_properties_type,
-		command_queue_properties_type
+		command_queue_flags_type,
+		command_queue_flags_type
 	);
 }
 

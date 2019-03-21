@@ -10,7 +10,9 @@ namespace clx {
 		clamp_to_edge=CL_ADDRESS_CLAMP_TO_EDGE,
 		clamp=CL_ADDRESS_CLAMP,
 		repeat=CL_ADDRESS_REPEAT,
+		#if CL_TARGET_VERSION >= 110
 		mirrored_repeat=CL_ADDRESS_MIRRORED_REPEAT,
+		#endif
 	};
 
 	enum class filter_mode: filter_mode_type {

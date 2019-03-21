@@ -6,15 +6,19 @@
 
 namespace clx {
 
+	#if CL_TARGET_VERSION >= 120
 	enum class argument_type_qualifiers: argument_type_qualifiers_type {
 		cl_kernel_arg_type_none=CL_KERNEL_ARG_TYPE_NONE,
 		cl_kernel_arg_type_const=CL_KERNEL_ARG_TYPE_CONST,
 		cl_kernel_arg_type_restrict=CL_KERNEL_ARG_TYPE_RESTRICT,
 		cl_kernel_arg_type_volatile=CL_KERNEL_ARG_TYPE_VOLATILE,
+		#if CL_TARGET_VERSION >= 200
 		cl_kernel_arg_type_pipe=CL_KERNEL_ARG_TYPE_PIPE,
+		#endif
 	};
 
 	CLX_FLAGS(argument_type_qualifiers, argument_type_qualifiers_type)
+	#endif
 
 }
 

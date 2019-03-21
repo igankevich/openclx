@@ -6,6 +6,7 @@
 
 namespace clx {
 
+	#if CL_TARGET_VERSION >= 120
 	enum class device_affinity_domain: device_affinity_domain_type {
 		numa=CL_DEVICE_AFFINITY_DOMAIN_NUMA,
 		L4_cache=CL_DEVICE_AFFINITY_DOMAIN_L4_CACHE,
@@ -16,6 +17,7 @@ namespace clx {
 	};
 
 	CLX_FLAGS(device_affinity_domain, device_affinity_domain_type)
+	#endif
 
 }
 

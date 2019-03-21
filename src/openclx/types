@@ -39,31 +39,46 @@ namespace clx {
 	typedef ::cl_device_fp_config floating_point_flags_type;
 	typedef ::cl_command_queue_properties command_queue_flags_type;
 	typedef ::cl_device_type device_flags_type;
-	typedef ::cl_device_partition_property device_partition_type;
-	typedef ::cl_device_affinity_domain device_affinity_domain_type;
 	typedef ::cl_context_properties context_properties_type;
-	#if CL_TARGET_VERSION >= 200
-	typedef ::cl_queue_properties queue_properties_type;
-	typedef ::cl_device_svm_capabilities svm_capabilities_type;
-	#endif
-	typedef ::cl_command_queue_properties command_queue_properties_type;
 	typedef ::cl_channel_order channel_order_type;
 	typedef ::cl_channel_type channel_data_type;
 	typedef ::cl_image_format image_format_type;
-	typedef ::cl_image_desc image_descriptor_type;
 	typedef ::cl_build_status build_status_type;
 	typedef ::cl_command_type command_type;
 	typedef ::cl_int execution_status_type;
 	typedef ::cl_mem_object_type memory_objects_type;
 	typedef ::cl_mem memory_object_type;
 	typedef ::cl_mem_flags memory_flags_type;
-	typedef ::cl_mem_migration_flags migration_flags_type;
 	typedef ::cl_map_flags map_flags_type;
-	typedef ::cl_kernel_arg_type_qualifier argument_type_qualifiers_type;
-	typedef ::cl_buffer_region buffer_region_type;
 	typedef ::cl_addressing_mode addressing_mode_type;
 	typedef ::cl_filter_mode filter_mode_type;
+
+	#if CL_TARGET_VERSION >= 110
+	typedef ::cl_buffer_region buffer_region_type;
+	#endif
+
+	#if CL_TARGET_VERSION >= 120
+	typedef ::cl_mem_migration_flags migration_flags_type;
+	typedef ::cl_device_partition_property device_partition_type;
+	typedef ::cl_device_affinity_domain device_affinity_domain_type;
+	typedef ::cl_kernel_arg_type_qualifier argument_type_qualifiers_type;
+	typedef ::cl_image_desc image_descriptor_type;
+
+	enum class migration_flags: migration_flags_type;
+	enum class device_partition: device_partition_type;
+	enum class device_affinity_domain: device_affinity_domain_type;
+	enum class argument_type_qualifiers: argument_type_qualifiers_type;
+	#endif
+
+	#if CL_TARGET_VERSION >= 200
 	typedef ::cl_sampler_properties sampler_properties_type;
+	typedef ::cl_queue_properties queue_properties_type;
+	typedef ::cl_device_svm_capabilities svm_flags_type;
+	typedef ::cl_pipe_properties pipe_properties_type;
+
+	enum class svm_flags: svm_flags_type;
+	class pipe;
+	#endif
 
 	class platform;
 	class device;
@@ -79,7 +94,22 @@ namespace clx {
 	class binary;
 
 	enum class addressing_mode: addressing_mode_type;
+	enum class build_status: build_status_type;
+	enum class channel_data: channel_data_type;
+	enum class channel_order: channel_order_type;
+	enum class command: command_type;
+	enum class command_queue_flags: command_queue_flags_type;
+	enum class device_flags: device_flags_type;
+	enum class device_local_memory: device_local_memory_type;
+	enum class device_memory_cache: device_memory_cache_type;
+	enum class errc: int_type;
+	enum class execution_flags: execution_flags_type;
+	enum class execution_status: execution_status_type;
 	enum class filter_mode: filter_mode_type;
+	enum class floating_point_flags: floating_point_flags_type;
+	enum class map_flags: map_flags_type;
+	enum class memory_flags: memory_flags_type;
+	enum class memory_objects: memory_objects_type;
 
 }
 

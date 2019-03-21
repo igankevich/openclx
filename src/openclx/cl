@@ -24,6 +24,42 @@
 #define CL_USE_DEPRECATED_OPENCL_2_2_APIS
 #endif
 
+#if CL_TARGET_VERSION >= 100
+#define CLX_NAMESPACE_100 inline namespace v100
+#else
+#define CLX_NAMESPACE_100 namespace v100
+#endif
+
+#if CL_TARGET_VERSION >= 110
+#define CLX_NAMESPACE_110 inline namespace v110
+#else
+#define CLX_NAMESPACE_110 namespace v110
+#endif
+
+#if CL_TARGET_VERSION >= 120
+#define CLX_NAMESPACE_120 inline namespace v120
+#else
+#define CLX_NAMESPACE_120 namespace v120
+#endif
+
+#if CL_TARGET_VERSION >= 200
+#define CLX_NAMESPACE_200 inline namespace v200
+#else
+#define CLX_NAMESPACE_200 namespace v200
+#endif
+
+#if CL_TARGET_VERSION >= 210
+#define CLX_NAMESPACE_210 inline namespace v210
+#else
+#define CLX_NAMESPACE_210 namespace v210
+#endif
+
+#if CL_TARGET_VERSION >= 220
+#define CLX_NAMESPACE_220 inline namespace v220
+#else
+#define CLX_NAMESPACE_220 namespace v220
+#endif
+
 #include <CL/opencl.h>
 
 #endif // vim:filetype=cpp
