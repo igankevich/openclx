@@ -1,0 +1,25 @@
+#ifndef OPENCLX_PIPE
+#define OPENCLX_PIPE
+
+#include <openclx/memory_object>
+
+namespace clx {
+
+	class pipe: public memory_object {
+
+	public:
+
+		inline explicit
+		pipe(memory_object_type ptr): memory_object(ptr) {}
+
+		unsigned_int_type
+		packet_size() const;
+
+		unsigned_int_type
+		max_packets() const;
+
+	};
+
+}
+
+#endif // vim:filetype=cpp

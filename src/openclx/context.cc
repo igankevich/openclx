@@ -8,6 +8,7 @@
 #include <openclx/device>
 #include <openclx/event>
 #include <openclx/image>
+#include <openclx/pipe>
 #include <openclx/program>
 #include <openclx/sampler>
 
@@ -250,5 +251,26 @@ clx::context::sampler(
 	CLX_CHECK(ret);
 	return static_cast<::clx::sampler>(sm);
 }
+
+#if CL_TARGET_VERSION >= 200
+::clx::pipe
+clx::context::pipe(
+	memory_flags flags,
+	unsigned_int_type packet_size,
+	unsigned_int_type max_packets
+) const {
+	int_type ret = 0;
+	auto p = ::clCreatePipe(
+		this->_ptr,
+		static_cast<memory_flags_type>(flags),
+		packet_size,
+		max_packets,
+		nullptr,
+		&ret
+	);
+	CLX_CHECK(ret);
+	return static_cast<::clx::pipe>(p);
+}
+#endif
 
 CLX_WARNING_POP

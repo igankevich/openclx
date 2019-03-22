@@ -11,6 +11,7 @@ openclx_src = files([
 	'kernel.cc',
 	'main.cc',
 	'memory_object.cc',
+	'pipe.cc',
 	'platform.cc',
 	'program.cc',
 	'sampler.cc',

@@ -20,13 +20,13 @@
 - [X] 100 clCreateBuffer
 - [X] 110 clCreateSubBuffer
 - [X] 120 clCreateImage
-- [ ] 200 clCreatePipe
+- [X] 200 clCreatePipe
 - [X] 100 clRetainMemObject
 - [X] 100 clReleaseMemObject
 - [X] 100 clGetSupportedImageFormats
 - [X] 100 clGetMemObjectInfo
 - [X] 100 clGetImageInfo
-- [ ] 200 clGetPipeInfo
+- [X] 200 clGetPipeInfo
 - [X] 110 clSetMemObjectDestructorCallback
 - [ ] 200 clSVMAlloc
 - [ ] 200 clSVMFree

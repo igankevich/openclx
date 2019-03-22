@@ -67,6 +67,14 @@ namespace clx {
 			filter_mode fmode
 		) const;
 
+		#if CL_TARGET_VERSION >= 200
+		::clx::pipe pipe(
+			memory_flags flags,
+			unsigned_int_type packet_size,
+			unsigned_int_type max_packets
+		) const;
+		#endif
+
 		std::vector<context_properties_type>
 		properties() const;
 
