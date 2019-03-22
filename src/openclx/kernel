@@ -56,6 +56,16 @@ namespace clx {
 		::clx::program program() const;
 		::clx::work_group work_group(const device& dev) const;
 
+		inline kernel_type
+		get() noexcept {
+			return this->_ptr;
+		}
+
+		inline const kernel_type
+		get() const noexcept {
+			return this->_ptr;
+		}
+
 		kernel() = default;
 		inline ~kernel() { this->release(); }
 		inline kernel(const kernel& rhs): _ptr(rhs._ptr) { this->retain(); }

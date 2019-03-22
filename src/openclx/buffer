@@ -5,12 +5,24 @@
 
 namespace clx {
 
+	class buffer_slice {
+	public:
+		const ::clx::buffer& buffer;
+		const size_t offset;
+		const size_t size;
+	};
+
 	class buffer: public memory_object {
 
 	public:
 
 		inline explicit
 		buffer(memory_object_type ptr): memory_object(ptr) {}
+
+		inline buffer_slice
+		slice(size_t offset, size_t size) const {
+			return {*this,offset,size};
+		}
 
 		#if CL_TARGET_VERSION >= 110
 		buffer

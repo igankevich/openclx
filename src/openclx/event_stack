@@ -5,6 +5,9 @@
 
 #include <openclx/command_queue>
 #include <openclx/event>
+#include <openclx/map_flags>
+#include <openclx/native_kernel>
+#include <openclx/range>
 
 namespace clx {
 
@@ -22,6 +25,32 @@ namespace clx {
 	public:
 		typedef std::vector<event> event_array;
 		typedef std::vector<event_array> frame_array;
+
+	private:
+
+		struct step_guard {
+
+			bool _sync;
+			event_array& frame;
+			unsigned_int_type nevents = 0;
+			const event_type* events = nullptr;
+
+			step_guard(bool sync, event_array& frame):
+			_sync(sync), frame(frame) {
+				if (this->_sync && !frame.empty()) {
+					events = reinterpret_cast<const event_type*>(frame.data());
+					nevents = frame.size();
+				}
+			}
+
+			~step_guard() {
+				if (this->_sync) {
+					frame.clear();
+					this->_sync = false;
+				}
+			}
+
+		};
 
 	private:
 		command_queue _queue;
@@ -43,6 +72,88 @@ namespace clx {
 
 		void
 		marker();
+
+		void
+		kernel(const ::clx::kernel& k);
+
+		inline void
+		kernel(const ::clx::kernel& k, const range& global) {
+			this->kernel(k, {}, global, {});
+		}
+
+		inline void
+		kernel(const ::clx::kernel& k, const range& global, const range& local) {
+			this->kernel(k, {}, global, local);
+		}
+
+		void
+		kernel(
+			const ::clx::kernel& k,
+			const range& offset,
+			const range& global,
+			const range& local
+		);
+
+		template <class ... Args>
+		inline void
+		kernel(native_kernel_type k, const Args& ... args_in) {
+			const auto& args = make_arguments(args_in...);
+			auto& frame = this->frame();
+			event_type ret;
+			{
+				step_guard g(this->_sync, frame);
+				unsigned_int_type nobjects = 0;
+				std::vector<memory_object_type> objects;
+				std::vector<void*> locations;
+				args.memory_objects(nobjects, objects, locations);
+				CLX_CHECK(::clEnqueueNativeKernel(
+					this->_queue.get(), k, &args, sizeof(args),
+					nobjects, objects.data(), locations.data(),
+					g.nevents, g.events, &ret
+				));
+			}
+			frame.emplace_back(std::move(ret));
+		}
+
+		void read(const buffer_slice& src, void* dst);
+		void read(const image_slice& src, void* dst);
+		void read(const image& src, void* dst);
+
+		void write(const buffer_slice& dst, void* src);
+		void write(const image_slice& dst, void* src);
+		void write(const image& dst, void* src);
+
+		void copy(const buffer_slice& src, const buffer_slice& dst);
+		void copy(const buffer& src, const buffer& dst);
+		void copy(const image_slice& src, const image_slice& dst);
+		void copy(const image& src, const image& dst);
+		void copy(const image_slice& src, const buffer_slice& dst);
+		void copy(const image_slice& src, const buffer& dst);
+		void copy(const image& src, const buffer& dst);
+		void copy(const buffer_slice& src, const image_slice& dst);
+		void copy(const buffer_slice& src, const image& dst);
+		void copy(const buffer& src, const image& dst);
+
+		void*
+		map(const buffer_slice& b, map_flags flags);
+
+		void*
+		map(const buffer& b, map_flags flags);
+
+		void*
+		map(
+			const image_slice& src, map_flags flags,
+			size_t& row_pitch, size_t& slice_pitch
+		);
+
+		void*
+		map(
+			const image& src, map_flags flags,
+			size_t& row_pitch, size_t& slice_pitch
+		);
+
+		void
+		unmap(const memory_object& obj, void* ptr);
 
 		inline void
 		step() {

@@ -38,6 +38,23 @@ namespace clx {
 		std::vector<device> devices() const;
 		std::string source() const;
 
+		#if CL_TARGET_VERSION >= 220
+		inline void
+		callback(callback_type cb, void* data=nullptr) {
+			CLX_CHECK(::clSetProgramReleaseCallback(this->_ptr, cb, data));
+		}
+		#endif
+
+		#if CL_TARGET_VERSION >= 220
+		template <class T>
+		inline void
+		constant(unsigned_int_type id, T value) {
+			CLX_CHECK(::clSetProgramSpecializationConstant(
+				this->_ptr, id, sizeof(T), &value
+			));
+		}
+		#endif
+
 		program() = default;
 		inline ~program() { this->release(); }
 		inline program(const program& rhs): _ptr(rhs._ptr) { this->retain(); }

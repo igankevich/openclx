@@ -89,7 +89,9 @@ namespace clx {
 	class event;
 	class memory_object;
 	class image;
+	class image_slice;
 	class buffer;
+	class buffer_slice;
 	class sampler;
 	class binary;
 

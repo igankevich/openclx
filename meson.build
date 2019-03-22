@@ -6,6 +6,14 @@ project(
 	default_options: ['cpp_std=c++11']
 )
 
+cpp = meson.get_compiler('cpp')
+
+foreach arg : ['-Werror=return-type']
+	if cpp.has_argument(arg)
+		add_global_arguments(arg, language: 'cpp')
+	endif
+endforeach
+
 src = include_directories('src')
 
 subdir('src')

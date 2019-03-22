@@ -1,111 +1,109 @@
-- [X] 100 clGetPlatformIDs
-- [X] 100 clGetPlatformInfo
-- [X] 100 clGetDeviceIDs
-- [X] 100 clGetDeviceInfo
-- [X] 120 clCreateSubDevices
-- [X] 100 clRetainDevice
-- [X] 100 clReleaseDevice
-- [X] 210 clSetDefaultDeviceCommandQueue
-- [X] 210 clGetDeviceAndHostTimer
-- [X] 210 clGetHostTimer
-- [X] 100 clCreateContext
-- [X] 100 clCreateContextFromType
-- [X] 100 clRetainContext
-- [X] 100 clReleaseContext
-- [X] 100 clGetContextInfo
-- [X] 200 clCreateCommandQueueWithProperties
-- [X] 100 clRetainCommandQueue
-- [X] 100 clReleaseCommandQueue
-- [X] 100 clGetCommandQueueInfo
-- [X] 100 clCreateBuffer
-- [X] 110 clCreateSubBuffer
-- [X] 120 clCreateImage
-- [X] 200 clCreatePipe
-- [X] 100 clRetainMemObject
-- [X] 100 clReleaseMemObject
-- [X] 100 clGetSupportedImageFormats
-- [X] 100 clGetMemObjectInfo
-- [X] 100 clGetImageInfo
-- [X] 200 clGetPipeInfo
-- [X] 110 clSetMemObjectDestructorCallback
+- [ ] 110 clEnqueueCopyBufferRect
+- [ ] 110 clEnqueueReadBufferRect
+- [ ] 110 clEnqueueWriteBufferRect
+- [ ] 120 clCompileProgram
+- [ ] 120 clEnqueueFillBuffer
+- [ ] 120 clEnqueueFillImage
+- [ ] 120 clEnqueueMigrateMemObjects
+- [ ] 120 clGetKernelArgInfo
+- [ ] 120 clLinkProgram
+- [ ] 200 clEnqueueSVMFree
+- [ ] 200 clEnqueueSVMMap
+- [ ] 200 clEnqueueSVMMemFill
+- [ ] 200 clEnqueueSVMMemcpy
+- [ ] 200 clEnqueueSVMUnmap
 - [ ] 200 clSVMAlloc
 - [ ] 200 clSVMFree
-- [X] 200 clCreateSamplerWithProperties
-- [X] 100 clRetainSampler
-- [X] 100 clReleaseSampler
-- [X] 100 clGetSamplerInfo
-- [X] 100 clCreateProgramWithSource
-- [X] 100 clCreateProgramWithBinary
-- [X] 120 clCreateProgramWithBuiltInKernels
-- [ ] 210 clCreateProgramWithIL
-- [X] 100 clRetainProgram
-- [X] 100 clReleaseProgram
-- [X] 100 clBuildProgram
-- [ ] 120 clCompileProgram
-- [ ] 120 clLinkProgram
-- [ ] 220 clSetProgramReleaseCallback
-- [ ] 220 clSetProgramSpecializationConstant
-- [X] 120 clUnloadPlatformCompiler
-- [X] 100 clGetProgramInfo
-- [X] 100 clGetProgramBuildInfo
-- [X] 100 clCreateKernel
-- [X] 100 clCreateKernelsInProgram
-- [X] 210 clCloneKernel
-- [X] 100 clRetainKernel
-- [X] 100 clReleaseKernel
-- [X] 100 clSetKernelArg
 - [ ] 200 clSetKernelArgSVMPointer
 - [ ] 200 clSetKernelExecInfo
-- [X] 100 clGetKernelInfo
-- [ ] 120 clGetKernelArgInfo
-- [X] 100 clGetKernelWorkGroupInfo
-- [ ] 210 clGetKernelSubGroupInfo
-- [X] 100 clWaitForEvents
-- [X] 100 clGetEventInfo
-- [X] 110 clCreateUserEvent
-- [X] 100 clRetainEvent
-- [X] 100 clReleaseEvent
-- [X] 110 clSetUserEventStatus
-- [X] 110 clSetEventCallback
-- [X] 100 clGetEventProfilingInfo
-- [X] 100 clFlush
-- [X] 100 clFinish
-- [ ] 100 clEnqueueReadBuffer
-- [ ] 110 clEnqueueReadBufferRect
-- [ ] 100 clEnqueueWriteBuffer
-- [ ] 110 clEnqueueWriteBufferRect
-- [ ] 120 clEnqueueFillBuffer
-- [ ] 100 clEnqueueCopyBuffer
-- [ ] 110 clEnqueueCopyBufferRect
-- [ ] 100 clEnqueueReadImage
-- [ ] 100 clEnqueueWriteImage
-- [ ] 120 clEnqueueFillImage
-- [ ] 100 clEnqueueCopyImage
-- [ ] 100 clEnqueueCopyImageToBuffer
-- [ ] 100 clEnqueueCopyBufferToImage
-- [ ] 100 clEnqueueMapBuffer
-- [ ] 100 clEnqueueMapImage
-- [ ] 100 clEnqueueUnmapMemObject
-- [ ] 120 clEnqueueMigrateMemObjects
-- [ ] 100 clEnqueueNDRangeKernel
-- [ ] 100 clEnqueueNativeKernel
-- [X] 120 clEnqueueMarkerWithWaitList
-- [X] 120 clEnqueueBarrierWithWaitList
-- [ ] 200 clEnqueueSVMFree
-- [ ] 200 clEnqueueSVMMemcpy
-- [ ] 200 clEnqueueSVMMemFill
-- [ ] 200 clEnqueueSVMMap
-- [ ] 200 clEnqueueSVMUnmap
+- [ ] 210 clCreateProgramWithIL
 - [ ] 210 clEnqueueSVMMigrateMem
-- [X] 120 clGetExtensionFunctionAddressForPlatform
-- [-] 100 clSetCommandQueueProperty
+- [ ] 210 clGetKernelSubGroupInfo
+- [X] 100 clBuildProgram
+- [X] 100 clCreateBuffer
+- [X] 100 clCreateCommandQueue
+- [X] 100 clCreateContext
+- [X] 100 clCreateContextFromType
+- [X] 100 clCreateKernel
+- [X] 100 clCreateKernelsInProgram
+- [X] 100 clCreateProgramWithBinary
+- [X] 100 clCreateProgramWithSource
+- [X] 100 clCreateSampler
+- [X] 100 clEnqueueBarrier
+- [X] 100 clEnqueueCopyBuffer
+- [X] 100 clEnqueueCopyBufferToImage
+- [X] 100 clEnqueueCopyImage
+- [X] 100 clEnqueueCopyImageToBuffer
+- [X] 100 clEnqueueMapBuffer
+- [X] 100 clEnqueueMapImage
+- [X] 100 clEnqueueMarker
+- [X] 100 clEnqueueNDRangeKernel
+- [X] 100 clEnqueueNativeKernel
+- [X] 100 clEnqueueReadBuffer
+- [X] 100 clEnqueueReadImage
+- [X] 100 clEnqueueTask
+- [X] 100 clEnqueueUnmapMemObject
+- [X] 100 clEnqueueWriteBuffer
+- [X] 100 clEnqueueWriteImage
+- [X] 100 clFinish
+- [X] 100 clFlush
+- [X] 100 clGetCommandQueueInfo
+- [X] 100 clGetContextInfo
+- [X] 100 clGetDeviceIDs
+- [X] 100 clGetDeviceInfo
+- [X] 100 clGetEventInfo
+- [X] 100 clGetEventProfilingInfo
+- [X] 100 clGetExtensionFunctionAddress
+- [X] 100 clGetImageInfo
+- [X] 100 clGetKernelInfo
+- [X] 100 clGetKernelWorkGroupInfo
+- [X] 100 clGetMemObjectInfo
+- [X] 100 clGetPlatformIDs
+- [X] 100 clGetPlatformInfo
+- [X] 100 clGetProgramBuildInfo
+- [X] 100 clGetProgramInfo
+- [X] 100 clGetSamplerInfo
+- [X] 100 clGetSupportedImageFormats
+- [X] 100 clReleaseCommandQueue
+- [X] 100 clReleaseContext
+- [X] 100 clReleaseDevice
+- [X] 100 clReleaseEvent
+- [X] 100 clReleaseKernel
+- [X] 100 clReleaseMemObject
+- [X] 100 clReleaseProgram
+- [X] 100 clReleaseSampler
+- [X] 100 clRetainCommandQueue
+- [X] 100 clRetainContext
+- [X] 100 clRetainDevice
+- [X] 100 clRetainEvent
+- [X] 100 clRetainKernel
+- [X] 100 clRetainMemObject
+- [X] 100 clRetainProgram
+- [X] 100 clRetainSampler
+- [X] 100 clSetKernelArg
+- [X] 100 clUnloadCompiler
+- [X] 100 clWaitForEvents
 - [X] 110 clCreateImage2D
 - [X] 110 clCreateImage3D
-- [X] 100 clEnqueueMarker
-- [ ] 100 clEnqueueWaitForEvents
-- [X] 100 clEnqueueBarrier
-- [X] 100 clUnloadCompiler
-- [X] 100 clGetExtensionFunctionAddress
-- [X] 100 clCreateCommandQueue
-- [X] 100 clCreateSampler
-- [ ] 100 clEnqueueTask
+- [X] 110 clCreateSubBuffer
+- [X] 110 clCreateUserEvent
+- [X] 110 clSetEventCallback
+- [X] 110 clSetMemObjectDestructorCallback
+- [X] 110 clSetUserEventStatus
+- [X] 120 clCreateImage
+- [X] 120 clCreateProgramWithBuiltInKernels
+- [X] 120 clCreateSubDevices
+- [X] 120 clEnqueueBarrierWithWaitList
+- [X] 120 clEnqueueMarkerWithWaitList
+- [X] 120 clGetExtensionFunctionAddressForPlatform
+- [X] 120 clUnloadPlatformCompiler
+- [X] 200 clCreateCommandQueueWithProperties
+- [X] 200 clCreatePipe
+- [X] 200 clCreateSamplerWithProperties
+- [X] 200 clGetPipeInfo
+- [X] 210 clCloneKernel
+- [X] 210 clGetDeviceAndHostTimer
+- [X] 210 clGetHostTimer
+- [X] 210 clSetDefaultDeviceCommandQueue
+- [X] 220 clSetProgramReleaseCallback
+- [X] 220 clSetProgramSpecializationConstant

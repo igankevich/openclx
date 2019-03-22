@@ -3,8 +3,16 @@
 
 #include <openclx/image_format>
 #include <openclx/memory_object>
+#include <openclx/range>
 
 namespace clx {
+
+	class image_slice {
+	public:
+		const ::clx::image& image;
+		const range& offset;
+		const range& size;
+	};
 
 	class image: public memory_object {
 
@@ -12,6 +20,16 @@ namespace clx {
 
 		inline explicit
 		image(memory_object_type ptr): memory_object(ptr) {}
+
+		inline image_slice
+		slice(const range& offset, const range& size) const {
+			return {*this,offset,size};
+		}
+
+		inline range
+		dimensions() const {
+			return {width(),height(),depth()};
+		}
 
 		image_format format() const;
 		size_t element_size() const;
