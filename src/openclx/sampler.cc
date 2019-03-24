@@ -5,15 +5,15 @@
 CLX_METHOD_SCALAR(
 	clx::sampler::num_references,
 	::clGetSamplerInfo,
-	CL_SAMPLER_REFERENCE_COUNT,
-	unsigned_int_type
+	unsigned_int_type,
+	CL_SAMPLER_REFERENCE_COUNT
 )
 
 CLX_METHOD_SCALAR(
 	clx::sampler::context,
 	::clGetSamplerInfo,
-	CL_SAMPLER_CONTEXT,
-	::clx::context
+	::clx::context,
+	CL_SAMPLER_CONTEXT
 )
 
 CLX_METHOD_BOOL(
@@ -25,13 +25,13 @@ CLX_METHOD_BOOL(
 CLX_METHOD_SCALAR(
 	clx::sampler::addressing_mode,
 	::clGetSamplerInfo,
-	CL_SAMPLER_ADDRESSING_MODE,
-	::clx::addressing_mode
+	::clx::addressing_mode,
+	CL_SAMPLER_ADDRESSING_MODE
 )
 
 CLX_METHOD_SCALAR(
 	clx::sampler::filter_mode,
 	::clGetSamplerInfo,
-	CL_SAMPLER_FILTER_MODE,
-	::clx::filter_mode
+	::clx::filter_mode,
+	CL_SAMPLER_FILTER_MODE
 )

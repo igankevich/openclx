@@ -1,17 +1,10 @@
+#include <openclx/array_view>
 #include <openclx/bits/macros>
 #include <openclx/context>
 #include <openclx/device>
 #include <openclx/downcast>
 #include <openclx/kernel>
 #include <openclx/program>
-
-void
-clx::program::build(const std::string& options) {
-	CLX_CHECK(::clBuildProgram(
-		this->_ptr, 0, nullptr, options.data(),
-		nullptr, nullptr
-	));
-}
 
 void
 clx::program::build(const std::string& options, const device_array& devices) {
@@ -23,9 +16,9 @@ clx::program::build(const std::string& options, const device_array& devices) {
 
 clx::build_status
 clx::program::build_status(const device& dev) const {
-	CLX_GET_SCALAR_ARG(
-		::clGetProgramBuildInfo, dev.get(), CL_PROGRAM_BUILD_STATUS,
-		::clx::build_status
+	CLX_BODY_SCALAR(
+		::clGetProgramBuildInfo, ::clx::build_status,
+		dev.get(), CL_PROGRAM_BUILD_STATUS
 	)
 }
 
@@ -106,35 +99,6 @@ clx::program::binaries() const {
 
 #if CL_TARGET_VERSION >= 120
 void
-clx::program::compile(const std::string& options) {
-	CLX_CHECK(::clCompileProgram(
-		this->_ptr, 0, nullptr,
-		options.data(), 0, nullptr, nullptr,
-		nullptr, nullptr
-	));
-}
-#endif
-
-#if CL_TARGET_VERSION >= 120
-void
-clx::program::compile(const std::string& options, const device_array& devices) {
-	CLX_CHECK(::clCompileProgram(
-		this->_ptr, devices.size(), downcast(devices.data()),
-		options.data(), 0, nullptr, nullptr,
-		nullptr, nullptr
-	));
-}
-#endif
-
-#if CL_TARGET_VERSION >= 120
-void
-clx::program::compile(const std::string& options, const header_array& headers) {
-	this->compile(options, headers, this->devices());
-}
-#endif
-
-#if CL_TARGET_VERSION >= 120
-void
 clx::program::compile(
 	const std::string& options,
 	const header_array& headers,
@@ -188,38 +152,18 @@ clx::program::kernel(const char* name) const {
 	return static_cast<::clx::kernel>(krnl);
 }
 
-CLX_METHOD_SCALAR(clx::program::context, ::clGetProgramInfo, CL_PROGRAM_CONTEXT, ::clx::context)
-CLX_METHOD_SCALAR(clx::program::num_references, ::clGetProgramInfo, CL_PROGRAM_REFERENCE_COUNT, unsigned_int_type)
-CLX_METHOD_SCALAR(clx::program::num_devices, ::clGetProgramInfo, CL_PROGRAM_NUM_DEVICES, unsigned_int_type)
+CLX_METHOD_SCALAR(clx::program::context, ::clGetProgramInfo, ::clx::context, CL_PROGRAM_CONTEXT)
+CLX_METHOD_SCALAR(clx::program::num_references, ::clGetProgramInfo, unsigned_int_type, CL_PROGRAM_REFERENCE_COUNT)
+CLX_METHOD_SCALAR(clx::program::num_devices, ::clGetProgramInfo, unsigned_int_type, CL_PROGRAM_NUM_DEVICES)
 CLX_METHOD_ARRAY(clx::program::devices, ::clGetProgramInfo, CL_PROGRAM_DEVICES, device)
 CLX_METHOD_STRING(clx::program::source, ::clGetProgramInfo, CL_PROGRAM_SOURCE)
 
 #if CL_TARGET_VERSION >= 120
 clx::program
-clx::link(const std::vector<program>& programs, const std::string& options) {
-	if (programs.empty()) {
-		throw std::invalid_argument("empty programs");
-	}
-	int_type ret = 0;
-	auto prog =
-		::clLinkProgram(
-			programs.front().context().get(), 0, nullptr,
-			options.data(), programs.size(),
-			downcast(programs.data()),
-			nullptr, nullptr, &ret
-		);
-	CLX_CHECK(ret);
-	return static_cast<program>(prog);
-}
-#endif
-
-
-#if CL_TARGET_VERSION >= 120
-clx::program
 clx::link(
-	const std::vector<program>& programs,
+	const array_view<program>& programs,
 	const std::string& options,
-	const program::device_array& devices
+	const array_view<device>& devices
 ) {
 	if (programs.empty()) {
 		throw std::invalid_argument("empty programs");

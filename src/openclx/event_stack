@@ -3,10 +3,13 @@
 
 #include <vector>
 
+#include <openclx/color>
 #include <openclx/command_queue>
 #include <openclx/event>
 #include <openclx/map_flags>
+#include <openclx/migration_flags>
 #include <openclx/native_kernel>
+#include <openclx/pattern>
 #include <openclx/range>
 #include <openclx/slice>
 
@@ -30,29 +33,27 @@ namespace clx {
 		typedef slice_3d<const image&> image_slice_3d;
 		typedef slice_3d<host_pointer> host_slice_3d;
 		typedef slice_3d<const_host_pointer> const_host_slice_3d;
+		typedef array_view<memory_object> memory_object_array;
 
 	private:
 
 		struct step_guard {
 
-			bool _sync;
+			bool sync;
 			event_array& frame;
 			unsigned_int_type nevents = 0;
 			const event_type* events = nullptr;
 
 			step_guard(bool sync, event_array& frame):
-			_sync(sync), frame(frame) {
-				if (this->_sync && !frame.empty()) {
+			sync(sync), frame(frame) {
+				if (sync && !frame.empty()) {
 					events = reinterpret_cast<const event_type*>(frame.data());
 					nevents = frame.size();
 				}
 			}
 
 			~step_guard() {
-				if (this->_sync) {
-					frame.clear();
-					this->_sync = false;
-				}
+				if (sync) { frame.clear(); sync = false; }
 			}
 
 		};
@@ -154,6 +155,19 @@ namespace clx {
 		void copy(const buffer_slice_3d& src, const host_slice_3d& dst);
 		#endif
 
+		#if CL_TARGET_VERSION >= 120
+		void fill(const buffer_slice& dst, const pattern& pattern);
+		void fill(const buffer& dst, const pattern& pattern);
+		void fill(const image_slice_3d& dst, const color& col);
+		void fill(const image& dst, const color& col);
+		void migrate(migration_flags flags, const memory_object_array& objects);
+		template <class ... Args> inline void
+		migrate(migration_flags flags, const Args& ... objects) {
+			memory_object arr[] {objects...};
+			this->migrate(flags, {arr, sizeof...(objects)});
+		}
+		#endif
+
 		host_pointer
 		map(const buffer_slice& b, map_flags flags);
 
@@ -235,6 +249,10 @@ namespace clx {
 		#if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
 		void
 		marker_100();
+		#endif
+
+		#if CL_TARGET_VERSION >= 120
+		friend class pattern;
 		#endif
 
 	};

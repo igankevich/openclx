@@ -49,6 +49,11 @@ namespace clx {
 			CLX_CHECK(::clSetKernelArg(this->_ptr, i, value.size*sizeof(T), nullptr));
 		}
 
+		#if CL_TARGET_VERSION >= 120
+		kernel_argument
+		argument(unsigned_int_type i) const;
+		#endif
+
 		std::string name() const;
 		unsigned_int_type num_arguments() const;
 		unsigned_int_type num_references() const;

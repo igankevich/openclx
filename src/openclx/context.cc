@@ -65,7 +65,7 @@ clx::context::program(const std::string& src) const {
 }
 
 clx::program
-clx::context::program(const std::vector<binary>& binaries) const {
+clx::context::program(const array_view<binary>& binaries) const {
 	const auto& devices = this->devices();
 	if (devices.size() != binaries.size()) {
 		throw std::invalid_argument("different number of binaries and devices");
@@ -144,15 +144,17 @@ CLX_METHOD_ARRAY(
 
 CLX_METHOD_SCALAR(
 	clx::context::num_references,
-	::clGetContextInfo, CL_CONTEXT_REFERENCE_COUNT,
-	unsigned_int_type
+	::clGetContextInfo,
+	unsigned_int_type,
+	CL_CONTEXT_REFERENCE_COUNT
 )
 
 #if CL_TARGET_VERSION >= 120
 CLX_METHOD_SCALAR(
 	clx::context::num_devices,
-	::clGetContextInfo, CL_CONTEXT_NUM_DEVICES,
-	unsigned_int_type
+	::clGetContextInfo,
+	unsigned_int_type,
+	CL_CONTEXT_NUM_DEVICES
 )
 #endif
 

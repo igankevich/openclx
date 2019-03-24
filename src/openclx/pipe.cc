@@ -4,13 +4,13 @@
 CLX_METHOD_SCALAR(
 	clx::pipe::packet_size,
 	::clGetPipeInfo,
-	CL_PIPE_PACKET_SIZE,
-	unsigned_int_type
+	unsigned_int_type,
+	CL_PIPE_PACKET_SIZE
 )
 
 CLX_METHOD_SCALAR(
 	clx::pipe::max_packets,
 	::clGetPipeInfo,
-	CL_PIPE_PACKET_SIZE,
-	unsigned_int_type
+	unsigned_int_type,
+	CL_PIPE_PACKET_SIZE
 )

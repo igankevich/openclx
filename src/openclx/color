@@ -1,0 +1,37 @@
+#ifndef OPENCLX_COLOR
+#define OPENCLX_COLOR
+
+namespace clx {
+
+	#if CL_TARGET_VERSION >= 120
+	class color {
+
+	private:
+		union {
+			float_type _floats[4];
+			int_type _ints[4];
+			unsigned_int_type _uints[4];
+		};
+
+	public:
+
+		inline
+		color(float_type r, float_type g, float_type b, float_type a):
+		_floats{r,g,b,a} {}
+
+		inline
+		color(int_type r, int_type g, int_type b, int_type a):
+		_ints{r,g,b,a} {}
+
+		inline
+		color(
+			unsigned_int_type r, unsigned_int_type g,
+			unsigned_int_type b, unsigned_int_type a
+		): _uints{r,g,b,a} {}
+
+	};
+	#endif
+
+}
+
+#endif // vim:filetype=cpp

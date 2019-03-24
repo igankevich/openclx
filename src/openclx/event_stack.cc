@@ -1,3 +1,4 @@
+#include <openclx/array_view>
 #include <openclx/buffer>
 #include <openclx/downcast>
 #include <openclx/error>
@@ -252,6 +253,54 @@ clx::event_stack::copy(const buffer_slice_3d& src, const buffer_slice_3d& dst) {
 		src.row_pitch, src.slice_pitch, dst.row_pitch, dst.slice_pitch
 	);
 }
+
+#if CL_TARGET_VERSION >= 120
+void
+clx::event_stack::fill(const buffer_slice& dst, const pattern& pattern) {
+	CLX_BODY_ENQUEUE(
+		::clEnqueueFillBuffer, dst.buffer.get(),
+		pattern.ptr(), pattern.size(),
+		dst.offset, dst.size
+	);
+}
+#endif
+
+#if CL_TARGET_VERSION >= 120
+void
+clx::event_stack::fill(const buffer& dst, const pattern& pattern) {
+	this->fill(dst.slice(0,dst.size()), pattern);
+}
+#endif
+
+#if CL_TARGET_VERSION >= 120
+void
+clx::event_stack::fill(const image_slice_3d& dst, const color& col) {
+	CLX_BODY_ENQUEUE(
+		::clEnqueueFillImage, dst.object.get(),
+		&col, dst.offset.data(), dst.size.data()
+	);
+}
+#endif
+
+#if CL_TARGET_VERSION >= 120
+void
+clx::event_stack::fill(const image& dst, const color& col) {
+	this->fill(dst.slice({0,0,0},dst.dimensions()), col);
+}
+#endif
+
+#if CL_TARGET_VERSION >= 120
+void
+clx::event_stack::migrate(
+	migration_flags flags,
+	const memory_object_array& objects
+) {
+	CLX_BODY_ENQUEUE(
+		::clEnqueueMigrateMemObjects,
+		objects.size(), downcast(objects.data()), downcast(flags)
+	);
+}
+#endif
 
 clx::host_pointer
 clx::event_stack::map(const buffer_slice& b, map_flags flags) {

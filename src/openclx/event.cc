@@ -1,3 +1,4 @@
+#include <openclx/array_view>
 #include <openclx/bits/macros>
 #include <openclx/command_queue>
 #include <openclx/context>
@@ -7,68 +8,68 @@
 CLX_METHOD_SCALAR(
 	clx::event::queue,
 	::clGetEventInfo,
-	CL_EVENT_COMMAND_QUEUE,
-	::clx::command_queue
+	::clx::command_queue,
+	CL_EVENT_COMMAND_QUEUE
 );
 
 CLX_METHOD_SCALAR(
 	clx::event::command,
 	::clGetEventInfo,
-	CL_EVENT_COMMAND_TYPE,
-	::clx::command
+	::clx::command,
+	CL_EVENT_COMMAND_TYPE
 );
 
 CLX_METHOD_SCALAR(
 	clx::event::status,
 	::clGetEventInfo,
-	CL_EVENT_COMMAND_EXECUTION_STATUS,
-	::clx::execution_status
+	::clx::execution_status,
+	CL_EVENT_COMMAND_EXECUTION_STATUS
 );
 
 CLX_METHOD_SCALAR(
 	clx::event::num_references,
 	::clGetEventInfo,
-	CL_EVENT_REFERENCE_COUNT,
-	unsigned_int_type
+	unsigned_int_type,
+	CL_EVENT_REFERENCE_COUNT
 );
 
 CLX_METHOD_SCALAR(
 	clx::event::time_queued,
 	::clGetEventProfilingInfo,
-	CL_PROFILING_COMMAND_QUEUED,
-	nanoseconds
+	nanoseconds,
+	CL_PROFILING_COMMAND_QUEUED
 );
 
 CLX_METHOD_SCALAR(
 	clx::event::time_submitted,
 	::clGetEventProfilingInfo,
-	CL_PROFILING_COMMAND_SUBMIT,
-	nanoseconds
+	nanoseconds,
+	CL_PROFILING_COMMAND_SUBMIT
 );
 
 CLX_METHOD_SCALAR(
 	clx::event::time_started,
 	::clGetEventProfilingInfo,
-	CL_PROFILING_COMMAND_START,
-	nanoseconds
+	nanoseconds,
+	CL_PROFILING_COMMAND_START
 );
 
 CLX_METHOD_SCALAR(
 	clx::event::time_ended,
 	::clGetEventProfilingInfo,
-	CL_PROFILING_COMMAND_END,
-	nanoseconds
+	nanoseconds,
+	CL_PROFILING_COMMAND_END
 );
 
 CLX_METHOD_SCALAR(
 	clx::event::time_completed,
 	::clGetEventProfilingInfo,
-	CL_PROFILING_COMMAND_COMPLETE,
-	nanoseconds
+	nanoseconds,
+	CL_PROFILING_COMMAND_COMPLETE
 );
 
 void
-clx::wait(const std::vector<event>& events) {
+clx::wait(const array_view<event>& events) {
 	CLX_CHECK(::clWaitForEvents(events.size(), downcast(events.data())));
 }
 

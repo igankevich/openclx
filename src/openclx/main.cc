@@ -6,7 +6,7 @@
 #include <openclx/platform>
 #include <openclx/types>
 #include <openclx/vector>
-#include <openclx/argument_type_qualifiers>
+#include <openclx/kernel_argument>
 #include <openclx/map_flags>
 #include <openclx/event_stack>
 

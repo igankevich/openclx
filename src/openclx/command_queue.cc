@@ -8,19 +8,25 @@ CLX_IGNORED_ATTRIBUTES
 
 CLX_METHOD_SCALAR(
 	clx::command_queue::context,
-	::clGetCommandQueueInfo, CL_QUEUE_CONTEXT,
-	::clx::context
+	::clGetCommandQueueInfo,
+	::clx::context,
+	CL_QUEUE_CONTEXT
 )
+
 CLX_METHOD_SCALAR(
 	clx::command_queue::device,
-	::clGetCommandQueueInfo, CL_QUEUE_DEVICE,
-	::clx::device
+	::clGetCommandQueueInfo,
+	::clx::device,
+	CL_QUEUE_DEVICE
 )
+
 CLX_METHOD_SCALAR(
 	clx::command_queue::num_references,
-	::clGetCommandQueueInfo, CL_QUEUE_DEVICE,
-	unsigned_int_type
+	::clGetCommandQueueInfo,
+	unsigned_int_type,
+	CL_QUEUE_DEVICE
 )
+
 CLX_METHOD_ARRAY(
 	clx::command_queue::properties,
 	::clGetCommandQueueInfo, CL_QUEUE_PROPERTIES,

@@ -62,6 +62,8 @@ namespace clx {
 	typedef ::cl_device_partition_property device_partition_type;
 	typedef ::cl_device_affinity_domain device_affinity_domain_type;
 	typedef ::cl_kernel_arg_type_qualifier argument_type_qualifiers_type;
+	typedef ::cl_kernel_arg_access_qualifier access_qualifiers_type;
+	typedef ::cl_kernel_arg_address_qualifier address_qualifiers_type;
 	typedef ::cl_image_desc image_descriptor_type;
 
 	enum class migration_flags: migration_flags_type;
@@ -86,6 +88,7 @@ namespace clx {
 	class command_queue;
 	class program;
 	class kernel;
+	class kernel_argument;
 	class event;
 	class memory_object;
 	class image;
@@ -119,6 +122,9 @@ namespace clx {
 
 	template <class T>
 	class downcast_type;
+
+	template <class T>
+	class array_view;
 
 }
 

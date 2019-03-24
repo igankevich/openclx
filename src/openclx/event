@@ -2,7 +2,6 @@
 #define OPENCLX_EVENT
 
 #include <chrono>
-#include <vector>
 
 #include <openclx/command>
 #include <openclx/error>
@@ -57,6 +56,16 @@ namespace clx {
 		}
 		#endif
 
+		inline event_type
+		get() noexcept {
+			return this->_ptr;
+		}
+
+		inline const event_type
+		get() const noexcept {
+			return this->_ptr;
+		}
+
 		event() = default;
 		inline ~event() { this->release(); }
 		inline event(const event& rhs): _ptr(rhs._ptr) { this->retain(); }
@@ -101,7 +110,7 @@ namespace clx {
 	}
 
 	void
-	wait(const std::vector<event>& events);
+	wait(const array_view<event>& events);
 
 }
 

@@ -1,14 +1,14 @@
 #ifndef OPENCLX_BITS_MACROS
 #define OPENCLX_BITS_MACROS
 
-#define CLX_BODY_STRING(function, key) \
+#define CLX_BODY_STRING(function, ...) \
 	size_t actual_size = 0; \
 	std::string value(4096, ' '); \
 	errc ret; \
 	bool success = false; \
 	while (!success) { \
 		ret = errc( \
-			function(this->_ptr, key, value.size(), &value[0], &actual_size) \
+			function(this->get(), __VA_ARGS__, value.size(), &value[0], &actual_size) \
 		); \
 		value.resize(actual_size); \
 		if (ret != errc::invalid_value && actual_size <= value.size()) { \
@@ -19,10 +19,10 @@
 	while (!value.empty() && value.back() == 0) { value.pop_back(); } \
 	return value;
 
-#define CLX_METHOD_STRING(method, function, key) \
+#define CLX_METHOD_STRING(method, function, ...) \
 	std::string \
 	method() const { \
-		CLX_BODY_STRING(function, key); \
+		CLX_BODY_STRING(function, __VA_ARGS__); \
 	}
 
 #define CLX_BODY_ARRAY(function, key, return_type) \
@@ -32,7 +32,7 @@
 	bool success = false; \
 	while (!success) { \
 		ret = function( \
-			this->_ptr, \
+			this->get(), \
 			key, \
 			result.size()*sizeof(return_type), \
 			result.data(), \
@@ -52,28 +52,23 @@
 		CLX_BODY_ARRAY(function, key, return_type) \
 	}
 
-#define CLX_BODY_SCALAR(function, key, type) \
+#define CLX_BODY_SCALAR(function, type, ...) \
 	type value{}; \
-	CLX_CHECK(function(this->_ptr, key, sizeof(type), &value, nullptr)); \
+	CLX_CHECK(function(this->get(), __VA_ARGS__, sizeof(type), &value, nullptr)); \
 	return value;
 
-#define CLX_METHOD_SCALAR(name, function, key, type) \
+#define CLX_METHOD_SCALAR(name, function, type, ...) \
 	auto \
 	name() const -> type { \
-		CLX_BODY_SCALAR(function, key, type) \
+		CLX_BODY_SCALAR(function, type, __VA_ARGS__) \
 	}
 
-#define CLX_METHOD_BOOL(name, function, key) \
+#define CLX_METHOD_BOOL(name, function, ...) \
 	auto \
 	name() const -> bool { \
 		bool_type value{}; \
-		CLX_CHECK(function(this->_ptr, key, sizeof(bool_type), &value, nullptr)); \
+		CLX_CHECK(function(this->get(), __VA_ARGS__, sizeof(bool_type), &value, nullptr)); \
 		return static_cast<bool>(value); \
 	}
-
-#define CLX_GET_SCALAR_ARG(function, arg, key, type) \
-	type value{}; \
-	CLX_CHECK(function(this->_ptr, arg, key, sizeof(type), &value, nullptr)); \
-	return value;
 
 #endif // vim:filetype=cpp

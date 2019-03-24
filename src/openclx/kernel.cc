@@ -2,6 +2,7 @@
 #include <openclx/context>
 #include <openclx/device>
 #include <openclx/kernel>
+#include <openclx/kernel_argument>
 #include <openclx/program>
 
 clx::kernel
@@ -12,30 +13,41 @@ clx::kernel::copy() const {
 	return static_cast<kernel>(krnl);
 }
 
+#if CL_TARGET_VERSION >= 120
+clx::kernel_argument
+clx::kernel::argument(unsigned_int_type i) const {
+	return kernel_argument{*this,i};
+}
+#endif
+
 CLX_METHOD_STRING(clx::kernel::name, ::clGetKernelInfo, CL_KERNEL_FUNCTION_NAME)
+
 CLX_METHOD_SCALAR(
 	clx::kernel::num_arguments,
 	::clGetKernelInfo,
-	CL_KERNEL_NUM_ARGS,
-	unsigned_int_type
+	unsigned_int_type,
+	CL_KERNEL_NUM_ARGS
 )
+
 CLX_METHOD_SCALAR(
 	clx::kernel::num_references,
 	::clGetKernelInfo,
-	CL_KERNEL_REFERENCE_COUNT,
-	unsigned_int_type
+	unsigned_int_type,
+	CL_KERNEL_REFERENCE_COUNT
 )
+
 CLX_METHOD_SCALAR(
 	clx::kernel::context,
 	::clGetKernelInfo,
-	CL_KERNEL_CONTEXT,
-	::clx::context
+	::clx::context,
+	CL_KERNEL_CONTEXT
 )
+
 CLX_METHOD_SCALAR(
 	clx::kernel::program,
 	::clGetKernelInfo,
-	CL_KERNEL_PROGRAM,
-	::clx::program
+	::clx::program,
+	CL_KERNEL_PROGRAM
 )
 
 clx::work_group

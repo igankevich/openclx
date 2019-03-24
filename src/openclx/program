@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include <openclx/array_view>
 #include <openclx/binary>
 #include <openclx/build_status>
 #include <openclx/error>
@@ -15,8 +16,8 @@ namespace clx {
 
 	public:
 		typedef void (*callback_type)(program_type, void *);
-		typedef std::vector<device> device_array;
-		typedef std::vector<header> header_array;
+		typedef array_view<header> header_array;
+		typedef array_view<device> device_array;
 
 	private:
 		program_type _ptr = nullptr;
@@ -26,17 +27,35 @@ namespace clx {
 		inline explicit
 		program(program_type ptr): _ptr(ptr) {}
 
-		void build(const std::string& options);
-		void build(const std::string& options, const device_array& devices);
+		inline void
+		build(const std::string& options) {
+			this->build(options, {});
+		}
+
+		void
+		build(const std::string& options, const device_array& devices);
+
 		::clx::build_status build_status(const device& dev) const;
 		std::string options(const device& dev) const;
 		std::string build_log(const device& dev) const;
 		std::vector<binary> binaries() const;
 
 		#if CL_TARGET_VERSION >= 120
-		void compile(const std::string& options);
-		void compile(const std::string& options, const device_array& devices);
-		void compile(const std::string& options, const header_array& headers);
+		inline void
+		compile(const std::string& options) {
+			this->compile(options, {}, {});
+		}
+
+		inline void
+		compile(const std::string& options, const device_array& devices) {
+			this->compile(options, {}, devices);
+		}
+
+		inline void
+		compile(const std::string& options, const header_array& headers) {
+			this->compile(options, headers, {});
+		}
+
 		void compile(
 			const std::string& options,
 			const header_array& headers,
@@ -122,16 +141,18 @@ namespace clx {
 
 	#if CL_TARGET_VERSION >= 120
 	program
-	link(const std::vector<program>& programs, const std::string& options);
+	link(
+		const array_view<program>& programs,
+		const std::string& options,
+		const array_view<device>& devices
+	);
 	#endif
 
 	#if CL_TARGET_VERSION >= 120
-	program
-	link(
-		const std::vector<program>& programs,
-		const std::string& options,
-		const program::device_array& devices
-	);
+	inline program
+	link(const array_view<program>& programs, const std::string& options) {
+		return link(programs, options, {});
+	}
 	#endif
 
 	class header {

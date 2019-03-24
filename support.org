@@ -1,9 +1,3 @@
-- [X] 120 clCompileProgram
-- [ ] 120 clEnqueueFillBuffer
-- [ ] 120 clEnqueueFillImage
-- [ ] 120 clEnqueueMigrateMemObjects
-- [ ] 120 clGetKernelArgInfo
-- [X] 120 clLinkProgram
 - [ ] 200 clEnqueueSVMFree
 - [ ] 200 clEnqueueSVMMap
 - [ ] 200 clEnqueueSVMMemFill
@@ -90,12 +84,18 @@
 - [X] 110 clSetEventCallback
 - [X] 110 clSetMemObjectDestructorCallback
 - [X] 110 clSetUserEventStatus
+- [X] 120 clCompileProgram
 - [X] 120 clCreateImage
 - [X] 120 clCreateProgramWithBuiltInKernels
 - [X] 120 clCreateSubDevices
 - [X] 120 clEnqueueBarrierWithWaitList
+- [X] 120 clEnqueueFillBuffer
+- [X] 120 clEnqueueFillImage
 - [X] 120 clEnqueueMarkerWithWaitList
+- [X] 120 clEnqueueMigrateMemObjects
 - [X] 120 clGetExtensionFunctionAddressForPlatform
+- [X] 120 clGetKernelArgInfo
+- [X] 120 clLinkProgram
 - [X] 120 clUnloadPlatformCompiler
 - [X] 200 clCreateCommandQueueWithProperties
 - [X] 200 clCreatePipe

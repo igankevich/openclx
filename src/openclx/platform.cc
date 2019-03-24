@@ -1,3 +1,4 @@
+#include <openclx/array_view>
 #include <openclx/bits/macros>
 #include <openclx/context>
 #include <openclx/device>
@@ -15,8 +16,8 @@ CLX_METHOD_STRING(clx::platform::extensions, ::clGetPlatformInfo, CL_PLATFORM_EX
 CLX_METHOD_SCALAR(
 	clx::platform::timer_resolution,
 	::clGetPlatformInfo,
-	CL_PLATFORM_HOST_TIMER_RESOLUTION,
-	nanoseconds
+	nanoseconds,
+	CL_PLATFORM_HOST_TIMER_RESOLUTION
 );
 #endif
 
@@ -60,7 +61,7 @@ clx::platform::devices(device_flags types) const {
 	return result;
 }
 
-clx::context clx::platform::context(const std::vector<device>& devices) const {
+clx::context clx::platform::context(const array_view<device>& devices) const {
 	std::vector<context_properties_type> prop{
 		context_properties_type(CL_CONTEXT_PLATFORM),
 		context_properties_type(this->_ptr),

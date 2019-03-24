@@ -5,6 +5,9 @@
 
 namespace clx {
 
+	template <class T>
+	struct downcast_type { typedef T type; };
+
 	#define CLX_MAKE_DOWNCAST_TYPE(name) \
 		template <> \
 		struct downcast_type<name> { typedef name##_type type; }
@@ -28,6 +31,7 @@ namespace clx {
 	CLX_MAKE_DOWNCAST_TYPE(memory_flags);
 	CLX_MAKE_DOWNCAST_TYPE(memory_objects);
 	CLX_MAKE_DOWNCAST_TYPE(image_format);
+	CLX_MAKE_DOWNCAST_TYPE(migration_flags);
 
 	#undef CLX_MAKE_DOWNCAST_TYPE
 	#undef CLX_MAKE_DOWNCAST_TYPE2

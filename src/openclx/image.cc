@@ -4,48 +4,31 @@
 CLX_METHOD_SCALAR(
 	clx::image::format,
 	::clGetImageInfo,
-	CL_IMAGE_FORMAT,
-	image_format
+	image_format,
+	CL_IMAGE_FORMAT
 )
 
 CLX_METHOD_SCALAR(
 	clx::image::element_size,
 	::clGetImageInfo,
-	CL_IMAGE_ELEMENT_SIZE,
-	size_t
+	size_t,
+	CL_IMAGE_ELEMENT_SIZE
 )
 
 CLX_METHOD_SCALAR(
 	clx::image::row_pitch,
 	::clGetImageInfo,
-	CL_IMAGE_ROW_PITCH,
-	size_t
+	size_t,
+	CL_IMAGE_ROW_PITCH
 )
 
 CLX_METHOD_SCALAR(
 	clx::image::slice_pitch,
 	::clGetImageInfo,
-	CL_IMAGE_SLICE_PITCH,
-	size_t
+	size_t,
+	CL_IMAGE_SLICE_PITCH
 )
 
-CLX_METHOD_SCALAR(
-	clx::image::width,
-	::clGetImageInfo,
-	CL_IMAGE_WIDTH,
-	size_t
-)
-
-CLX_METHOD_SCALAR(
-	clx::image::height,
-	::clGetImageInfo,
-	CL_IMAGE_HEIGHT,
-	size_t
-)
-
-CLX_METHOD_SCALAR(
-	clx::image::depth,
-	::clGetImageInfo,
-	CL_IMAGE_DEPTH,
-	size_t
-)
+CLX_METHOD_SCALAR(clx::image::width, ::clGetImageInfo, size_t, CL_IMAGE_WIDTH)
+CLX_METHOD_SCALAR(clx::image::height, ::clGetImageInfo, size_t, CL_IMAGE_HEIGHT)
+CLX_METHOD_SCALAR(clx::image::depth, ::clGetImageInfo, size_t, CL_IMAGE_DEPTH)

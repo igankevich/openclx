@@ -1,0 +1,75 @@
+#ifndef OPENCLX_ARRAY_VIEW
+#define OPENCLX_ARRAY_VIEW
+
+#include <cstdint>
+
+namespace clx {
+
+	template <class T>
+	class array_view {
+
+	public:
+		typedef T* pointer;
+		typedef const T* const_pointer;
+		typedef T& reference;
+		typedef const T& const_reference;
+		typedef std::size_t size_type;
+
+	private:
+		const T* _data;
+		size_type _size;
+
+	public:
+
+		inline
+		array_view(): _data{nullptr}, _size{0} {}
+
+		inline
+		array_view(const T* data, size_type size):
+		_data(data), _size(size) {}
+
+		template <class Container>
+		inline
+		array_view(const Container& cont):
+		_data(cont.data()), _size(cont.size()) {}
+
+		inline const_pointer
+		data() const {
+			return this->_data;
+		}
+
+		inline size_type
+		size() const {
+			return this->_size;
+		}
+
+		inline const_pointer
+		begin() const {
+			return this->_data;
+		}
+
+		inline const_pointer
+		end() const {
+			return this->_data + this->_size;
+		}
+
+		inline const_reference
+		front() const {
+			return *this->begin();
+		}
+
+		inline const_reference
+		back() const {
+			return *(this->end()-1);
+		}
+
+		inline bool
+		empty() const {
+			return this->_size == 0;
+		}
+
+	};
+
+}
+
+#endif // vim:filetype=cpp

@@ -1,0 +1,39 @@
+#ifndef OPENCLX_PATTERN
+#define OPENCLX_PATTERN
+
+namespace clx {
+
+	#if CL_TARGET_VERSION >= 120
+	class pattern {
+
+	private:
+		const void* _ptr;
+		size_t _size;
+
+	public:
+
+		inline
+		pattern(const void* ptr, size_t size):
+		_ptr(ptr), _size(size) {}
+
+		template <class T>
+		inline explicit
+		pattern(const T& value):
+		_ptr(&value), _size(sizeof(T)) {}
+
+		inline const void*
+		ptr() const {
+			return this->_ptr;
+		}
+
+		inline size_t
+		size() const {
+			return this->_size;
+		}
+
+	};
+	#endif
+
+}
+
+#endif // vim:filetype=cpp
