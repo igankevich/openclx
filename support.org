@@ -1,6 +1,3 @@
-- [ ] 110 clEnqueueCopyBufferRect
-- [ ] 110 clEnqueueReadBufferRect
-- [ ] 110 clEnqueueWriteBufferRect
 - [ ] 120 clCompileProgram
 - [ ] 120 clEnqueueFillBuffer
 - [ ] 120 clEnqueueFillImage
@@ -87,6 +84,9 @@
 - [X] 110 clCreateImage3D
 - [X] 110 clCreateSubBuffer
 - [X] 110 clCreateUserEvent
+- [X] 110 clEnqueueCopyBufferRect
+- [X] 110 clEnqueueReadBufferRect
+- [X] 110 clEnqueueWriteBufferRect
 - [X] 110 clSetEventCallback
 - [X] 110 clSetMemObjectDestructorCallback
 - [X] 110 clSetUserEventStatus

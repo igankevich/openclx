@@ -8,6 +8,7 @@
 #include <openclx/map_flags>
 #include <openclx/native_kernel>
 #include <openclx/range>
+#include <openclx/slice>
 
 namespace clx {
 
@@ -25,6 +26,10 @@ namespace clx {
 	public:
 		typedef std::vector<event> event_array;
 		typedef std::vector<event_array> frame_array;
+		typedef slice_3d<const buffer&> buffer_slice_3d;
+		typedef slice_3d<const image&> image_slice_3d;
+		typedef slice_3d<host_pointer> host_slice_3d;
+		typedef slice_3d<const_host_pointer> const_host_slice_3d;
 
 	private:
 
@@ -127,45 +132,48 @@ namespace clx {
 			frame.emplace_back(std::move(ret));
 		}
 
-		void read(const buffer_slice& src, void* dst);
-		void read(const image_slice& src, void* dst);
-		void read(const image& src, void* dst);
-
-		void write(const buffer_slice& dst, void* src);
-		void write(const image_slice& dst, void* src);
-		void write(const image& dst, void* src);
-
+		void copy(const buffer_slice& src, host_pointer dst);
+		void copy(const image_slice_3d& src, host_pointer dst);
+		void copy(const image& src, host_pointer dst);
+		void copy(const_host_pointer src, const buffer_slice& dst);
+		void copy(const_host_pointer src, const image_slice_3d& dst);
+		void copy(const_host_pointer src, const image& dst);
 		void copy(const buffer_slice& src, const buffer_slice& dst);
 		void copy(const buffer& src, const buffer& dst);
-		void copy(const image_slice& src, const image_slice& dst);
+		void copy(const image_slice_3d& src, const image_slice_3d& dst);
 		void copy(const image& src, const image& dst);
-		void copy(const image_slice& src, const buffer_slice& dst);
-		void copy(const image_slice& src, const buffer& dst);
+		void copy(const image_slice_3d& src, const buffer_slice& dst);
+		void copy(const image_slice_3d& src, const buffer& dst);
 		void copy(const image& src, const buffer& dst);
-		void copy(const buffer_slice& src, const image_slice& dst);
+		void copy(const buffer_slice& src, const image_slice_3d& dst);
 		void copy(const buffer_slice& src, const image& dst);
 		void copy(const buffer& src, const image& dst);
+		#if CL_TARGET_VERSION >= 110
+		void copy(const buffer_slice_3d& src, const buffer_slice_3d& dst);
+		void copy(const const_host_slice_3d& src, const buffer_slice_3d& dst);
+		void copy(const buffer_slice_3d& src, const host_slice_3d& dst);
+		#endif
 
-		void*
+		host_pointer
 		map(const buffer_slice& b, map_flags flags);
 
-		void*
+		host_pointer
 		map(const buffer& b, map_flags flags);
 
-		void*
+		host_pointer
 		map(
-			const image_slice& src, map_flags flags,
+			const image_slice_3d& src, map_flags flags,
 			size_t& row_pitch, size_t& slice_pitch
 		);
 
-		void*
+		host_pointer
 		map(
 			const image& src, map_flags flags,
 			size_t& row_pitch, size_t& slice_pitch
 		);
 
 		void
-		unmap(const memory_object& obj, void* ptr);
+		unmap(const memory_object& obj, host_pointer ptr);
 
 		inline void
 		step() {

@@ -89,7 +89,6 @@ namespace clx {
 	class event;
 	class memory_object;
 	class image;
-	class image_slice;
 	class buffer;
 	class buffer_slice;
 	class sampler;
@@ -112,6 +111,9 @@ namespace clx {
 	enum class map_flags: map_flags_type;
 	enum class memory_flags: memory_flags_type;
 	enum class memory_objects: memory_objects_type;
+
+	typedef void* host_pointer;
+	typedef const void* const_host_pointer;
 
 }
 

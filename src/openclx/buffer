@@ -2,6 +2,7 @@
 #define OPENCLX_BUFFER
 
 #include <openclx/memory_object>
+#include <openclx/slice>
 
 namespace clx {
 
@@ -15,6 +16,9 @@ namespace clx {
 	class buffer: public memory_object {
 
 	public:
+		typedef slice_3d<const buffer&> slice_3d_type;
+
+	public:
 
 		inline explicit
 		buffer(memory_object_type ptr): memory_object(ptr) {}
@@ -22,6 +26,14 @@ namespace clx {
 		inline buffer_slice
 		slice(size_t offset, size_t size) const {
 			return {*this,offset,size};
+		}
+
+		inline slice_3d_type
+		slice(
+			const range& offset, const range& size,
+			size_t row_pitch=0, size_t slice_pitch=0
+		) const {
+			return {*this,offset,size,row_pitch,slice_pitch};
 		}
 
 		#if CL_TARGET_VERSION >= 110

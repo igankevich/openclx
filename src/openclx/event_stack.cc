@@ -29,7 +29,7 @@
 #define CLX_BODY_ENQUEUE_MAP(name, ...) \
 	auto& frame = this->frame(); \
 	event_type ret; \
-	void* ptr = nullptr; \
+	host_pointer ptr = nullptr; \
 	{ \
 		step_guard g(this->_sync, frame); \
 		int_type err = 0; \
@@ -127,7 +127,7 @@ clx::event_stack::kernel(
 }
 
 void
-clx::event_stack::read(const buffer_slice& src, void* dst) {
+clx::event_stack::copy(const buffer_slice& src, host_pointer dst) {
 	CLX_BODY_ENQUEUE(
 		::clEnqueueReadBuffer,
 		src.buffer.get(), CL_FALSE,
@@ -135,40 +135,69 @@ clx::event_stack::read(const buffer_slice& src, void* dst) {
 	);
 }
 
+#if CL_TARGET_VERSION >= 110
 void
-clx::event_stack::read(const image_slice& src, void* dst) {
+clx::event_stack::copy(const buffer_slice_3d& src, const host_slice_3d& dst) {
 	CLX_BODY_ENQUEUE(
-		::clEnqueueReadImage, src.image.get(), CL_FALSE,
+		::clEnqueueReadBufferRect,
+		src.object.get(), CL_FALSE,
+		src.offset.data(), dst.offset.data(), src.size.data(),
+		src.row_pitch, src.slice_pitch,
+		dst.row_pitch, dst.slice_pitch,
+		dst.object
+	);
+}
+#endif
+
+void
+clx::event_stack::copy(const image_slice_3d& src, host_pointer dst) {
+	CLX_BODY_ENQUEUE(
+		::clEnqueueReadImage, src.object.get(), CL_FALSE,
 		src.offset.data(), src.size.data(),
-		src.image.row_pitch(), src.image.slice_pitch(), dst
+		src.row_pitch, src.slice_pitch, dst
 	);
 }
 
 void
-clx::event_stack::read(const image& src, void* dst) {
-	this->read({src,{0,0,0},src.dimensions()}, dst);
+clx::event_stack::copy(const image& src, host_pointer dst) {
+	this->copy({src,{0,0,0},src.dimensions()}, dst);
 }
 
 void
-clx::event_stack::write(const buffer_slice& dst, void* src) {
+clx::event_stack::copy(const_host_pointer src, const buffer_slice& dst) {
 	CLX_BODY_ENQUEUE(
 		::clEnqueueWriteBuffer, dst.buffer.get(), CL_FALSE,
 		dst.offset, dst.size, src
 	);
 }
 
+#if CL_TARGET_VERSION >= 110
 void
-clx::event_stack::write(const image_slice& dst, void* src) {
+clx::event_stack::copy(
+	const const_host_slice_3d& src,
+	const buffer_slice_3d& dst
+) {
 	CLX_BODY_ENQUEUE(
-		::clEnqueueWriteImage, dst.image.get(), CL_FALSE,
+		::clEnqueueWriteBufferRect, dst.object.get(), CL_FALSE,
+		dst.offset.data(), src.offset.data(), dst.size.data(),
+		dst.row_pitch, dst.slice_pitch, src.row_pitch, dst.slice_pitch,
+		src.object
+	);
+}
+#endif
+
+void
+clx::event_stack::copy(const_host_pointer src, const image_slice_3d& dst) {
+	CLX_BODY_ENQUEUE(
+		::clEnqueueWriteImage, dst.object.get(), CL_FALSE,
 		dst.offset.data(), dst.size.data(),
-		dst.image.row_pitch(), dst.image.slice_pitch(), src
+		dst.row_pitch, dst.slice_pitch, src
 	);
 }
 
 void
-clx::event_stack::write(const image& dst, void* src) {
-	this->write(dst.slice({0,0,0},dst.dimensions()), src);
+clx::event_stack::copy(const_host_pointer src, const image& dst) {
+	this->copy(src, dst.slice({0,0,0},dst.dimensions()));
 }
 
 void
@@ -186,9 +215,9 @@ clx::event_stack::copy(const buffer& src, const buffer& dst) {
 }
 
 void
-clx::event_stack::copy(const image_slice& src, const image_slice& dst) {
+clx::event_stack::copy(const image_slice_3d& src, const image_slice_3d& dst) {
 	CLX_BODY_ENQUEUE(
-		::clEnqueueCopyImage, src.image.get(), dst.image.get(),
+		::clEnqueueCopyImage, src.object.get(), dst.object.get(),
 		src.offset.data(), dst.offset.data(), src.size.data()
 	);
 }
@@ -200,15 +229,15 @@ clx::event_stack::copy(const image& src, const image& dst) {
 }
 
 void
-clx::event_stack::copy(const image_slice& src, const buffer_slice& dst) {
+clx::event_stack::copy(const image_slice_3d& src, const buffer_slice& dst) {
 	CLX_BODY_ENQUEUE(
-		::clEnqueueCopyImageToBuffer, src.image.get(), dst.buffer.get(),
+		::clEnqueueCopyImageToBuffer, src.object.get(), dst.buffer.get(),
 		src.offset.data(), src.size.data(), dst.offset
 	);
 }
 
 void
-clx::event_stack::copy(const image_slice& src, const buffer& dst) {
+clx::event_stack::copy(const image_slice_3d& src, const buffer& dst) {
 	this->copy(src, dst.slice(0,0));
 }
 
@@ -218,9 +247,9 @@ clx::event_stack::copy(const image& src, const buffer& dst) {
 }
 
 void
-clx::event_stack::copy(const buffer_slice& src, const image_slice& dst) {
+clx::event_stack::copy(const buffer_slice& src, const image_slice_3d& dst) {
 	CLX_BODY_ENQUEUE(
-		::clEnqueueCopyBufferToImage, src.buffer.get(), dst.image.get(),
+		::clEnqueueCopyBufferToImage, src.buffer.get(), dst.object.get(),
 		src.offset, dst.offset.data(), dst.size.data()
 	);
 }
@@ -235,7 +264,16 @@ clx::event_stack::copy(const buffer& src, const image& dst) {
 	this->copy(src.slice(0,0), dst.slice({0,0,0},dst.dimensions()));
 }
 
-void*
+void
+clx::event_stack::copy(const buffer_slice_3d& src, const buffer_slice_3d& dst) {
+	CLX_BODY_ENQUEUE(
+		::clEnqueueCopyBufferRect, src.object.get(), dst.object.get(),
+		src.offset.data(), dst.offset.data(), dst.size.data(),
+		src.row_pitch, src.slice_pitch, dst.row_pitch, dst.slice_pitch
+	);
+}
+
+clx::host_pointer
 clx::event_stack::map(const buffer_slice& b, map_flags flags) {
 	CLX_BODY_ENQUEUE_MAP(
 		::clEnqueueMapBuffer, b.buffer.get(), CL_FALSE,
@@ -243,24 +281,24 @@ clx::event_stack::map(const buffer_slice& b, map_flags flags) {
 	);
 }
 
-void*
+clx::host_pointer
 clx::event_stack::map(const buffer& b, map_flags flags) {
 	return this->map(b.slice(0,b.size()), flags);
 }
 
-void*
+clx::host_pointer
 clx::event_stack::map(
-	const image_slice& src, map_flags flags,
+	const image_slice_3d& src, map_flags flags,
 	size_t& row_pitch, size_t& slice_pitch
 ) {
 	CLX_BODY_ENQUEUE_MAP(
 		::clEnqueueMapImage,
-		src.image.get(), CL_FALSE, static_cast<map_flags_type>(flags),
+		src.object.get(), CL_FALSE, static_cast<map_flags_type>(flags),
 		src.offset.data(), src.size.data(), &row_pitch, &slice_pitch
 	);
 }
 
-void*
+clx::host_pointer
 clx::event_stack::map(
 	const image& src, map_flags flags,
 	size_t& row_pitch, size_t& slice_pitch
@@ -272,7 +310,7 @@ clx::event_stack::map(
 }
 
 void
-clx::event_stack::unmap(const memory_object& obj, void* ptr) {
+clx::event_stack::unmap(const memory_object& obj, host_pointer ptr) {
 	CLX_BODY_ENQUEUE(::clEnqueueUnmapMemObject, obj.get(), ptr);
 }
 
