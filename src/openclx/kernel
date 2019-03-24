@@ -38,13 +38,13 @@ namespace clx {
 		copy() const;
 
 		template <class T>
-		void
+		inline void
 		argument(unsigned_int_type i, const T& value) {
 			CLX_CHECK(::clSetKernelArg(this->_ptr, i, sizeof(T), &value));
 		}
 
 		template <class T>
-		void
+		inline void
 		argument(unsigned_int_type i, const local<T>& value) {
 			CLX_CHECK(::clSetKernelArg(this->_ptr, i, value.size*sizeof(T), nullptr));
 		}
@@ -52,6 +52,32 @@ namespace clx {
 		#if CL_TARGET_VERSION >= 120
 		kernel_argument
 		argument(unsigned_int_type i) const;
+		#endif
+
+		#if CL_TARGET_VERSION >= 200
+		template <class T>
+		inline void
+		argument(unsigned_int_type i, const T* ptr) {
+			CLX_CHECK(::clSetKernelArgSVMPointer(this->_ptr, i, ptr));
+		}
+		#endif
+
+		#if CL_TARGET_VERSION >= 200
+		void svm_pointers(const array_view<void*>& pointers);
+		template <class ... Args> inline void
+		svm_pointers(const Args& ... args) {
+			void* pointers[] {args...};
+			this->svm_pointers({pointers, sizeof...(args)});
+		}
+		void fine_grain_system_svm_pointers(bool b);
+		#endif
+
+		#if CL_TARGET_VERSION >= 210
+		size_t max_sub_groups(const device& device) const;
+		size_t num_sub_groups(const device& device) const;
+		size_t max_sub_group_size(const device& device, const range& range) const;
+		size_t num_sub_groups(const device& device, const range& range) const;
+		range local_size(const device& device, size_t nsubgroups) const;
 		#endif
 
 		std::string name() const;

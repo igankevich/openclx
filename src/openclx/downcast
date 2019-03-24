@@ -31,7 +31,13 @@ namespace clx {
 	CLX_MAKE_DOWNCAST_TYPE(memory_flags);
 	CLX_MAKE_DOWNCAST_TYPE(memory_objects);
 	CLX_MAKE_DOWNCAST_TYPE(image_format);
+	CLX_MAKE_DOWNCAST_TYPE(map_flags);
+	#if CL_TARGET_VERSION >= 120
 	CLX_MAKE_DOWNCAST_TYPE(migration_flags);
+	#endif
+	#if CL_TARGET_VERSION >= 200
+	CLX_MAKE_DOWNCAST_TYPE(svm_flags);
+	#endif
 
 	#undef CLX_MAKE_DOWNCAST_TYPE
 	#undef CLX_MAKE_DOWNCAST_TYPE2

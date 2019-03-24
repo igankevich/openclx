@@ -7,6 +7,7 @@
 #include <openclx/types>
 #include <openclx/vector>
 #include <openclx/kernel_argument>
+#include <openclx/svm_allocator>
 #include <openclx/map_flags>
 #include <openclx/event_stack>
 

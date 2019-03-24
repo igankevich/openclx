@@ -47,6 +47,11 @@ namespace clx {
 	std::istream&
 	operator>>(std::istream& in, binary& rhs);
 
+	class intermediate_language: public binary {
+	public:
+		using binary::binary;
+	};
+
 }
 
 #endif // vim:filetype=cpp

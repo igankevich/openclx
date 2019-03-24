@@ -16,6 +16,7 @@ openclx_src = files([
 	'platform.cc',
 	'program.cc',
 	'sampler.cc',
+	'svm_block.cc',
 ])
 
 openclx_deps = [

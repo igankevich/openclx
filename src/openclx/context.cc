@@ -12,6 +12,7 @@
 #include <openclx/pipe>
 #include <openclx/program>
 #include <openclx/sampler>
+#include <openclx/svm_block>
 
 CLX_WARNING_PUSH
 CLX_IGNORED_ATTRIBUTES
@@ -94,6 +95,16 @@ clx::context::program(const array_view<binary>& binaries) const {
 	}
 	return static_cast<::clx::program>(prg);
 }
+
+#if CL_TARGET_VERSION >= 200
+clx::program
+clx::context::program(const intermediate_language& il) const {
+	int_type ret = 0;
+	auto prg = ::clCreateProgramWithIL(this->_ptr, il.data(), il.size(), &ret);
+	CLX_CHECK(ret);
+	return static_cast<::clx::program>(prg);
+}
+#endif
 
 #if CL_TARGET_VERSION >= 120
 clx::program
@@ -292,7 +303,7 @@ clx::context::sampler_100(
 #endif
 
 #if CL_TARGET_VERSION >= 200
-::clx::pipe
+clx::pipe
 clx::context::pipe(
 	memory_flags flags,
 	unsigned_int_type packet_size,
@@ -309,6 +320,19 @@ clx::context::pipe(
 	);
 	CLX_CHECK(ret);
 	return static_cast<::clx::pipe>(p);
+}
+#endif
+
+#if CL_TARGET_VERSION >= 200
+clx::svm_block
+clx::context::shared_memory(
+	svm_flags flags,
+	size_t size,
+	size_t alignment
+) const {
+	auto ptr = ::clSVMAlloc(this->_ptr, downcast(flags), size, alignment);
+	if (!ptr) { throw std::bad_alloc{}; }
+	return svm_block{ptr, size};
 }
 #endif
 

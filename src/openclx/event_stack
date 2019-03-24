@@ -34,6 +34,8 @@ namespace clx {
 		typedef slice_3d<host_pointer> host_slice_3d;
 		typedef slice_3d<const_host_pointer> const_host_slice_3d;
 		typedef array_view<memory_object> memory_object_array;
+		typedef void* svm_pointer;
+		typedef array_view<void> svm_array;
 
 	private:
 
@@ -166,6 +168,21 @@ namespace clx {
 			memory_object arr[] {objects...};
 			this->migrate(flags, {arr, sizeof...(objects)});
 		}
+		#endif
+
+		#if CL_TARGET_VERSION >= 200
+		void free(const array_view<svm_pointer>& pointers);
+		void fill(svm_array ptr, const pattern& pattern);
+		void copy(const svm_array& src, const svm_array& dst);
+		void map(const svm_array& src, map_flags flags);
+		void unmap(svm_pointer ptr);
+		#endif
+
+		#if CL_TARGET_VERSION >= 210
+		void migrate(
+			migration_flags flags,
+			const array_view<array_view<svm_pointer>>& pointers
+		);
 		#endif
 
 		host_pointer

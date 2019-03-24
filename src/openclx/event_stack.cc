@@ -302,11 +302,73 @@ clx::event_stack::migrate(
 }
 #endif
 
+#if CL_TARGET_VERSION >= 200
+void
+clx::event_stack::free(const array_view<void*>& pointers) {
+	CLX_BODY_ENQUEUE(
+		::clEnqueueSVMFree,
+		pointers.size(), const_cast<void**>(pointers.data()),
+		nullptr, nullptr
+	);
+}
+
+void
+clx::event_stack::fill(svm_array ptr, const pattern& pattern) {
+	CLX_BODY_ENQUEUE(
+		::clEnqueueSVMMemFill, ptr.data(),
+		pattern.ptr(), pattern.size(),
+		ptr.size()
+	);
+}
+
+void
+clx::event_stack::copy(const svm_array& src, const svm_array& dst) {
+	CLX_BODY_ENQUEUE(
+		::clEnqueueSVMMemcpy, CL_FALSE,
+		dst.data(), src.data(), src.size()
+	);
+}
+
+void
+clx::event_stack::map(const svm_array& src, map_flags flags) {
+	CLX_BODY_ENQUEUE(
+		::clEnqueueSVMMap, CL_FALSE,
+		downcast(flags), src.data(), src.size()
+	);
+}
+
+void
+clx::event_stack::unmap(svm_pointer ptr) {
+	CLX_BODY_ENQUEUE(::clEnqueueSVMUnmap, ptr);
+}
+#endif
+
+#if CL_TARGET_VERSION >= 210
+void
+clx::event_stack::migrate(
+	migration_flags flags,
+	const array_view<array_view<svm_pointer>>& pointers
+) {
+	std::vector<const void*> ptrs;
+	ptrs.reserve(pointers.size());
+	std::vector<size_t> sizes;
+	sizes.reserve(pointers.size());
+	for (const auto& p : pointers) {
+		ptrs.emplace_back(p.data());
+		sizes.emplace_back(p.size());
+	}
+	CLX_BODY_ENQUEUE(
+		::clEnqueueSVMMigrateMem,
+		pointers.size(), ptrs.data(), sizes.data(), downcast(flags)
+	);
+}
+#endif
+
 clx::host_pointer
 clx::event_stack::map(const buffer_slice& b, map_flags flags) {
 	CLX_BODY_ENQUEUE_MAP(
 		::clEnqueueMapBuffer, b.buffer.get(), CL_FALSE,
-		static_cast<map_flags_type>(flags), b.offset, b.size
+		downcast(flags), b.offset, b.size
 	);
 }
 
@@ -322,7 +384,7 @@ clx::event_stack::map(
 ) {
 	CLX_BODY_ENQUEUE_MAP(
 		::clEnqueueMapImage,
-		src.object.get(), CL_FALSE, static_cast<map_flags_type>(flags),
+		src.object.get(), CL_FALSE, downcast(flags),
 		src.offset.data(), src.size.data(), &row_pitch, &slice_pitch
 	);
 }

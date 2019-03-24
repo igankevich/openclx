@@ -1,0 +1,116 @@
+#ifndef OPENCLX_SVM_ALLOCATOR
+#define OPENCLX_SVM_ALLOCATOR
+
+#include <cstddef>
+#include <limits>
+#include <memory>
+
+#include <openclx/context>
+#include <openclx/svm_flags>
+
+namespace clx {
+
+	#if CL_TARGET_VERSION >= 200
+	template <class T, svm_flags F>
+	class svm_allocator {
+
+	public:
+		typedef T value_type;
+		typedef value_type* pointer;
+		typedef const value_type* const_pointer;
+		typedef value_type& reference;
+		typedef const value_type& const_reference;
+		typedef std::size_t size_type;
+		typedef std::ptrdiff_t difference_type;
+		template <class U>
+		struct rebind { typedef svm_allocator<U,F> other; };
+
+	private:
+		::clx::context _context;
+
+	public:
+
+		svm_allocator() = default;
+		~svm_allocator() = default;
+		svm_allocator(const svm_allocator&) = default;
+		svm_allocator& operator=(const svm_allocator&) = default;
+		svm_allocator(svm_allocator&&) = default;
+		svm_allocator& operator=(svm_allocator&&) = default;
+		template <class U>
+		svm_allocator(const svm_allocator<U,F>& rhs):
+		_context(rhs._context) {}
+
+		inline value_type*
+		allocate(size_type n) {
+			auto ptr = ::clSVMAlloc(
+				this->_context.get(),
+				static_cast<svm_flags_type>(F),
+				n*sizeof(value_type),
+				alignof(std::max_align_t)
+			);
+			if (!ptr) { throw std::bad_alloc{}; }
+			return ptr;
+		}
+
+		inline value_type*
+		allocate(size_type n, const void*) {
+			return this->allocate(n);
+		}
+
+		inline value_type*
+		deallocate(pointer ptr, size_type) {
+			::clSVMFree(this->_context.get(), this->_ptr);
+		}
+
+		inline void
+		construct(pointer p, const_reference val) {
+			::new((void *)p) T(val);
+		}
+
+		template <class U, class ... Args>
+		inline void
+		construct(U* p, Args&&... args) {
+			::new((void *)p) U(std::forward<Args>(args)...);
+		}
+
+		inline void
+		destroy(pointer p) { ((value_type*)p)->~value_type(); }
+
+		template <class U>
+		inline void
+		destroy(U* p) { p->~U(); }
+
+		inline pointer
+		address(reference x) const { return &x; }
+
+		inline const_pointer
+		address(const_reference x) const { return &x; }
+
+		inline size_type
+		max_size() const {
+			return std::numeric_limits<size_type>::max();
+		}
+
+		inline const ::clx::context&
+		context() const noexcept {
+			return this->_context;
+		}
+
+	};
+
+	template <class T, svm_flags F>
+	inline bool
+	operator==(const svm_allocator<T,F>& lhs, const svm_allocator<T,F>& rhs) {
+		return lhs.context().get() == rhs.context().get();
+	}
+
+	template <class T, svm_flags F>
+	inline bool
+	operator!=(const svm_allocator<T,F>& lhs, const svm_allocator<T,F>& rhs) {
+		return !operator==(lhs, rhs);
+	}
+	#endif
+
+}
+
+#endif // vim:filetype=cpp

@@ -13,6 +13,7 @@
 #include <openclx/memory_flags>
 #include <openclx/memory_objects>
 #include <openclx/sampler>
+#include <openclx/svm_flags>
 #include <openclx/types>
 
 namespace clx {
@@ -41,6 +42,9 @@ namespace clx {
 
 		::clx::program program(const std::string& src) const;
 		::clx::program program(const array_view<binary>& binaries) const;
+		#if CL_TARGET_VERSION >= 200
+		::clx::program program(const intermediate_language& il) const;
+		#endif
 
 		#if CL_TARGET_VERSION >= 120
 		::clx::header header(const std::string& name, const std::string& src) const;
@@ -97,6 +101,14 @@ namespace clx {
 			memory_flags flags,
 			unsigned_int_type packet_size,
 			unsigned_int_type max_packets
+		) const;
+		#endif
+
+		#if CL_TARGET_VERSION >= 200
+		::clx::svm_block shared_memory(
+			svm_flags flags,
+			size_t size,
+			size_t alignment
 		) const;
 		#endif
 

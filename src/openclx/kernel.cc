@@ -20,6 +20,26 @@ clx::kernel::argument(unsigned_int_type i) const {
 }
 #endif
 
+#if CL_TARGET_VERSION >= 200
+void
+clx::kernel::svm_pointers(const array_view<void*>& pointers) {
+	CLX_CHECK(::clSetKernelExecInfo(
+		this->_ptr, CL_KERNEL_EXEC_INFO_SVM_PTRS,
+		pointers.size()*sizeof(void*), pointers.data()
+	));
+}
+
+void
+clx::kernel::fine_grain_system_svm_pointers(bool b) {
+	bool_type value = static_cast<bool_type>(b);
+	CLX_CHECK(::clSetKernelExecInfo(
+		this->_ptr, CL_KERNEL_EXEC_INFO_SVM_FINE_GRAIN_SYSTEM,
+		sizeof(bool_type), &value
+	));
+}
+#endif
+
+
 CLX_METHOD_STRING(clx::kernel::name, ::clGetKernelInfo, CL_KERNEL_FUNCTION_NAME)
 
 CLX_METHOD_SCALAR(
@@ -72,3 +92,64 @@ clx::kernel::work_group(const device& dev) const {
 	return wg;
 	#undef CLX_WG_FIELD
 }
+
+#if CL_TARGET_VERSION >= 210
+size_t
+clx::kernel::max_sub_groups(const device& device) const {
+	CLX_BODY_SCALAR(
+		::clGetKernelSubGroupInfo,
+		size_t,
+		device.get(),
+		CL_KERNEL_MAX_NUM_SUB_GROUPS,
+		0, nullptr
+	);
+}
+
+size_t
+clx::kernel::num_sub_groups(const device& device) const {
+	CLX_BODY_SCALAR(
+		::clGetKernelSubGroupInfo,
+		size_t,
+		device.get(),
+		CL_KERNEL_COMPILE_NUM_SUB_GROUPS,
+		0, nullptr
+	);
+}
+
+size_t
+clx::kernel::max_sub_group_size(const device& device, const range& range) const {
+	CLX_BODY_SCALAR(
+		::clGetKernelSubGroupInfo,
+		size_t,
+		device.get(),
+		CL_KERNEL_MAX_SUB_GROUP_SIZE_FOR_NDRANGE,
+		range.dimensions()*sizeof(size_t), range.data()
+	);
+}
+
+size_t
+clx::kernel::num_sub_groups(const device& device, const range& range) const {
+	CLX_BODY_SCALAR(
+		::clGetKernelSubGroupInfo,
+		size_t,
+		device.get(),
+		CL_KERNEL_SUB_GROUP_COUNT_FOR_NDRANGE,
+		range.dimensions()*sizeof(size_t), range.data()
+	);
+}
+
+clx::range
+clx::kernel::local_size(const device& device, size_t nsubgroups) const {
+	range value{0,0,0};
+	CLX_CHECK(
+		::clGetKernelSubGroupInfo(
+			this->get(),
+			device.get(),
+			CL_KERNEL_LOCAL_SIZE_FOR_SUB_GROUP_COUNT,
+			sizeof(size_t), &nsubgroups,
+			sizeof(range), &value, nullptr
+		)
+	);
+	return value;
+}
+#endif

@@ -1,15 +1,3 @@
-- [ ] 200 clEnqueueSVMFree
-- [ ] 200 clEnqueueSVMMap
-- [ ] 200 clEnqueueSVMMemFill
-- [ ] 200 clEnqueueSVMMemcpy
-- [ ] 200 clEnqueueSVMUnmap
-- [ ] 200 clSVMAlloc
-- [ ] 200 clSVMFree
-- [ ] 200 clSetKernelArgSVMPointer
-- [ ] 200 clSetKernelExecInfo
-- [ ] 210 clCreateProgramWithIL
-- [ ] 210 clEnqueueSVMMigrateMem
-- [ ] 210 clGetKernelSubGroupInfo
 - [X] 100 clBuildProgram
 - [X] 100 clCreateBuffer
 - [X] 100 clCreateCommandQueue
@@ -100,10 +88,22 @@
 - [X] 200 clCreateCommandQueueWithProperties
 - [X] 200 clCreatePipe
 - [X] 200 clCreateSamplerWithProperties
+- [X] 200 clEnqueueSVMFree
+- [X] 200 clEnqueueSVMMap
+- [X] 200 clEnqueueSVMMemFill
+- [X] 200 clEnqueueSVMMemcpy
+- [X] 200 clEnqueueSVMUnmap
 - [X] 200 clGetPipeInfo
+- [X] 200 clSVMAlloc
+- [X] 200 clSVMFree
+- [X] 200 clSetKernelArgSVMPointer
+- [X] 200 clSetKernelExecInfo
 - [X] 210 clCloneKernel
+- [X] 210 clCreateProgramWithIL
+- [X] 210 clEnqueueSVMMigrateMem
 - [X] 210 clGetDeviceAndHostTimer
 - [X] 210 clGetHostTimer
+- [X] 210 clGetKernelSubGroupInfo
 - [X] 210 clSetDefaultDeviceCommandQueue
 - [X] 220 clSetProgramReleaseCallback
 - [X] 220 clSetProgramSpecializationConstant
