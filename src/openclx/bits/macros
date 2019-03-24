@@ -38,8 +38,9 @@
 			result.data(), \
 			&actual_size \
 		); \
-		result.resize(actual_size); \
-		if (errc(ret) != errc::invalid_value && actual_size <= result.size()) { \
+		auto nvalues = actual_size / sizeof(return_type); \
+		result.resize(nvalues); \
+		if (errc(ret) != errc::invalid_value && nvalues <= result.size()) { \
 			CLX_CHECK(ret); \
 			success = true; \
 		} \

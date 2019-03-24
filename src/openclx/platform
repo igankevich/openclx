@@ -28,6 +28,9 @@ namespace clx {
 		std::string name() const;
 		std::string vendor() const;
 		std::string extensions() const;
+		#if defined(CL_PLATFORM_ICD_SUFFIX_KHR)
+		std::string suffix() const;
+		#endif
 
 		std::vector<device>
 		devices(device_flags types) const;

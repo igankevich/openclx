@@ -33,7 +33,7 @@ shared_library(
 )
 
 executable(
-	'openclx',
+	'clx',
 	sources: openclx_src,
 	include_directories: src,
 	dependencies: openclx_deps,

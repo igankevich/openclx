@@ -11,6 +11,9 @@ CLX_METHOD_STRING(clx::platform::version, ::clGetPlatformInfo, CL_PLATFORM_VERSI
 CLX_METHOD_STRING(clx::platform::name, ::clGetPlatformInfo, CL_PLATFORM_NAME);
 CLX_METHOD_STRING(clx::platform::vendor, ::clGetPlatformInfo, CL_PLATFORM_VENDOR);
 CLX_METHOD_STRING(clx::platform::extensions, ::clGetPlatformInfo, CL_PLATFORM_EXTENSIONS);
+#if defined(CL_PLATFORM_ICD_SUFFIX_KHR)
+CLX_METHOD_STRING(clx::platform::suffix, ::clGetPlatformInfo, CL_PLATFORM_ICD_SUFFIX_KHR);
+#endif
 
 #if CL_TARGET_VERSION >= 210
 CLX_METHOD_SCALAR(

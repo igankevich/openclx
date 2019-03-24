@@ -47,7 +47,7 @@ clx::compiler::binary_path(
 	hash_type::result_type number
 ) const {
 	std::stringstream name;
-	name << this->binary_directory();
+	name << this->cache_directory();
 	name << file_separator;
 	name << filename << '-';
 	name << std::setfill('0') << std::setw(sizeof(number)) << std::hex << number;
@@ -62,31 +62,65 @@ clx::compiler::compile(const std::string& filename) {
 	if (!success) {
 		return it->second;
 	}
-	const auto& src = file_to_string(filename);
 	auto& prg = it->second;
+	this->compile(prg, filename, file_to_string(filename));
+	return prg;
+}
+
+clx::program
+clx::compiler::compile(const std::string& filename, const std::string& src) {
+	auto& programs = this->_programs;
+	program_map::iterator it; bool success;
+	std::tie(it, success) = programs.insert({filename,{}});
+	if (!success) {
+		return it->second;
+	}
+	auto& prg = it->second;
+	this->compile(prg, filename, src);
+	return prg;
+}
+
+void
+clx::compiler::compile(
+	program& prg,
+	const std::string& filename,
+	const std::string& src
+) {
 	if (cache()) {
 		hash_type hash;
-		auto key = hash(salt() + src);
-		const auto& path = binary_path(filename, key);
-		std::fstream stream;
+		const auto& devices = this->devices();
 		try {
-			stream.exceptions(std::ios::failbit | std::ios::badbit);
-			stream.open(path, std::ios::binary | std::ios::in);
-			binary bin; stream >> bin;
-			prg = this->_context.program(bin);
-			prg.build(options(), devices());
-			stream.clear();
-			stream.close();
-			stream.open(path, std::ios::binary | std::ios::out);
-			stream << bin;
-			stream.close();
+			std::vector<binary> binaries;
+			binaries.reserve(devices.size());
+			for (const auto& device : devices) {
+				auto key = hash(salt(device) + src);
+				const auto& path = binary_path(filename, key);
+				std::ifstream in;
+				in.exceptions(std::ios::failbit | std::ios::badbit);
+				in.open(path, std::ios::binary | std::ios::in);
+				binaries.emplace_back();
+				in >> binaries.back();
+			}
+			prg = this->_context.program(binaries);
+			prg.build(options(), devices);
 		} catch (const std::exception& err) {
 			this->compile_from_source(prg, src);
+			const auto& binaries = prg.binaries();
+			const auto ndevices = devices.size();
+			for (size_t i=0; i<ndevices; ++i) {
+				const auto& device = devices[i];
+				const auto& binary = binaries[i];
+				auto key = hash(salt(device) + src);
+				const auto& path = binary_path(filename, key);
+				std::ofstream out;
+				out.exceptions(std::ios::failbit | std::ios::badbit);
+				out.open(path, std::ios::binary | std::ios::out);
+				out << binary;
+			}
 		}
 	} else {
 		this->compile_from_source(prg, src);
 	}
-	return prg;
 }
 
 void
@@ -153,25 +187,20 @@ void
 clx::compiler::devices(const device_array& rhs) {
 	this->_devices = rhs;
 	this->_programs.clear();
-	this->salts();
 }
 
-void
-clx::compiler::salts() {
-	auto& devices = this->_devices;
-	auto& salt = this->_salt;
-	salt.clear();
+std::string
+clx::compiler::salt(const device& device) const {
+	std::string salt;
 	salt.reserve(4096);
-	for (const auto& device : devices) {
-		const auto& platform = device.platform();
-		salt += platform.name();
-		salt += platform.vendor();
-		salt += platform.version();
-		salt += device.name();
-		salt += device.vendor();
-		salt += device.version();
-	}
-	salt.shrink_to_fit();
+	const auto& platform = device.platform();
+	salt += platform.name();
+	salt += platform.vendor();
+	salt += platform.version();
+	salt += device.name();
+	salt += device.vendor();
+	salt += device.version();
+	return salt;
 }
 
 void

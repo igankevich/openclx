@@ -24,17 +24,22 @@ namespace clx {
 		context _context;
 		program_map _programs;
 		device_array _devices;
-		std::string _salt;
 		std::string _options;
-		std::string _source_directory;
-		std::string _binary_directory;
+		std::string _source_directory{'.'};
+		std::string _cache_directory{'.'};
 		std::string _suffix;
-		bool _cache = true;
+		bool _cache = false;
 
 	public:
 
+		inline explicit
+		compiler(context ctx): _context(ctx) {}
+
 		program
 		compile(const std::string& filename);
+
+		program
+		compile(const std::string& filename, const std::string& src);
 
 		std::string
 		errors(const program& prg) const;
@@ -77,13 +82,13 @@ namespace clx {
 		}
 
 		inline void
-		binary_directory(const std::string& rhs) {
-			this->_binary_directory = rhs;
+		cache_directory(const std::string& rhs) {
+			this->_cache_directory = rhs;
 		}
 
 		inline const std::string&
-		binary_directory() const {
-			return this->_binary_directory;
+		cache_directory() const {
+			return this->_cache_directory;
 		}
 
 		inline void
@@ -114,6 +119,13 @@ namespace clx {
 	private:
 
 		void
+		compile(
+			program& prg,
+			const std::string& filename,
+			const std::string& src
+		);
+
+		void
 		compile_from_source(program& prg, const std::string& src);
 
 		std::string
@@ -124,12 +136,7 @@ namespace clx {
 			hash_type::result_type number
 		) const;
 
-		inline const std::string&
-		salt() const {
-			return this->_salt;
-		}
-
-		void salts();
+		std::string salt(const device& device) const;
 
 	};
 

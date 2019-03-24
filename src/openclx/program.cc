@@ -1,3 +1,5 @@
+#include <memory>
+
 #include <openclx/array_view>
 #include <openclx/bits/macros>
 #include <openclx/context>
@@ -81,7 +83,15 @@ clx::program::binaries() const {
 		sizes.data(),
 		nullptr
 	));
-	std::vector<unsigned char*> binaries(ndevices);
+	static_assert(
+		sizeof(std::unique_ptr<unsigned char>) == sizeof(unsigned char*),
+		"bad size"
+	);
+	std::vector<std::unique_ptr<unsigned char[]>> binaries;
+	binaries.reserve(ndevices);
+	for (const auto& s : sizes) {
+		binaries.emplace_back(new unsigned char[s]);
+	}
 	CLX_CHECK(::clGetProgramInfo(
 		this->_ptr,
 		CL_PROGRAM_BINARIES,
@@ -92,7 +102,7 @@ clx::program::binaries() const {
 	std::vector<binary> result;
 	result.reserve(ndevices);
 	for (unsigned_int_type i=0; i<ndevices; ++i) {
-		result.emplace_back(binaries[i], sizes[i]);
+		result.emplace_back(binaries[i].get(), sizes[i]);
 	}
 	return result;
 }
