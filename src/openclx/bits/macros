@@ -1,6 +1,46 @@
 #ifndef OPENCLX_BITS_MACROS
 #define OPENCLX_BITS_MACROS
 
+#include <string>
+#include <openclx/error>
+
+namespace clx {
+
+	namespace bits {
+
+		typedef int_type (*info_type)(...);
+
+		template <class ... Args>
+		std::string
+		body_string(info_type function, void* ptr, Args ... args) {
+			size_t actual_size = 0;
+			std::string value(4096, ' ');
+			errc ret;
+			bool success = false;
+			while (!success) {
+				ret = errc(
+					function(ptr, args..., value.size(), &value[0], &actual_size)
+				);
+				value.resize(actual_size);
+				if (ret != errc::invalid_value && actual_size <= value.size()) {
+					CLX_CHECK(ret);
+					success = true;
+				}
+			}
+			while (!value.empty() && value.back() == 0) { value.pop_back(); }
+			return value;
+		}
+
+	}
+
+}
+
+#define CLX_BODY_STRING(function, ...) \
+	return ::clx::bits::body_string( \
+		reinterpret_cast<bits::info_type>(function), \
+		this->get(), __VA_ARGS__)
+
+/*
 #define CLX_BODY_STRING(function, ...) \
 	size_t actual_size = 0; \
 	std::string value(4096, ' '); \
@@ -18,6 +58,7 @@
 	} \
 	while (!value.empty() && value.back() == 0) { value.pop_back(); } \
 	return value;
+*/
 
 #define CLX_METHOD_STRING(method, function, ...) \
 	std::string \
