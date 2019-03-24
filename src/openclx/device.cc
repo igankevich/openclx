@@ -61,38 +61,35 @@ clx::context clx::device::context() const {
 	return static_cast<clx::context>(ctx);
 }
 
+#if CL_TARGET_VERSION >= 200
 clx::command_queue
-clx::device::queue(command_queue_flags flags) const {
-	return this->queue(this->context().get(), flags);
-}
-
-clx::command_queue
-clx::device::queue(
-	context_type ctx,
-	command_queue_flags flags
-) const {
-	#if CL_TARGET_VERSION >= 200
+clx::device::queue_200(context_type ctx, command_queue_flags flags) const {
 	std::vector<queue_properties_type> props{
 		queue_properties_type(CL_QUEUE_PROPERTIES),
 		queue_properties_type(flags),
 		queue_properties_type(0)
 	};
-	#endif
 	int_type ret = 0;
-	#if CL_TARGET_VERSION >= 200
 	auto result =
-		::clCreateCommandQueueWithProperties(ctx, this->_ptr, props.data(), &ret);
-	#else
-	auto result = ::clCreateCommandQueue(
-		ctx,
-		this->_ptr,
-		static_cast<command_queue_flags_type>(flags),
-		&ret
-	);
-	#endif
+		::clCreateCommandQueueWithProperties(
+			ctx, this->_ptr, props.data(), &ret
+		);
 	CLX_CHECK(ret);
 	return static_cast<::clx::command_queue>(result);
 }
+#endif
+
+#if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
+clx::command_queue
+clx::device::queue_100(context_type ctx, command_queue_flags flags) const {
+	int_type ret = 0;
+	auto result = ::clCreateCommandQueue(
+		ctx, this->_ptr, static_cast<command_queue_flags_type>(flags), &ret
+	);
+	CLX_CHECK(ret);
+	return static_cast<::clx::command_queue>(result);
+}
+#endif
 
 CLX_METHOD_BOOL(clx::device::available, ::clGetDeviceInfo, CL_DEVICE_AVAILABLE)
 CLX_METHOD_BOOL(clx::device::compiler_available, ::clGetDeviceInfo, CL_DEVICE_COMPILER_AVAILABLE)

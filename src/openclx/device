@@ -5,7 +5,9 @@
 #include <string>
 #include <vector>
 
+#include <openclx/command_queue>
 #include <openclx/command_queue_flags>
+#include <openclx/context>
 #include <openclx/device_affinity_domain>
 #include <openclx/device_flags>
 #include <openclx/device_local_memory>
@@ -67,7 +69,15 @@ namespace clx {
 		unsigned_int_type vendor_id() const;
 		::clx::platform platform() const;
 		::clx::context context() const;
-		::clx::command_queue queue(command_queue_flags flags) const;
+
+		inline ::clx::command_queue
+		queue(command_queue_flags flags) const {
+			#if CL_TARGET_VERSION >= 200
+			return this->queue_200(this->context().get(), flags);
+			#else
+			return this->queue_100(this->context().get(), flags);
+			#endif
+		}
 
 		bool available() const;
 		bool compiler_available() const;
@@ -167,10 +177,15 @@ namespace clx {
 
 	private:
 
-		::clx::command_queue queue(
-			context_type ctx,
-			command_queue_flags flags
-		) const;
+		#if CL_TARGET_VERSION >= 200
+		::clx::command_queue
+		queue_200(context_type ctx, command_queue_flags flags) const;
+		#endif
+
+		#if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
+		::clx::command_queue
+		queue_100(context_type ctx, command_queue_flags flags) const;
+		#endif
 
 		friend class context;
 

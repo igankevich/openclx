@@ -21,16 +21,31 @@ CLX_METHOD_ARRAY(
 	device
 )
 
+#if CL_TARGET_VERSION >= 200
 std::vector<clx::command_queue>
-clx::context::command_queues(command_queue_flags flags) const {
+clx::context::command_queues_200(command_queue_flags flags) const {
 	const auto& devices = this->devices();
 	std::vector<command_queue> result;
 	result.reserve(devices.size());
 	for (const auto& device : devices) {
-		result.emplace_back(device.queue(this->_ptr, flags));
+		result.emplace_back(device.queue_200(this->_ptr, flags));
 	}
 	return result;
 }
+#endif
+
+#if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
+std::vector<clx::command_queue>
+clx::context::command_queues_100(command_queue_flags flags) const {
+	const auto& devices = this->devices();
+	std::vector<command_queue> result;
+	result.reserve(devices.size());
+	for (const auto& device : devices) {
+		result.emplace_back(device.queue_100(this->_ptr, flags));
+	}
+	return result;
+}
+#endif
 
 clx::program
 clx::context::program(const std::string& src) const {
@@ -143,8 +158,9 @@ CLX_METHOD_SCALAR(
 )
 #endif
 
+#if CL_TARGET_VERSION >= 200
 clx::image
-clx::context::image(
+clx::context::image_200(
 	memory_flags flags,
 	const image_format& format,
 	const image_descriptor& descriptor,
@@ -152,17 +168,29 @@ clx::context::image(
 ) const {
 	int_type ret = 0;
 	memory_type img = nullptr;
-	#if CL_TARGET_VERSION >= 120
-	img =
-		::clCreateImage(
-			this->_ptr,
-			static_cast<memory_flags_type>(flags),
-			&format,
-			&descriptor,
-			host_pointer,
-			&ret
-		);
-	#else
+	img = ::clCreateImage(
+		this->_ptr,
+		static_cast<memory_flags_type>(flags),
+		&format,
+		&descriptor,
+		host_pointer,
+		&ret
+	);
+	CLX_CHECK(ret);
+	return static_cast<::clx::image>(img);
+}
+#endif
+
+#if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
+clx::image
+clx::context::image_100(
+	memory_flags flags,
+	const image_format& format,
+	const image_descriptor& descriptor,
+	void* host_pointer
+) const {
+	int_type ret = 0;
+	memory_type img = nullptr;
 	if (descriptor.depth() == 0) {
 		img = ::clCreateImage2D(
 			this->_ptr,
@@ -188,10 +216,10 @@ clx::context::image(
 			&ret
 		);
 	}
-	#endif
 	CLX_CHECK(ret);
 	return static_cast<::clx::image>(img);
 }
+#endif
 
 clx::event
 clx::context::event() const {
@@ -220,14 +248,14 @@ clx::context::buffer(
 	return static_cast<::clx::buffer>(buf);
 }
 
+#if CL_TARGET_VERSION >= 200
 clx::sampler
-clx::context::sampler(
+clx::context::sampler_200(
 	bool normalised,
 	addressing_mode amode,
 	filter_mode fmode
 ) const {
 	int_type ret = 0;
-	#if CL_TARGET_VERSION >= 200
 	std::vector<sampler_properties_type> props{
 		sampler_properties_type(CL_SAMPLER_NORMALIZED_COORDS),
 		sampler_properties_type(normalised),
@@ -238,19 +266,30 @@ clx::context::sampler(
 		sampler_properties_type(0)
 	};
 	auto sm = ::clCreateSamplerWithProperties(this->_ptr, props.data(), &ret);
-	#else
-	auto sm =
-		::clCreateSampler(
-			this->_ptr,
-			static_cast<bool_type>(normalised),
-			static_cast<addressing_mode_type>(amode),
-			static_cast<filter_mode_type>(fmode),
-			&ret
-		);
-	#endif
 	CLX_CHECK(ret);
 	return static_cast<::clx::sampler>(sm);
 }
+#endif
+
+#if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
+clx::sampler
+clx::context::sampler_100(
+	bool normalised,
+	addressing_mode amode,
+	filter_mode fmode
+) const {
+	int_type ret = 0;
+	auto sm = ::clCreateSampler(
+		this->_ptr,
+		static_cast<bool_type>(normalised),
+		static_cast<addressing_mode_type>(amode),
+		static_cast<filter_mode_type>(fmode),
+		&ret
+	);
+	CLX_CHECK(ret);
+	return static_cast<::clx::sampler>(sm);
+}
+#endif
 
 #if CL_TARGET_VERSION >= 200
 ::clx::pipe

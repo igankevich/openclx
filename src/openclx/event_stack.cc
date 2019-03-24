@@ -4,6 +4,44 @@
 #include <openclx/image>
 #include <openclx/kernel>
 
+#define CLX_BODY_ENQUEUE(name, ...) \
+	auto& frame = this->frame(); \
+	event_type ret; \
+	{ \
+		step_guard g(this->_sync, frame); \
+		CLX_CHECK(name( \
+			this->_queue.get(), __VA_ARGS__, g.nevents, g.events, &ret \
+		)); \
+	} \
+	frame.emplace_back(std::move(ret));
+
+#define CLX_BODY_ENQUEUE_NOARGS(name) \
+	auto& frame = this->frame(); \
+	event_type ret; \
+	{ \
+		step_guard g(this->_sync, frame); \
+		CLX_CHECK(name( \
+			this->_queue.get(), g.nevents, g.events, &ret \
+		)); \
+	} \
+	frame.emplace_back(std::move(ret));
+
+#define CLX_BODY_ENQUEUE_MAP(name, ...) \
+	auto& frame = this->frame(); \
+	event_type ret; \
+	void* ptr = nullptr; \
+	{ \
+		step_guard g(this->_sync, frame); \
+		int_type err = 0; \
+		ptr = name( \
+			this->_queue.get(), __VA_ARGS__, \
+			g.nevents, g.events, &ret, &err \
+		); \
+		CLX_CHECK(err); \
+	} \
+	frame.emplace_back(std::move(ret)); \
+	return ptr;
+
 namespace {
 
 	inline void
@@ -32,67 +70,47 @@ clx::event_stack::wait() {
 	frame.clear();
 }
 
+#if CL_TARGET_VERSION >= 120
 void
-clx::event_stack::barrier() {
-	auto& frame = this->frame();
-	event_type ret;
-	{
-		#if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
-		CLX_CHECK(::clEnqueueBarrier(this->_queue.get(), &ret));
-		#else
-		step_guard g(this->_sync, frame);
-		CLX_CHECK(::clEnqueueBarrierWithWaitList(
-			this->_queue.get(),
-			g.nevents,
-			g.events,
-			&ret
-		));
-		#endif
-	}
-	frame.emplace_back(std::move(ret));
+clx::event_stack::barrier_120() {
+	CLX_BODY_ENQUEUE_NOARGS(::clEnqueueBarrierWithWaitList);
 }
+#endif
 
+#if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
 void
-clx::event_stack::marker() {
+clx::event_stack::barrier_100() {
 	auto& frame = this->frame();
 	event_type ret;
-	{
-		#if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
-		CLX_CHECK(::clEnqueueMarker(this->_queue.get(), &ret));
-		#else
-		step_guard g(this->_sync, frame);
-		CLX_CHECK(::clEnqueueMarkerWithWaitList(
-			this->_queue.get(),
-			g.nevents,
-			g.events,
-			&ret
-		));
-		#endif
-	}
+	CLX_CHECK(::clEnqueueBarrier(this->_queue.get(), &ret));
 	frame.emplace_back(std::move(ret));
 }
+#endif
+
+#if CL_TARGET_VERSION >= 120
+void
+clx::event_stack::marker_120() {
+	CLX_BODY_ENQUEUE_NOARGS(::clEnqueueMarkerWithWaitList);
+}
+#endif
+
+#if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
+void
+clx::event_stack::marker_100() {
+	auto& frame = this->frame();
+	event_type ret;
+	CLX_CHECK(::clEnqueueMarker(this->_queue.get(), &ret));
+	frame.emplace_back(std::move(ret));
+}
+#endif
 
 void
 clx::event_stack::kernel(const ::clx::kernel& k) {
-	auto& frame = this->frame();
-	event_type ret;
-	{
-		step_guard g(this->_sync, frame);
-		#if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
-		CLX_CHECK(::clEnqueueTask(
-			this->_queue.get(), k.get(),
-			g.nevents, g.events, &ret
-		));
-		#else
-		const size_t offset = 0, size = 1;
-		CLX_CHECK(::clEnqueueNDRangeKernel(
-			this->_queue.get(), k.get(),
-			1u, &offset, &size, &size,
-			g.nevents, g.events, &ret
-		));
-		#endif
-	}
-	frame.emplace_back(std::move(ret));
+	const size_t offset = 0, size = 1;
+	CLX_BODY_ENQUEUE(
+		::clEnqueueNDRangeKernel, k.get(),
+		1u, &offset, &size, &size
+	);
 }
 
 void
@@ -102,48 +120,28 @@ clx::event_stack::kernel(
 	const range& global,
 	const range& local
 ) {
-	auto& frame = this->frame();
-	event_type ret;
-	{
-		step_guard g(this->_sync, frame);
-		CLX_CHECK(::clEnqueueNDRangeKernel(
-			this->_queue.get(), k.get(), global.dimensions(),
-			offset.data(), global.data(), local.data(),
-			g.nevents, g.events, &ret
-		));
-	}
-	frame.emplace_back(std::move(ret));
+	CLX_BODY_ENQUEUE(
+		::clEnqueueNDRangeKernel, k.get(),
+		global.dimensions(), offset.data(), global.data(), local.data()
+	);
 }
 
 void
 clx::event_stack::read(const buffer_slice& src, void* dst) {
-	auto& frame = this->frame();
-	event_type ret;
-	{
-		step_guard g(this->_sync, frame);
-		CLX_CHECK(::clEnqueueReadBuffer(
-			this->_queue.get(), src.buffer.get(), CL_FALSE,
-			src.offset, src.size, dst,
-			g.nevents, g.events, &ret
-		));
-	}
-	frame.emplace_back(std::move(ret));
+	CLX_BODY_ENQUEUE(
+		::clEnqueueReadBuffer,
+		src.buffer.get(), CL_FALSE,
+		src.offset, src.size, dst
+	);
 }
 
 void
 clx::event_stack::read(const image_slice& src, void* dst) {
-	auto& frame = this->frame();
-	event_type ret;
-	{
-		step_guard g(this->_sync, frame);
-		CLX_CHECK(::clEnqueueReadImage(
-			this->_queue.get(), src.image.get(), CL_FALSE,
-			src.offset.data(), src.size.data(),
-			src.image.row_pitch(), src.image.slice_pitch(), dst,
-			g.nevents, g.events, &ret
-		));
-	}
-	frame.emplace_back(std::move(ret));
+	CLX_BODY_ENQUEUE(
+		::clEnqueueReadImage, src.image.get(), CL_FALSE,
+		src.offset.data(), src.size.data(),
+		src.image.row_pitch(), src.image.slice_pitch(), dst
+	);
 }
 
 void
@@ -153,33 +151,19 @@ clx::event_stack::read(const image& src, void* dst) {
 
 void
 clx::event_stack::write(const buffer_slice& dst, void* src) {
-	auto& frame = this->frame();
-	event_type ret;
-	{
-		step_guard g(this->_sync, frame);
-		CLX_CHECK(::clEnqueueWriteBuffer(
-			this->_queue.get(), dst.buffer.get(), CL_FALSE,
-			dst.offset, dst.size, src,
-			g.nevents, g.events, &ret
-		));
-	}
-	frame.emplace_back(std::move(ret));
+	CLX_BODY_ENQUEUE(
+		::clEnqueueWriteBuffer, dst.buffer.get(), CL_FALSE,
+		dst.offset, dst.size, src
+	);
 }
 
 void
 clx::event_stack::write(const image_slice& dst, void* src) {
-	auto& frame = this->frame();
-	event_type ret;
-	{
-		step_guard g(this->_sync, frame);
-		CLX_CHECK(::clEnqueueWriteImage(
-			this->_queue.get(), dst.image.get(), CL_FALSE,
-			dst.offset.data(), dst.size.data(),
-			dst.image.row_pitch(), dst.image.slice_pitch(), src,
-			g.nevents, g.events, &ret
-		));
-	}
-	frame.emplace_back(std::move(ret));
+	CLX_BODY_ENQUEUE(
+		::clEnqueueWriteImage, dst.image.get(), CL_FALSE,
+		dst.offset.data(), dst.size.data(),
+		dst.image.row_pitch(), dst.image.slice_pitch(), src
+	);
 }
 
 void
@@ -189,17 +173,10 @@ clx::event_stack::write(const image& dst, void* src) {
 
 void
 clx::event_stack::copy(const buffer_slice& src, const buffer_slice& dst) {
-	auto& frame = this->frame();
-	event_type ret;
-	{
-		step_guard g(this->_sync, frame);
-		CLX_CHECK(::clEnqueueCopyBuffer(
-			this->_queue.get(), src.buffer.get(), dst.buffer.get(),
-			src.offset, dst.offset, src.size,
-			g.nevents, g.events, &ret
-		));
-	}
-	frame.emplace_back(std::move(ret));
+	CLX_BODY_ENQUEUE(
+		::clEnqueueCopyBuffer, src.buffer.get(), dst.buffer.get(),
+		src.offset, dst.offset, src.size
+	);
 }
 
 void
@@ -210,17 +187,10 @@ clx::event_stack::copy(const buffer& src, const buffer& dst) {
 
 void
 clx::event_stack::copy(const image_slice& src, const image_slice& dst) {
-	auto& frame = this->frame();
-	event_type ret;
-	{
-		step_guard g(this->_sync, frame);
-		CLX_CHECK(::clEnqueueCopyImage(
-			this->_queue.get(), src.image.get(), dst.image.get(),
-			src.offset.data(), dst.offset.data(), src.size.data(),
-			g.nevents, g.events, &ret
-		));
-	}
-	frame.emplace_back(std::move(ret));
+	CLX_BODY_ENQUEUE(
+		::clEnqueueCopyImage, src.image.get(), dst.image.get(),
+		src.offset.data(), dst.offset.data(), src.size.data()
+	);
 }
 
 void
@@ -231,17 +201,10 @@ clx::event_stack::copy(const image& src, const image& dst) {
 
 void
 clx::event_stack::copy(const image_slice& src, const buffer_slice& dst) {
-	auto& frame = this->frame();
-	event_type ret;
-	{
-		step_guard g(this->_sync, frame);
-		CLX_CHECK(::clEnqueueCopyImageToBuffer(
-			this->_queue.get(), src.image.get(), dst.buffer.get(),
-			src.offset.data(), src.size.data(), dst.offset,
-			g.nevents, g.events, &ret
-		));
-	}
-	frame.emplace_back(std::move(ret));
+	CLX_BODY_ENQUEUE(
+		::clEnqueueCopyImageToBuffer, src.image.get(), dst.buffer.get(),
+		src.offset.data(), src.size.data(), dst.offset
+	);
 }
 
 void
@@ -256,17 +219,10 @@ clx::event_stack::copy(const image& src, const buffer& dst) {
 
 void
 clx::event_stack::copy(const buffer_slice& src, const image_slice& dst) {
-	auto& frame = this->frame();
-	event_type ret;
-	{
-		step_guard g(this->_sync, frame);
-		CLX_CHECK(::clEnqueueCopyBufferToImage(
-			this->_queue.get(), src.buffer.get(), dst.image.get(),
-			src.offset, dst.offset.data(), dst.size.data(),
-			g.nevents, g.events, &ret
-		));
-	}
-	frame.emplace_back(std::move(ret));
+	CLX_BODY_ENQUEUE(
+		::clEnqueueCopyBufferToImage, src.buffer.get(), dst.image.get(),
+		src.offset, dst.offset.data(), dst.size.data()
+	);
 }
 
 void
@@ -281,21 +237,10 @@ clx::event_stack::copy(const buffer& src, const image& dst) {
 
 void*
 clx::event_stack::map(const buffer_slice& b, map_flags flags) {
-	auto& frame = this->frame();
-	event_type ret;
-	void* ptr = nullptr;
-	{
-		step_guard g(this->_sync, frame);
-		int_type err = 0;
-		ptr = ::clEnqueueMapBuffer(
-			this->_queue.get(), b.buffer.get(), CL_FALSE,
-			static_cast<map_flags_type>(flags), b.offset, b.size,
-			g.nevents, g.events, &ret, &err
-		);
-		CLX_CHECK(err);
-	}
-	frame.emplace_back(std::move(ret));
-	return ptr;
+	CLX_BODY_ENQUEUE_MAP(
+		::clEnqueueMapBuffer, b.buffer.get(), CL_FALSE,
+		static_cast<map_flags_type>(flags), b.offset, b.size
+	);
 }
 
 void*
@@ -308,22 +253,11 @@ clx::event_stack::map(
 	const image_slice& src, map_flags flags,
 	size_t& row_pitch, size_t& slice_pitch
 ) {
-	auto& frame = this->frame();
-	event_type ret;
-	void* ptr = nullptr;
-	{
-		step_guard g(this->_sync, frame);
-		int_type err = 0;
-		ptr = ::clEnqueueMapImage(
-			this->_queue.get(), src.image.get(), CL_FALSE,
-			static_cast<map_flags_type>(flags), src.offset.data(), src.size.data(),
-			&row_pitch, &slice_pitch,
-			g.nevents, g.events, &ret, &err
-		);
-		CLX_CHECK(err);
-	}
-	frame.emplace_back(std::move(ret));
-	return ptr;
+	CLX_BODY_ENQUEUE_MAP(
+		::clEnqueueMapImage,
+		src.image.get(), CL_FALSE, static_cast<map_flags_type>(flags),
+		src.offset.data(), src.size.data(), &row_pitch, &slice_pitch
+	);
 }
 
 void*
@@ -339,15 +273,6 @@ clx::event_stack::map(
 
 void
 clx::event_stack::unmap(const memory_object& obj, void* ptr) {
-	auto& frame = this->frame();
-	event_type ret;
-	{
-		step_guard g(this->_sync, frame);
-		CLX_CHECK(::clEnqueueUnmapMemObject(
-			this->_queue.get(), obj.get(), ptr,
-			g.nevents, g.events, &ret
-		));
-	}
-	frame.emplace_back(std::move(ret));
+	CLX_BODY_ENQUEUE(::clEnqueueUnmapMemObject, obj.get(), ptr);
 }
 

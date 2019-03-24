@@ -25,7 +25,10 @@ namespace clx {
 		size_t image_slice_pitch;
 		int_type ip_levels;
 		int_type num_samples;
-		memory_object buffer;
+		union {
+			memory_object buffer;
+			memory_object mem_object;
+		}
 	};
 	#endif
 

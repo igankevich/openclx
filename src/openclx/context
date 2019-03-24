@@ -4,12 +4,15 @@
 #include <string>
 #include <vector>
 
+#include <openclx/command_queue>
 #include <openclx/command_queue_flags>
 #include <openclx/error>
+#include <openclx/image>
 #include <openclx/image_descriptor>
 #include <openclx/image_format>
 #include <openclx/memory_flags>
 #include <openclx/memory_objects>
+#include <openclx/sampler>
 #include <openclx/types>
 
 namespace clx {
@@ -27,8 +30,14 @@ namespace clx {
 		std::vector<device>
 		devices() const;
 
-		std::vector<command_queue>
-		command_queues(command_queue_flags flags) const;
+		inline std::vector<command_queue>
+		command_queues(command_queue_flags flags) const {
+			#if CL_TARGET_VERSION >= 200
+			return this->command_queues_200(flags);
+			#else
+			return this->command_queues_100(flags);
+			#endif
+		}
 
 		::clx::program program(const std::string& src) const;
 		::clx::program program(const std::vector<binary>& binaries) const;
@@ -38,13 +47,19 @@ namespace clx {
 		unsigned_int_type num_devices() const;
 		#endif
 
-		::clx::image
+		inline ::clx::image
 		image(
 			memory_flags flags,
 			const image_format& format,
 			const image_descriptor& descriptor,
 			void* host_pointer=nullptr
-		) const;
+		) const {
+			#if CL_TARGET_VERSION >= 200
+			return this->image_200(flags, format, descriptor, host_pointer);
+			#else
+			return this->image_100(flags, format, descriptor, host_pointer);
+			#endif
+		}
 
 		std::vector<image_format>
 		image_formats(memory_flags flags, memory_objects type) const;
@@ -60,12 +75,18 @@ namespace clx {
 			void* host_pointer=nullptr
 		) const;
 
-		::clx::sampler
+		inline ::clx::sampler
 		sampler(
 			bool normalised,
 			addressing_mode amode,
 			filter_mode fmode
-		) const;
+		) const {
+			#if CL_TARGET_VERSION >= 200
+			return this->sampler_200(normalised, amode, fmode);
+			#else
+			return this->sampler_100(normalised, amode, fmode);
+			#endif
+		}
 
 		#if CL_TARGET_VERSION >= 200
 		::clx::pipe pipe(
@@ -125,6 +146,56 @@ namespace clx {
 		swap(context& rhs) {
 			std::swap(this->_ptr, rhs._ptr);
 		}
+
+	private:
+
+		#if CL_TARGET_VERSION >= 200
+		std::vector<command_queue>
+		command_queues_200(command_queue_flags flags) const;
+		#endif
+
+		#if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
+		std::vector<command_queue>
+		command_queues_100(command_queue_flags flags) const;
+		#endif
+
+		#if CL_TARGET_VERSION >= 200
+		::clx::image
+		image_200(
+			memory_flags flags,
+			const image_format& format,
+			const image_descriptor& descriptor,
+			void* host_pointer=nullptr
+		) const;
+		#endif
+
+		#if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
+		::clx::image
+		image_100(
+			memory_flags flags,
+			const image_format& format,
+			const image_descriptor& descriptor,
+			void* host_pointer=nullptr
+		) const;
+		#endif
+
+		#if CL_TARGET_VERSION >= 200
+		::clx::sampler
+		sampler_200(
+			bool normalised,
+			addressing_mode amode,
+			filter_mode fmode
+		) const;
+		#endif
+
+		#if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
+		::clx::sampler
+		sampler_100(
+			bool normalised,
+			addressing_mode amode,
+			filter_mode fmode
+		) const;
+		#endif
 
 	};
 

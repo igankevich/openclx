@@ -67,11 +67,23 @@ namespace clx {
 		void
 		wait();
 
-		void
-		barrier();
+		inline void
+		barrier() {
+			#if CL_TARGET_VERSION >= 120
+			this->barrier_120();
+			#else
+			this->barrier_100();
+			#endif
+		}
 
-		void
-		marker();
+		inline void
+		marker() {
+			#if CL_TARGET_VERSION >= 120
+			this->marker_120();
+			#else
+			this->marker_100();
+			#endif
+		}
 
 		void
 		kernel(const ::clx::kernel& k);
@@ -196,6 +208,26 @@ namespace clx {
 		frame() {
 			return this->_frames.back();
 		}
+
+		#if CL_TARGET_VERSION >= 120
+		void
+		barrier_120();
+		#endif
+
+		#if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
+		void
+		barrier_100();
+		#endif
+
+		#if CL_TARGET_VERSION >= 120
+		void
+		marker_120();
+		#endif
+
+		#if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
+		void
+		marker_100();
+		#endif
 
 	};
 
