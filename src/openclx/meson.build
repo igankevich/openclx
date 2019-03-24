@@ -2,6 +2,7 @@ openclx_src = files([
 	'binary.cc',
 	'buffer.cc',
 	'command_queue.cc',
+	'compiler.cc',
 	'context.cc',
 	'device.cc',
 	'error.cc',

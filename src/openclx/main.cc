@@ -1,15 +1,5 @@
-#include <openclx/device>
-#include <openclx/error>
-#include <openclx/event>
-#include <openclx/image_format>
-#include <openclx/limits>
+#include <openclx/compiler>
 #include <openclx/platform>
-#include <openclx/types>
-#include <openclx/vector>
-#include <openclx/kernel_argument>
-#include <openclx/svm_allocator>
-#include <openclx/map_flags>
-#include <openclx/event_stack>
 
 #include <iostream>
 
@@ -19,6 +9,7 @@ int main() {
 		std::clog << "p.name()=" << p.name() << std::endl;
 		for (const auto& d : p.devices(device_flags::all)) {
 			std::clog << "d.name()=" << d.name() << std::endl;
+			std::clog << "d.vendor_id()=" << d.vendor_id() << std::endl;
 		}
 	}
 	return 0;

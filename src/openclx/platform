@@ -35,19 +35,23 @@ namespace clx {
 		::clx::context context(const array_view<device>& devices) const;
 		::clx::context context(device_flags types=device_flags::all) const;
 
-		#if CL_TARGET_VERSION >= 120
 		inline void
 		unload_compiler() {
+			#if CL_TARGET_VERSION >= 120
 			CLX_CHECK(::clUnloadPlatformCompiler(this->_ptr));
+			#else
+			CLX_CHECK(::clUnloadCompiler());
+			#endif
 		}
-		#endif
 
-		#if CL_TARGET_VERSION >= 120
 		inline void*
 		extension_function_address(const char* name) const {
+			#if CL_TARGET_VERSION >= 120
 			return ::clGetExtensionFunctionAddressForPlatform(this->_ptr, name);
+			#else
+			return ::clGetExtensionFunctionAddress(name);
+			#endif
 		}
-		#endif
 
 		#if CL_TARGET_VERSION >= 210
 		nanoseconds timer_resolution() const;
