@@ -1,4 +1,5 @@
 #include <openclx/buffer>
+#include <openclx/downcast>
 #include <openclx/error>
 #include <openclx/event_stack>
 #include <openclx/image>
@@ -41,27 +42,6 @@
 	} \
 	frame.emplace_back(std::move(ret)); \
 	return ptr;
-
-namespace {
-
-	inline void
-	release(clx::event_type* data, size_t n) {
-		for (size_t i=0; i<n; ++i) {
-			CLX_CHECK(::clReleaseEvent(data[i]));
-		}
-	}
-
-	inline const clx::event_type*
-	downcast(const clx::event* x) {
-		return reinterpret_cast<const clx::event_type*>(x);
-	}
-
-	inline clx::event_type*
-	downcast(clx::event* x) {
-		return reinterpret_cast<clx::event_type*>(x);
-	}
-
-}
 
 void
 clx::event_stack::wait() {

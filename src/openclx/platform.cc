@@ -1,6 +1,7 @@
 #include <openclx/bits/macros>
 #include <openclx/context>
 #include <openclx/device>
+#include <openclx/downcast>
 #include <openclx/error>
 #include <openclx/platform>
 
@@ -27,9 +28,7 @@ clx::platforms() {
 	bool success = false;
 	while (!success) {
 		ret = ::clGetPlatformIDs(
-			result.size(),
-			reinterpret_cast<platform_type*>(result.data()),
-			&actual_size
+			result.size(), downcast(result.data()), &actual_size
 		);
 		result.resize(actual_size);
 		if (errc(ret) != errc::invalid_value && actual_size <= result.size()) {
@@ -48,10 +47,8 @@ clx::platform::devices(device_flags types) const {
 	bool success = false;
 	while (!success) {
 		ret = ::clGetDeviceIDs(
-			this->_ptr,
-			static_cast<device_flags_type>(types),
-			result.size(),
-			reinterpret_cast<device_type*>(result.data()),
+			this->_ptr, static_cast<device_flags_type>(types),
+			result.size(), downcast(result.data()),
 			&actual_size
 		);
 		result.resize(actual_size);
@@ -71,12 +68,8 @@ clx::context clx::platform::context(const std::vector<device>& devices) const {
 	};
 	int_type ret = 0;
 	auto ctx = ::clCreateContext(
-		prop.data(),
-		devices.size(),
-		reinterpret_cast<const device_type*>(devices.data()),
-		nullptr,
-		nullptr,
-		&ret
+		prop.data(), devices.size(), downcast(devices.data()),
+		nullptr, nullptr, &ret
 	);
 	CLX_CHECK(ret);
 	return static_cast<clx::context>(ctx);

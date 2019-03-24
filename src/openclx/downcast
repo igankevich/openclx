@@ -1,0 +1,58 @@
+#ifndef OPENCLX_DOWNCAST
+#define OPENCLX_DOWNCAST
+
+#include <openclx/types>
+
+namespace clx {
+
+	#define CLX_MAKE_DOWNCAST_TYPE(name) \
+		template <> \
+		struct downcast_type<name> { typedef name##_type type; }
+
+	#define CLX_MAKE_DOWNCAST_TYPE2(name,new_name) \
+		template <> \
+		struct downcast_type<name> { typedef new_name type; }
+
+	CLX_MAKE_DOWNCAST_TYPE(platform);
+	CLX_MAKE_DOWNCAST_TYPE(device);
+	CLX_MAKE_DOWNCAST_TYPE(context);
+	CLX_MAKE_DOWNCAST_TYPE(command_queue);
+	CLX_MAKE_DOWNCAST_TYPE(program);
+	CLX_MAKE_DOWNCAST_TYPE(kernel);
+	CLX_MAKE_DOWNCAST_TYPE(event);
+	CLX_MAKE_DOWNCAST_TYPE(memory_object);
+	CLX_MAKE_DOWNCAST_TYPE2(image, memory_object_type);
+	CLX_MAKE_DOWNCAST_TYPE2(buffer, memory_object_type);
+	CLX_MAKE_DOWNCAST_TYPE(sampler);
+	CLX_MAKE_DOWNCAST_TYPE2(errc, int_type);
+	CLX_MAKE_DOWNCAST_TYPE(memory_flags);
+	CLX_MAKE_DOWNCAST_TYPE(memory_objects);
+	CLX_MAKE_DOWNCAST_TYPE(image_format);
+
+	#undef CLX_MAKE_DOWNCAST_TYPE
+	#undef CLX_MAKE_DOWNCAST_TYPE2
+
+	template <class T>
+	inline const typename downcast_type<T>::type*
+	downcast(const T* x) {
+		typedef typename downcast_type<T>::type target_type;
+		return reinterpret_cast<const target_type*>(x);
+	}
+
+	template <class T>
+	inline typename downcast_type<T>::type*
+	downcast(T* x) {
+		typedef typename downcast_type<T>::type target_type;
+		return reinterpret_cast<target_type*>(x);
+	}
+
+	template <class T>
+	inline typename downcast_type<T>::type
+	downcast(T x) {
+		typedef typename downcast_type<T>::type target_type;
+		return static_cast<target_type>(x);
+	}
+
+}
+
+#endif // vim:filetype=cpp

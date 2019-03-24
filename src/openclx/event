@@ -100,13 +100,8 @@ namespace clx {
 		lhs.swap(rhs);
 	}
 
-	inline void
-	wait(const std::vector<event>& events) {
-		CLX_CHECK(::clWaitForEvents(
-			events.size(),
-			reinterpret_cast<const event_type*>(events.data())
-		));
-	}
+	void
+	wait(const std::vector<event>& events);
 
 }
 

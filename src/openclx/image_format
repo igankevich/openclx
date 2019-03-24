@@ -58,7 +58,8 @@ namespace clx {
 		#endif
 	};
 
-	struct image_format: public image_format_type {
+	class image_format: public image_format_type {
+	public:
 
 		inline
 		image_format(): image_format_type{} {}

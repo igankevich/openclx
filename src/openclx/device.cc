@@ -2,6 +2,7 @@
 #include <openclx/command_queue>
 #include <openclx/context>
 #include <openclx/device>
+#include <openclx/downcast>
 #include <openclx/platform>
 
 CLX_WARNING_PUSH
@@ -204,10 +205,8 @@ clx::device::partition(unsigned int num_compute_units) const {
 	bool success = false;
 	while (!success) {
 		ret = clCreateSubDevices(
-			this->_ptr,
-			properties.data(),
-			result.size(),
-			reinterpret_cast<device_type*>(result.data()),
+			this->_ptr, properties.data(),
+			result.size(), downcast(result.data()),
 			&actual_size
 		);
 		result.resize(actual_size/sizeof(size_t));
@@ -239,10 +238,8 @@ clx::device::partition(const std::vector<unsigned int>& num_compute_units) const
 	std::vector<device> result(num_compute_units.size());
 	unsigned_int_type actual_size = 0;
 	CLX_CHECK(::clCreateSubDevices(
-		this->_ptr,
-		properties.data(),
-		result.size(),
-		reinterpret_cast<device_type*>(result.data()),
+		this->_ptr, properties.data(),
+		result.size(), downcast(result.data()),
 		&actual_size
 	));
 	result.resize(actual_size);

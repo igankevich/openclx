@@ -1,6 +1,7 @@
 #include <openclx/bits/macros>
 #include <openclx/command_queue>
 #include <openclx/context>
+#include <openclx/downcast>
 #include <openclx/event>
 
 CLX_METHOD_SCALAR(
@@ -65,4 +66,9 @@ CLX_METHOD_SCALAR(
 	CL_PROFILING_COMMAND_COMPLETE,
 	nanoseconds
 );
+
+void
+clx::wait(const std::vector<event>& events) {
+	CLX_CHECK(::clWaitForEvents(events.size(), downcast(events.data())));
+}
 

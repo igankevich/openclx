@@ -1,9 +1,9 @@
-- [ ] 120 clCompileProgram
+- [X] 120 clCompileProgram
 - [ ] 120 clEnqueueFillBuffer
 - [ ] 120 clEnqueueFillImage
 - [ ] 120 clEnqueueMigrateMemObjects
 - [ ] 120 clGetKernelArgInfo
-- [ ] 120 clLinkProgram
+- [X] 120 clLinkProgram
 - [ ] 200 clEnqueueSVMFree
 - [ ] 200 clEnqueueSVMMap
 - [ ] 200 clEnqueueSVMMemFill

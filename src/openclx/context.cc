@@ -6,6 +6,7 @@
 #include <openclx/command_queue>
 #include <openclx/context>
 #include <openclx/device>
+#include <openclx/downcast>
 #include <openclx/event>
 #include <openclx/image>
 #include <openclx/pipe>
@@ -81,11 +82,8 @@ clx::context::program(const std::vector<binary>& binaries) const {
 	std::vector<errc> status(binaries.size());
 	auto prg = ::clCreateProgramWithBinary(
 		this->_ptr,
-		devices.size(),
-		reinterpret_cast<const device_type*>(devices.data()),
-		sizes.data(),
-		data.data(),
-		reinterpret_cast<int_type*>(status.data()),
+		devices.size(), downcast(devices.data()), sizes.data(),
+		data.data(), downcast(status.data()),
 		&ret
 	);
 	CLX_CHECK(ret);
@@ -103,14 +101,18 @@ clx::context::builtin_program(const std::string& names) const {
 	const auto& devices = this->devices();
 	int_type ret = 0;
 	auto prg = ::clCreateProgramWithBuiltInKernels(
-		this->_ptr,
-		devices.size(),
-		reinterpret_cast<const device_type*>(devices.data()),
-		names.data(),
-		&ret
+		this->_ptr, devices.size(), downcast(devices.data()),
+		names.data(), &ret
 	);
 	CLX_CHECK(ret);
 	return static_cast<::clx::program>(prg);
+}
+#endif
+
+#if CL_TARGET_VERSION >= 120
+clx::header
+clx::context::header(const std::string& name, const std::string& src) const {
+	return {this->program(src), name};
 }
 #endif
 
@@ -122,12 +124,8 @@ clx::context::image_formats(memory_flags flags, memory_objects type) const {
 	unsigned_int_type actual_size = 0;
 	while (!success) {
 		ret = ::clGetSupportedImageFormats(
-			this->_ptr,
-			static_cast<memory_flags_type>(flags),
-			static_cast<memory_objects_type>(type),
-			result.size(),
-			reinterpret_cast<image_format_type*>(result.data()),
-			&actual_size
+			this->_ptr, downcast(flags), downcast(type),
+			result.size(), downcast(result.data()), &actual_size
 		);
 		result.resize(actual_size);
 		if (errc(ret) != errc::invalid_value && result.size() <= actual_size) {
