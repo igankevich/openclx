@@ -203,8 +203,19 @@ CLX_METHOD_SCALAR(clx::device::type, ::clGetDeviceInfo, device_flags, CL_DEVICE_
 CLX_METHOD_SCALAR(clx::device::parent, ::clGetDeviceInfo, device, CL_DEVICE_PARENT_DEVICE)
 CLX_METHOD_SCALAR(clx::device::max_subordinate_devices, ::clGetDeviceInfo, unsigned_int_type, CL_DEVICE_PARTITION_MAX_SUB_DEVICES)
 CLX_METHOD_SCALAR(clx::device::affinity_domain, ::clGetDeviceInfo, device_affinity_domain, CL_DEVICE_PARTITION_AFFINITY_DOMAIN)
-CLX_METHOD_ARRAY(clx::device::supported_partitions, ::clGetDeviceInfo, CL_DEVICE_PARTITION_PROPERTIES, device_partition)
+CLX_METHOD_ARRAY(clx::device::supported_partitions_priv, ::clGetDeviceInfo, CL_DEVICE_PARTITION_PROPERTIES, device_partition)
 CLX_METHOD_ARRAY(clx::device::partitions, ::clGetDeviceInfo, CL_DEVICE_PARTITION_TYPE, device_partition)
+
+
+std::vector<clx::device_partition>
+clx::device::supported_partitions() const {
+	auto partitions = this->supported_partitions_priv();
+	if (!partitions.empty() && partitions.front() == device_partition{}) {
+		partitions.clear();
+	}
+	return partitions;
+}
+
 #endif
 
 #if CL_TARGET_VERSION >= 120
@@ -216,22 +227,23 @@ clx::device::partition(unsigned int num_compute_units) const {
 		device_partition_type(0)
 	};
 	std::vector<device> result(4096 / sizeof(device));
-	unsigned_int_type actual_size = 0;
+	unsigned_int_type ndevices = 0;
 	int_type ret;
 	bool success = false;
 	while (!success) {
-		ret = clCreateSubDevices(
+		ret = ::clCreateSubDevices(
 			this->_ptr, properties.data(),
 			result.size(), downcast(result.data()),
-			&actual_size
+			&ndevices
 		);
-		result.resize(actual_size/sizeof(size_t));
-		if (errc(ret) != errc::invalid_value && actual_size <= result.size()) {
+		result.resize(ndevices);
+		if ((errc(ret) != errc::invalid_value &&
+			ndevices <= result.size()) || ndevices == 0) {
 			CLX_CHECK(ret);
 			success = true;
 		}
 	}
-	result.resize(actual_size);
+	result.resize(ndevices);
 	return result;
 }
 #endif

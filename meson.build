@@ -6,6 +6,8 @@ project(
 	default_options: ['cpp_std=c++11']
 )
 
+with_tests = get_option('with_tests')
+
 cpp = meson.get_compiler('cpp')
 
 foreach arg : ['-Werror=return-type']

@@ -11,7 +11,6 @@ openclx_src = files([
 	'image.cc',
 	'kernel.cc',
 	'kernel_argument.cc',
-	'main.cc',
 	'memory_object.cc',
 	'pipe.cc',
 	'platform.cc',
@@ -24,7 +23,7 @@ openclx_deps = [
 	dependency('OpenCL')
 ]
 
-shared_library(
+libclx = shared_library(
 	'openclx',
 	sources: openclx_src,
 	include_directories: src,
@@ -34,8 +33,24 @@ shared_library(
 
 executable(
 	'clx',
-	sources: openclx_src,
+	sources: 'main.cc',
 	include_directories: src,
 	dependencies: openclx_deps,
+	link_with: libclx,
 	implicit_include_directories: false,
 )
+
+if with_tests
+	gtest = dependency('gtest', main: true)
+	test(
+		'device-test',
+		executable(
+			'device-test',
+			sources: 'device_test.cc',
+			include_directories: src,
+			dependencies: [openclx_deps,gtest],
+			link_with: libclx,
+			implicit_include_directories: false,
+		)
+	)
+endif

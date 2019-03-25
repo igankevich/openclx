@@ -177,6 +177,11 @@ namespace clx {
 
 	private:
 
+		#if CL_TARGET_VERSION >= 120
+		std::vector<device_partition>
+		supported_partitions_priv() const;
+		#endif
+
 		#if CL_TARGET_VERSION >= 200
 		::clx::command_queue
 		queue_200(context_type ctx, command_queue_flags flags) const;

@@ -1,0 +1,9 @@
+option(
+	'with_tests',
+	type: 'boolean',
+	value: true,
+	description: 'build unit tests'
+)
+
+
+
