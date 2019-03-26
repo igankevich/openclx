@@ -18,15 +18,6 @@ namespace clx {
 	class event_stack {
 
 	public:
-		struct frame_type {
-			size_t offset = 0;
-			size_t size = 0;
-			frame_type() = default;
-			frame_type(size_t offset, size_t size):
-			offset(offset), size(size) {}
-		};
-
-	public:
 		typedef std::vector<event> event_array;
 		typedef std::vector<event_array> frame_array;
 		typedef slice_3d<const buffer&> buffer_slice_3d;
@@ -41,12 +32,12 @@ namespace clx {
 
 		struct step_guard {
 
-			bool sync;
+			bool& sync;
 			event_array& frame;
 			unsigned_int_type nevents = 0;
 			const event_type* events = nullptr;
 
-			step_guard(bool sync, event_array& frame):
+			step_guard(bool& sync, event_array& frame):
 			sync(sync), frame(frame) {
 				if (sync && !frame.empty()) {
 					events = reinterpret_cast<const event_type*>(frame.data());
