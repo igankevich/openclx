@@ -1,7 +1,7 @@
 #ifndef OPENCLX_SVM_BLOCK
 #define OPENCLX_SVM_BLOCK
 
-#include <openclx/types>
+#include <openclx/forward>
 #include <openclx/context>
 
 namespace clx {

@@ -8,7 +8,7 @@
 #include <openclx/binary>
 #include <openclx/build_status>
 #include <openclx/error>
-#include <openclx/types>
+#include <openclx/forward>
 
 namespace clx {
 

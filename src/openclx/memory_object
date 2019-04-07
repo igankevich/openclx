@@ -4,7 +4,7 @@
 #include <openclx/error>
 #include <openclx/memory_flags>
 #include <openclx/memory_objects>
-#include <openclx/types>
+#include <openclx/forward>
 
 namespace clx {
 

@@ -1,7 +1,7 @@
 #ifndef OPENCLX_DEVICE_MEMORY_CACHE
 #define OPENCLX_DEVICE_MEMORY_CACHE
 
-#include <openclx/types>
+#include <openclx/forward>
 
 namespace clx {
 

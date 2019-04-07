@@ -5,7 +5,7 @@
 
 #include <openclx/bits/pragmas>
 #include <openclx/error>
-#include <openclx/types>
+#include <openclx/forward>
 
 CLX_WARNING_PUSH
 CLX_IGNORED_ATTRIBUTES

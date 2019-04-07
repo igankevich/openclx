@@ -16,7 +16,7 @@
 #include <openclx/error>
 #include <openclx/execution_flags>
 #include <openclx/floating_point_flags>
-#include <openclx/types>
+#include <openclx/forward>
 
 namespace clx {
 

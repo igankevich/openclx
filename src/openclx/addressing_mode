@@ -1,7 +1,7 @@
 #ifndef OPENCLX_ADDRESSING_MODE
 #define OPENCLX_ADDRESSING_MODE
 
-#include <openclx/types>
+#include <openclx/forward>
 
 namespace clx {
 

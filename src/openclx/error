@@ -5,7 +5,7 @@
 #include <string>
 #include <system_error>
 
-#include <openclx/types>
+#include <openclx/forward>
 
 namespace clx {
 

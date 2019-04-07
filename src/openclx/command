@@ -1,7 +1,7 @@
 #ifndef OPENCLX_COMMAND
 #define OPENCLX_COMMAND
 
-#include <openclx/types>
+#include <openclx/forward>
 
 namespace clx {
 

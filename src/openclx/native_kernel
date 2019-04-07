@@ -1,7 +1,7 @@
 #ifndef OPENCLX_NATIVE_KERNEL
 #define OPENCLX_NATIVE_KERNEL
 
-#include <openclx/types>
+#include <openclx/forward>
 
 namespace clx {
 

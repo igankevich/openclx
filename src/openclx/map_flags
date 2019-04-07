@@ -2,7 +2,7 @@
 #define OPENCLX_MAP_FLAGS
 
 #include <openclx/bits/flags>
-#include <openclx/types>
+#include <openclx/forward>
 
 namespace clx {
 

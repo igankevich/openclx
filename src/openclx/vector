@@ -1,9 +1,8 @@
 #ifndef OPENCLX_VECTOR
 #define OPENCLX_VECTOR
 
-#include <array>
-
-#include <openclx/cl>
+#include <openclx/forward>
+#include <openclx/array_view>
 
 namespace clx {
 
@@ -49,23 +48,24 @@ namespace clx {
 	template <class T, int N>
 	union Vector {
 
+	private:
 		typedef typename bits::make_vector<T,N>::type device_vector_type;
 
+	private:
 		T _vec1[N];
 		device_vector_type _vec2;
 
+	public:
 		inline explicit
 		Vector(const T* rhs) {
-			for (int i=0; i<N; ++i) {
-				_vec1[i] = rhs[i];
-			}
+			for (int i=0; i<N; ++i) { this->_vec1[i] = rhs[i]; }
 		}
 
 	};
 
 	template <class T, int N>
 	inline Vector<T,N>
-	make_vector(const std::array<T,N>& rhs) {
+	make_vector(const array_view<T>& rhs) {
 		return Vector<T,N>(rhs.data());
 	}
 

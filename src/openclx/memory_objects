@@ -1,7 +1,7 @@
 #ifndef OPENCLX_MEMORY_OBJECTS
 #define OPENCLX_MEMORY_OBJECTS
 
-#include <openclx/types>
+#include <openclx/forward>
 
 namespace clx {
 

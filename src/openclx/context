@@ -14,7 +14,7 @@
 #include <openclx/memory_objects>
 #include <openclx/sampler>
 #include <openclx/svm_flags>
-#include <openclx/types>
+#include <openclx/forward>
 
 namespace clx {
 

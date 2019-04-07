@@ -2,7 +2,7 @@
 #define OPENCLX_DEVICE_AFFINITY_DOMAIN
 
 #include <openclx/bits/flags>
-#include <openclx/types>
+#include <openclx/forward>
 
 namespace clx {
 

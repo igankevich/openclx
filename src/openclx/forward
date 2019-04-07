@@ -1,5 +1,10 @@
-#ifndef OPENCLX_TYPES
-#define OPENCLX_TYPES
+#ifndef OPENCLX_FORWARD
+#define OPENCLX_FORWARD
+
+#include <iosfwd>
+#include <string>
+#include <system_error>
+#include <vector>
 
 #include <openclx/cl>
 
@@ -81,8 +86,7 @@ namespace clx {
 
 	enum class svm_flags: svm_flags_type;
 	class svm_block;
-	template <class T, svm_flags F>
-	class svm_allocator;
+	template <class T, svm_flags F> class svm_allocator;
 	class pipe;
 	#endif
 
@@ -104,6 +108,12 @@ namespace clx {
 	class image_format;
 	class range;
 	class intermediate_language;
+	class compiler;
+	class error_category;
+	class color;
+	class binary;
+	class pattern;
+	class event_stack;
 
 	enum class addressing_mode: addressing_mode_type;
 	enum class build_status: build_status_type;
@@ -126,11 +136,63 @@ namespace clx {
 	typedef void* host_pointer;
 	typedef const void* const_host_pointer;
 
-	template <class T>
-	class downcast_type;
+	template <class T> class downcast_type;
+	template <class T> class array_view;
+	template <class T> class slice_3d;
+	template <class T> struct local;
+	template <class T, int N> union Vector;
+	template <class T> struct numeric_limits;
+	struct numeric_limits_half;
+	struct work_group;
+	class range;
+	typedef void (*native_kernel_type)(void *);
+	struct image_descriptor;
 
-	template <class T>
-	class array_view;
+	const char* to_string(errc rhs);
+	std::ostream& operator<<(std::ostream& out, const errc& rhs);
+	std::error_condition make_error_condition(errc e) noexcept;
+	std::ostream& operator<<(std::ostream& out, const binary& rhs);
+	std::istream& operator>>(std::istream& in, binary& rhs);
+	template <class T, int N> Vector<T,N> make_vector(const array_view<T>& rhs);
+	template <class T> const typename downcast_type<T>::type* downcast(const T* x);
+	template <class T> typename downcast_type<T>::type* downcast(T* x);
+	template <class T> typename downcast_type<T>::type downcast(T x);
+	template <class ... Args> class argument;
+	template <class ... Args> argument<Args...> make_arguments(const Args& ... args);
+
+	void swap(context& lhs, context& rhs);
+	void swap(platform& lhs, platform& rhs);
+	void swap(device& lhs, device& rhs);
+	void swap(program& lhs, program& rhs);
+	void swap(kernel& lhs, kernel& rhs);
+	void swap(event& lhs, event& rhs);
+	void swap(memory_object& lhs, memory_object& rhs);
+	void swap(sampler& lhs, sampler& rhs);
+	void swap(command_queue& lhs, command_queue& rhs);
+	#if CL_TARGET_VERSION >= 200
+	void swap(svm_block& lhs, svm_block& rhs);
+	#endif
+
+	std::vector<platform> platforms();
+
+	#if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
+	void unload_compiler();
+	void* extension_function_address(const char* name);
+	#endif
+
+	#if CL_TARGET_VERSION >= 120
+	program
+	link(
+		const array_view<program>& programs,
+		const std::string& options,
+		const array_view<device>& devices
+	);
+	program
+	link(const array_view<program>& programs, const std::string& options);
+	#endif
+
+	void
+	wait(const array_view<event>& events);
 
 }
 

@@ -1,7 +1,7 @@
 #ifndef OPENCLX_SAMPLER
 #define OPENCLX_SAMPLER
 
-#include <openclx/types>
+#include <openclx/forward>
 #include <openclx/error>
 
 namespace clx {

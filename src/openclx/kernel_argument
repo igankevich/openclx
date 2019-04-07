@@ -3,7 +3,7 @@
 
 #include <openclx/bits/flags>
 #include <openclx/kernel>
-#include <openclx/types>
+#include <openclx/forward>
 
 namespace clx {
 
