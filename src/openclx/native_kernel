@@ -29,7 +29,7 @@ namespace clx {
 		inline void
 		memory_objects(
 			unsigned_int_type& n,
-			const memory_object_type* objects,
+			memory_object_type* objects,
 			const void** locations
 		) const {
 			if (std::is_same<Head,memory_object>::value ||
@@ -61,7 +61,7 @@ namespace clx {
 		inline void
 		memory_objects(
 			unsigned_int_type& n,
-			const memory_object_type* objects,
+			memory_object_type* objects,
 			const void** locations
 		) const {
 			if (std::is_same<Head,memory_object>::value ||

@@ -9,8 +9,8 @@ openclx_src = files([
 	'event.cc',
 	'event_stack.cc',
 	'image.cc',
-	'kernel.cc',
 	'kernel_argument.cc',
+	'kernel.cc',
 	'memory_object.cc',
 	'pipe.cc',
 	'platform.cc',
@@ -23,12 +23,22 @@ openclx_deps = [
 	dependency('OpenCL')
 ]
 
-libclx = shared_library(
+libopenclx = library(
 	'openclx',
 	sources: openclx_src,
 	include_directories: src,
 	dependencies: openclx_deps,
 	implicit_include_directories: false,
+	install: true,
+)
+
+pkgconfig = import('pkgconfig')
+pkgconfig.generate(
+	libraries: libopenclx,
+	version: meson.project_version(),
+	name: meson.project_name(),
+	description: 'C++ wrapper for OpenCL',
+	filebase: meson.project_name()
 )
 
 executable(
@@ -36,8 +46,9 @@ executable(
 	sources: 'main.cc',
 	include_directories: src,
 	dependencies: openclx_deps,
-	link_with: libclx,
+	link_with: libopenclx,
 	implicit_include_directories: false,
+	install: true,
 )
 
 if with_tests
@@ -49,7 +60,7 @@ if with_tests
 			sources: 'device_test.cc',
 			include_directories: src,
 			dependencies: [openclx_deps,gtest],
-			link_with: libclx,
+			link_with: libopenclx,
 			implicit_include_directories: false,
 		)
 	)
