@@ -93,6 +93,7 @@ namespace clx {
 	class platform;
 	class device;
 	class context;
+	class context_properties;
 	class command_queue;
 	class program;
 	class kernel;

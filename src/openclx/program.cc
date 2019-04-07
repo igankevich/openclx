@@ -168,6 +168,23 @@ CLX_METHOD_SCALAR(clx::program::num_devices, ::clGetProgramInfo, unsigned_int_ty
 CLX_METHOD_ARRAY(clx::program::devices, ::clGetProgramInfo, CL_PROGRAM_DEVICES, device)
 CLX_METHOD_STRING(clx::program::source, ::clGetProgramInfo, CL_PROGRAM_SOURCE)
 
+#if CL_TARGET_VERSION >= 210
+clx::intermediate_language
+clx::program::intermediate_language() const {
+	size_t actual_size = 0;
+	CLX_CHECK(::clGetProgramInfo(
+		this->_ptr, CL_PROGRAM_IL,
+		0, nullptr, &actual_size
+	));
+	::clx::intermediate_language il(actual_size);
+	CLX_CHECK(::clGetProgramInfo(
+		this->_ptr, CL_PROGRAM_IL,
+		actual_size, il.data(), nullptr
+	));
+	return il;
+}
+#endif
+
 #if CL_TARGET_VERSION >= 120
 clx::program
 clx::link(

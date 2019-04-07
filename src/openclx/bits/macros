@@ -113,4 +113,7 @@ namespace clx {
 		return static_cast<bool>(value); \
 	}
 
+#define CLX_EXTENSION(name, platform) \
+	platform.extension<name##_fn>(#name)
+
 #endif // vim:filetype=cpp

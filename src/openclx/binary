@@ -18,26 +18,18 @@ namespace clx {
 	public:
 
 		binary() = default;
+		inline explicit binary(size_type n): _bytes(n) {}
 
 		inline explicit
 		binary(const value_type* bytes, size_type n):
 		_bytes(bytes, bytes+n) {}
 
-		void
-		write(std::ostream& out) const;
+		void write(std::ostream& out) const;
+		void read(std::istream& in);
 
-		void
-		read(std::istream& in);
-
-		inline const value_type*
-		data() const {
-			return this->_bytes.data();
-		}
-
-		inline size_type
-		size() const {
-			return this->_bytes.size();
-		}
+		inline value_type* data() { return this->_bytes.data(); }
+		inline const value_type* data() const { return this->_bytes.data(); }
+		inline size_type size() const { return this->_bytes.size(); }
 
 	};
 

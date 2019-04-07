@@ -36,7 +36,11 @@ namespace clx {
 		devices(device_flags types) const;
 
 		::clx::context context(const array_view<device>& devices) const;
+		::clx::context
+		context(const context_properties&,const array_view<device>&) const;
 		::clx::context context(device_flags types=device_flags::all) const;
+		::clx::context
+		context(const context_properties&,device_flags=device_flags::all) const;
 
 		inline void
 		unload_compiler() {
@@ -54,6 +58,12 @@ namespace clx {
 			#else
 			return ::clGetExtensionFunctionAddress(name);
 			#endif
+		}
+
+		template <class Function>
+		inline Function
+		extension(const char* name) const {
+			return reinterpret_cast<Function>(extension_function_address(name));
 		}
 
 		#if CL_TARGET_VERSION >= 210

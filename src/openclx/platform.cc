@@ -1,6 +1,7 @@
 #include <openclx/array_view>
 #include <openclx/bits/macros>
 #include <openclx/context>
+#include <openclx/context_properties>
 #include <openclx/device>
 #include <openclx/downcast>
 #include <openclx/error>
@@ -79,12 +80,49 @@ clx::context clx::platform::context(const array_view<device>& devices) const {
 	return static_cast<clx::context>(ctx);
 }
 
+clx::context
+clx::platform::context(
+	const context_properties& properties,
+	const array_view<device>& devices
+) const {
+	std::vector<context_properties_type> prop;
+	prop.reserve(29);
+	prop << CL_CONTEXT_PLATFORM << this->_ptr << properties << 0;
+	int_type ret = 0;
+	auto ctx = ::clCreateContext(
+		prop.data(), devices.size(), downcast(devices.data()),
+		nullptr, nullptr, &ret
+	);
+	CLX_CHECK(ret);
+	return static_cast<clx::context>(ctx);
+}
+
 clx::context clx::platform::context(device_flags types) const {
 	std::vector<context_properties_type> prop{
 		context_properties_type(CL_CONTEXT_PLATFORM),
 		context_properties_type(this->_ptr),
 		context_properties_type(0)
 	};
+	int_type ret = 0;
+	auto ctx =
+		::clCreateContextFromType(
+			prop.data(),
+			static_cast<device_flags_type>(types),
+			nullptr,
+			nullptr,
+			&ret
+		);
+	CLX_CHECK(ret);
+	return static_cast<clx::context>(ctx);
+}
+
+clx::context clx::platform::context(
+	const context_properties& properties,
+	device_flags types
+) const {
+	std::vector<context_properties_type> prop;
+	prop.reserve(29);
+	prop << CL_CONTEXT_PLATFORM << this->_ptr << properties << 0;
 	int_type ret = 0;
 	auto ctx =
 		::clCreateContextFromType(

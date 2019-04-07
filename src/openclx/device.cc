@@ -44,6 +44,14 @@ clx::device::device_and_host_time() const -> std::pair<nanoseconds,nanoseconds> 
 }
 #endif
 
+#if CL_TARGET_VERSION >= 210
+CLX_METHOD_STRING(
+	clx::device::intermediate_languages,
+	::clGetDeviceInfo,
+	CL_DEVICE_IL_VERSION
+)
+#endif
+
 CLX_METHOD_SCALAR(
 	clx::device::timer_resolution,
 	::clGetDeviceInfo,

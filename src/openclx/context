@@ -48,9 +48,6 @@ namespace clx {
 
 		#if CL_TARGET_VERSION >= 120
 		::clx::header header(const std::string& name, const std::string& src) const;
-		#endif
-
-		#if CL_TARGET_VERSION >= 120
 		::clx::program builtin_program(const std::string& kernel_names) const;
 		unsigned_int_type num_devices() const;
 		#endif
@@ -112,8 +109,14 @@ namespace clx {
 		) const;
 		#endif
 
+		#if CL_TARGET_VERSION >= 120 && defined(cl_khr_terminate_context)
+		void terminate();
+		#endif
+
 		std::vector<context_properties_type>
 		properties() const;
+
+		::clx::platform platform() const;
 
 		unsigned_int_type
 		num_references() const;

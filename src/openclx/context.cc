@@ -10,6 +10,7 @@
 #include <openclx/event>
 #include <openclx/image>
 #include <openclx/pipe>
+#include <openclx/platform>
 #include <openclx/program>
 #include <openclx/sampler>
 #include <openclx/svm_block>
@@ -333,6 +334,26 @@ clx::context::shared_memory(
 	auto ptr = ::clSVMAlloc(this->_ptr, downcast(flags), size, alignment);
 	if (!ptr) { throw std::bad_alloc{}; }
 	return svm_block{ptr, size};
+}
+#endif
+
+clx::platform
+clx::context::platform() const {
+	const auto& prop = this->properties();
+	const auto nprops = prop.size();
+	for (size_t i=0; i<nprops; ++i) {
+		if (prop[i] == CL_CONTEXT_PLATFORM && i < nprops) {
+			return ::clx::platform(reinterpret_cast<platform_type>(prop[i+1]));
+		}
+	}
+	return clx::platform();
+}
+
+#if CL_TARGET_VERSION >= 120 && defined(cl_khr_terminate_context)
+void
+clx::context::terminate() {
+	auto func = CLX_EXTENSION(clTerminateContextKHR, platform());
+	CLX_CHECK(func(this->_ptr));
 }
 #endif
 

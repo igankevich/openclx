@@ -1,0 +1,37 @@
+#ifndef OPENCLX_CONTEXT_PROPERTIES
+#define OPENCLX_CONTEXT_PROPERTIES
+
+#include <openclx/forward>
+
+namespace clx {
+
+	class context_properties {
+
+	private:
+		bool_type _terminated{CL_FALSE};
+
+	public:
+		inline bool_type can_be_terminated() const { return this->_terminated; }
+		inline void can_be_terminated(bool b) {
+			this->_terminated = static_cast<bool_type>(b); }
+
+	};
+
+	std::vector<context_properties_type>&
+	operator<<(
+		std::vector<context_properties_type>& out,
+		const context_properties& rhs
+	);
+
+	template <class T>
+	inline std::vector<context_properties_type>&
+	operator<<(std::vector<context_properties_type>& out, const T& rhs) {
+		out.emplace_back(context_properties_type(rhs));
+		return out;
+	}
+
+
+
+}
+
+#endif // vim:filetype=cpp

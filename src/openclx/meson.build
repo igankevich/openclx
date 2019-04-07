@@ -4,6 +4,7 @@ openclx_src = files([
 	'command_queue.cc',
 	'compiler.cc',
 	'context.cc',
+	'context_properties.cc',
 	'device.cc',
 	'error.cc',
 	'event.cc',

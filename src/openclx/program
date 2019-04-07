@@ -71,11 +71,8 @@ namespace clx {
 		std::vector<device> devices() const;
 		std::string source() const;
 
-		#if CL_TARGET_VERSION >= 220
-		inline void
-		callback(callback_type cb, void* data=nullptr) {
-			CLX_CHECK(::clSetProgramReleaseCallback(this->_ptr, cb, data));
-		}
+		#if CL_TARGET_VERSION >= 210
+		::clx::intermediate_language intermediate_language() const;
 		#endif
 
 		#if CL_TARGET_VERSION >= 220

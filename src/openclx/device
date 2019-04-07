@@ -55,6 +55,7 @@ namespace clx {
 		#if CL_TARGET_VERSION >= 210
 		nanoseconds host_time() const;
 		std::pair<nanoseconds,nanoseconds> device_and_host_time() const;
+		std::string intermediate_languages() const;
 		#endif
 
 		nanoseconds timer_resolution() const;
