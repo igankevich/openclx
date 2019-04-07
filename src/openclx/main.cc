@@ -53,8 +53,53 @@ print_platforms() {
 	for (const auto& platform : clx::platforms()) {
 		std::cout
 			<< std::setw(20) << platform.suffix()
-			<< ' ' << platform.name() << '\n';
+			<< "    " << platform.name() << '\n';
 	}
+}
+
+void
+option(const char* version, const char* category, const char* option) {
+	std::cout << std::setw(20) << std::right << category << "    ";
+	std::cout << std::setw(40) << std::left << option;
+	std::cout << std::setw(7) << std::right << version;
+	std::cout << '\n';
+}
+
+void
+usage() {
+	std::cout << "usage: clx [-p platform] [-o filename] [-h] [options] file...\n";
+	std::cout << "supported platforms:\n";
+	print_platforms();
+	std::cout << "compiler options:\n";
+	option("1.0", "math", "-cl-single-precision-constant");
+	option("1.0", "", "-cl-denorms-are-zero");
+	option("1.2", "", "-cl-fp32-correctly-rounded-divide-sqrt");
+	option("1.0", "optimisation", "-cl-opt-disable");
+	option("1.0", "", "-cl-strict-aliasing");
+	option("1.0", "", "-cl-mad-enable");
+	option("1.0", "", "-cl-no-signed-zeros");
+	option("1.0", "", "-cl-unsafe-math-optimizations");
+	option("1.0", "", "-cl-finite-math-only");
+	option("1.0", "", "-cl-fast-relaxed-math");
+	option("2.0", "", "-cl-uniform-work-group-size");
+	option("2.2", "", "-cl-no-subgroup-ifp");
+	option("1.0", "preprocesor", "-D -I");
+	option("1.0", "warnings", "-w -Werror");
+	option("1.1", "version", "-cl-std=CL2.0");
+	option("1.2", "kernels", "-cl-kernel-arg-info");
+	option("2.0", "debugging", "-g");
+	option("2.0", "spir", "-x spir -spir-std");
+	std::cout << "linker options:\n";
+	option("1.2", "library", "-create-library");
+	option("1.2", "", "-enable-link-options");
+	option("1.2", "programme", "-cl-denorms-are-zero");
+	option("1.2", "", "-cl-no-signed-zeroes");
+	option("1.2", "", "-cl-unsafe-math-optimizations");
+	option("1.2", "", "-cl-finite-math-only");
+	option("1.2", "", "-cl-fast-relaxed-math");
+	option("2.2", "", "-cl-no-subgroup-ifp");
+	std::cout << "Please, refer to OpenCL standard "
+		"for the full list of supported compiler options.\n";
 }
 
 class Application {
@@ -101,7 +146,7 @@ public:
 	void
 	run() {
 		if (suffix.empty()) {
-			print_platforms();
+			usage();
 			return;
 		}
 		if (files.empty()) {
