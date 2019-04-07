@@ -23,6 +23,14 @@ CLX_METHOD_STRING(clx::device::version, ::clGetDeviceInfo, CL_DEVICE_VERSION)
 CLX_METHOD_STRING(clx::device::driver_version, ::clGetDeviceInfo, CL_DRIVER_VERSION)
 CLX_METHOD_STRING(clx::device::extensions, ::clGetDeviceInfo, CL_DEVICE_EXTENSIONS)
 
+#if defined(CL_DEVICE_SPIR_VERSIONS)
+CLX_METHOD_STRING(
+	clx::device::spir_versions,
+	::clGetDeviceInfo,
+	CL_DEVICE_SPIR_VERSIONS
+)
+#endif
+
 #if CL_TARGET_VERSION >= 210
 auto
 clx::device::host_time() const -> nanoseconds {
@@ -89,16 +97,36 @@ clx::context clx::device::context() const {
 #if CL_TARGET_VERSION >= 200
 clx::command_queue
 clx::device::queue_200(context_type ctx, command_queue_flags flags) const {
-	std::vector<queue_properties_type> props{
+	queue_properties_type props[] = {
 		queue_properties_type(CL_QUEUE_PROPERTIES),
 		queue_properties_type(flags),
 		queue_properties_type(0)
 	};
 	int_type ret = 0;
 	auto result =
-		::clCreateCommandQueueWithProperties(
-			ctx, this->_ptr, props.data(), &ret
-		);
+		::clCreateCommandQueueWithProperties(ctx, this->_ptr, props, &ret);
+	CLX_CHECK(ret);
+	return static_cast<::clx::command_queue>(result);
+}
+#endif
+
+#if CL_TARGET_VERSION >= 200
+clx::command_queue
+clx::device::queue_200(
+	context_type ctx,
+	command_queue_flags flags,
+	unsigned_int_type size
+) const {
+	queue_properties_type props[] = {
+		queue_properties_type(CL_QUEUE_PROPERTIES),
+		queue_properties_type(flags),
+		queue_properties_type(CL_QUEUE_SIZE),
+		queue_properties_type(size),
+		queue_properties_type(0)
+	};
+	int_type ret = 0;
+	auto result =
+		::clCreateCommandQueueWithProperties(ctx, this->_ptr, props, &ret);
 	CLX_CHECK(ret);
 	return static_cast<::clx::command_queue>(result);
 }
@@ -108,9 +136,32 @@ clx::device::queue_200(context_type ctx, command_queue_flags flags) const {
 clx::command_queue
 clx::device::queue_100(context_type ctx, command_queue_flags flags) const {
 	int_type ret = 0;
-	auto result = ::clCreateCommandQueue(
-		ctx, this->_ptr, static_cast<command_queue_flags_type>(flags), &ret
-	);
+	auto result = ::clCreateCommandQueue(ctx, this->_ptr, downcast(flags), &ret);
+	CLX_CHECK(ret);
+	return static_cast<::clx::command_queue>(result);
+}
+#endif
+
+#if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
+clx::command_queue
+clx::device::queue_100(
+	context_type ctx,
+	command_queue_flags flags,
+	unsigned_int_type size
+) const {
+	queue_properties_type props[] = {
+		queue_properties_type(CL_QUEUE_PROPERTIES),
+		queue_properties_type(flags),
+		queue_properties_type(CL_QUEUE_SIZE),
+		queue_properties_type(size),
+		queue_properties_type(0)
+	};
+	int_type ret = 0;
+	auto func = CLX_EXTENSION(clCreateCommandQueueWithPropertiesKHR, platform());
+	if (!func) {
+		throw std::runtime_error("cl_khr_create_command_queue is not supported");
+	}
+	auto result = func(ctx, this->_ptr, props, &ret);
 	CLX_CHECK(ret);
 	return static_cast<::clx::command_queue>(result);
 }

@@ -137,7 +137,6 @@
 - [ ] ~cl_intel_simultaneous_sharing~
 - [ ] ~cl_intel_thread_local_exec~
 - [ ] ~cl_intel_va_api_media_sharing~
-- [ ] ~cl_khr_create_command_queue~
 - [ ] ~cl_khr_d3d10_sharing~
 - [ ] ~cl_khr_d3d11_sharing~
 - [ ] ~cl_khr_dx9_media_sharing~
@@ -149,7 +148,6 @@
 - [ ] ~cl_khr_initialize_memory~
 - [ ] ~cl_khr_mipmap_image~
 - [ ] ~cl_khr_priority_hints~
-- [ ] ~cl_khr_spir~
 - [ ] ~cl_khr_subgroup_named_barrier~
 - [ ] ~cl_khr_subgroups~
 - [ ] ~cl_khr_throttle_hints~
@@ -158,6 +156,8 @@
 - [ ] ~cl_qcom_ext_host_ptr_iocoherent~
 - [ ] ~cl_qcom_ext_host_ptr~
 - [ ] ~cl_qcom_ion_host_ptr~
+- [X] ~cl_khr_create_command_queue~
 - [X] ~cl_khr_icd~
 - [X] ~cl_khr_il_program~
+- [X] ~cl_khr_spir~
 - [X] ~cl_khr_terminate_context~

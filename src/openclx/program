@@ -6,7 +6,6 @@
 
 #include <openclx/array_view>
 #include <openclx/binary>
-#include <openclx/build_status>
 #include <openclx/error>
 #include <openclx/forward>
 
@@ -39,6 +38,12 @@ namespace clx {
 		std::string options(const device& dev) const;
 		std::string build_log(const device& dev) const;
 		std::vector<binary> binaries() const;
+		#if CL_TARGET_VERSION >= 120
+		binary_types binary_type(const device& dev) const;
+		#endif
+		#if CL_TARGET_VERSION >= 120
+		size_t size_of_global_variables(const device& dev) const;
+		#endif
 
 		#if CL_TARGET_VERSION >= 120
 		inline void

@@ -1,7 +1,9 @@
 #include <memory>
 
 #include <openclx/array_view>
+#include <openclx/binary>
 #include <openclx/bits/macros>
+#include <openclx/build_status>
 #include <openclx/context>
 #include <openclx/device>
 #include <openclx/downcast>
@@ -23,6 +25,26 @@ clx::program::build_status(const device& dev) const {
 		dev.get(), CL_PROGRAM_BUILD_STATUS
 	)
 }
+
+#if CL_TARGET_VERSION >= 120
+clx::binary_types
+clx::program::binary_type(const device& dev) const {
+	CLX_BODY_SCALAR(
+		::clGetProgramBuildInfo, ::clx::binary_types,
+		dev.get(), CL_PROGRAM_BINARY_TYPE
+	)
+}
+#endif
+
+#if CL_TARGET_VERSION >= 200
+size_t
+clx::program::size_of_global_variables(const device& dev) const {
+	CLX_BODY_SCALAR(
+		::clGetProgramBuildInfo, size_t,
+		dev.get(), CL_PROGRAM_BUILD_GLOBAL_VARIABLE_TOTAL_SIZE
+	)
+}
+#endif
 
 std::string
 clx::program::options(const device& dev) const {

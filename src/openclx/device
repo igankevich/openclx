@@ -66,6 +66,9 @@ namespace clx {
 		std::string version() const;
 		std::string driver_version() const;
 		std::string extensions() const;
+		#if defined(CL_DEVICE_SPIR_VERSIONS)
+		std::string spir_versions() const;
+		#endif
 
 		unsigned_int_type vendor_id() const;
 		::clx::platform platform() const;
@@ -77,6 +80,15 @@ namespace clx {
 			return this->queue_200(this->context().get(), flags);
 			#else
 			return this->queue_100(this->context().get(), flags);
+			#endif
+		}
+
+		inline ::clx::command_queue
+		queue(command_queue_flags flags, unsigned_int_type size) const {
+			#if CL_TARGET_VERSION >= 200
+			return this->queue_200(this->context().get(), flags, size);
+			#else
+			return this->queue_100(this->context().get(), flags, size);
 			#endif
 		}
 
@@ -188,9 +200,27 @@ namespace clx {
 		queue_200(context_type ctx, command_queue_flags flags) const;
 		#endif
 
+		#if CL_TARGET_VERSION >= 200
+		::clx::command_queue
+		queue_200(
+			context_type ctx,
+			command_queue_flags flags,
+			unsigned_int_type size
+		) const;
+		#endif
+
 		#if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
 		::clx::command_queue
 		queue_100(context_type ctx, command_queue_flags flags) const;
+		#endif
+
+		#if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
+		::clx::command_queue
+		queue_100(
+			context_type ctx,
+			command_queue_flags flags,
+			unsigned_int_type size
+		) const;
 		#endif
 
 		friend class context;

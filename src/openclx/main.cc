@@ -88,7 +88,7 @@ usage() {
 	option("1.1", "version", "-cl-std=CL2.0");
 	option("1.2", "kernels", "-cl-kernel-arg-info");
 	option("2.0", "debugging", "-g");
-	option("2.0", "spir", "-x spir -spir-std");
+	option("2.0", "spir", "-x spir -spir-std=1.2");
 	std::cout << "linker options:\n";
 	option("1.2", "library", "-create-library");
 	option("1.2", "", "-enable-link-options");

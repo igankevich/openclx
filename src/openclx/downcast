@@ -46,6 +46,7 @@ namespace clx {
 	inline const typename downcast_type<T>::type*
 	downcast(const T* x) {
 		typedef typename downcast_type<T>::type target_type;
+		static_assert(sizeof(T) == sizeof(target_type), "bad size");
 		return reinterpret_cast<const target_type*>(x);
 	}
 
@@ -53,6 +54,7 @@ namespace clx {
 	inline typename downcast_type<T>::type*
 	downcast(T* x) {
 		typedef typename downcast_type<T>::type target_type;
+		static_assert(sizeof(T) == sizeof(target_type), "bad size");
 		return reinterpret_cast<target_type*>(x);
 	}
 

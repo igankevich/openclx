@@ -353,6 +353,9 @@ clx::context::platform() const {
 void
 clx::context::terminate() {
 	auto func = CLX_EXTENSION(clTerminateContextKHR, platform());
+	if (!func) {
+		throw std::runtime_error("cl_khr_terminate_context is not supported");
+	}
 	CLX_CHECK(func(this->_ptr));
 }
 #endif

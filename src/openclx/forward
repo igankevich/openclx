@@ -70,11 +70,17 @@ namespace clx {
 	typedef ::cl_kernel_arg_access_qualifier access_qualifiers_type;
 	typedef ::cl_kernel_arg_address_qualifier address_qualifiers_type;
 	typedef ::cl_image_desc image_descriptor_type;
+	typedef ::cl_program_binary_type program_binary_type;
 
 	enum class migration_flags: migration_flags_type;
 	enum class device_partition: device_partition_type;
 	enum class device_affinity_domain: device_affinity_domain_type;
 	enum class argument_type_qualifiers: argument_type_qualifiers_type;
+	enum class binary_types: program_binary_type;
+	#endif
+
+	#if CL_TARGET_VERSION < 200 && defined(cl_khr_create_command_queue)
+	typedef ::cl_queue_properties_khr queue_properties_type;
 	#endif
 
 	#if CL_TARGET_VERSION >= 200
