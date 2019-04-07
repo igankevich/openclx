@@ -31,6 +31,7 @@ libopenclx = library(
 	dependencies: openclx_deps,
 	implicit_include_directories: false,
 	install: true,
+	version: meson.project_version(),
 )
 
 pkgconfig = import('pkgconfig')
