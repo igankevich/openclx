@@ -1,6 +1,7 @@
 #ifndef OPENCLX_PLATFORM
 #define OPENCLX_PLATFORM
 
+#include <chrono>
 #include <string>
 #include <vector>
 
@@ -10,13 +11,21 @@
 
 namespace clx {
 
+	enum class extension_function {
+		clCreateCommandQueueWithPropertiesKHR,
+		clTerminateContextKHR,
+		size
+	};
+
 	class platform {
 
 	public:
 		typedef std::chrono::nanoseconds nanoseconds;
+		typedef void* function_address;
 
 	private:
 		platform_type _ptr = nullptr;
+		std::vector<function_address> _functions;
 
 	public:
 
@@ -66,6 +75,12 @@ namespace clx {
 			return reinterpret_cast<Function>(extension_function_address(name));
 		}
 
+		template <class Function>
+		inline Function
+		function(extension_function func) {
+			return reinterpret_cast<Function>(this->do_function(func));
+		}
+
 		#if CL_TARGET_VERSION >= 210
 		nanoseconds timer_resolution() const;
 		#endif
@@ -82,12 +97,14 @@ namespace clx {
 		operator=(platform&& rhs) {
 			this->_ptr = rhs._ptr;
 			rhs._ptr = nullptr;
+			this->_functions = std::move(rhs._functions);
 			return *this;
 		}
 
 		inline void
 		swap(platform& rhs) {
 			std::swap(this->_ptr, rhs._ptr);
+			std::swap(this->_functions, rhs._functions);
 		}
 
 		inline platform_type
@@ -100,9 +117,12 @@ namespace clx {
 			return this->_ptr;
 		}
 
-	};
+	private:
 
-	static_assert(sizeof(platform) == sizeof(platform_type), "bad size");
+		function_address
+		do_function(extension_function func);
+
+	};
 
 	inline void
 	swap(platform& lhs, platform& rhs) {

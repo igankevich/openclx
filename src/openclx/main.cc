@@ -98,6 +98,9 @@ usage() {
 	option("1.2", "", "-cl-finite-math-only");
 	option("1.2", "", "-cl-fast-relaxed-math");
 	option("2.2", "", "-cl-no-subgroup-ifp");
+	option("", "nvidia", "-cl-nv-maxrregcount N");
+	option("", "", "-cl-nv-opt-level N");
+	option("", "", "-cl-nv-verbose");
 	std::cout << "Please, refer to OpenCL standard "
 		"for the full list of supported compiler options.\n";
 }

@@ -1,0 +1,90 @@
+#ifndef OPENCLX_BITS_CL_AMD_DEVICE_ATTRIBUTE_QUERY
+#define OPENCLX_BITS_CL_AMD_DEVICE_ATTRIBUTE_QUERY
+
+#include <openclx/cl>
+
+#if !defined(CL_DEVICE_PROFILING_TIMER_OFFSET_AMD)
+#define CL_DEVICE_PROFILING_TIMER_OFFSET_AMD            0x4036
+#endif
+
+#if !defined(CL_DEVICE_TOPOLOGY_AMD)
+#define CL_DEVICE_TOPOLOGY_AMD                          0x4037
+#endif
+
+#if !defined(CL_DEVICE_BOARD_NAME_AMD)
+#define CL_DEVICE_BOARD_NAME_AMD                        0x4038
+#endif
+
+#if !defined(CL_DEVICE_GLOBAL_FREE_MEMORY_AMD)
+#define CL_DEVICE_GLOBAL_FREE_MEMORY_AMD                0x4039
+#endif
+
+#if !defined(CL_DEVICE_SIMD_PER_COMPUTE_UNIT_AMD)
+#define CL_DEVICE_SIMD_PER_COMPUTE_UNIT_AMD             0x4040
+#endif
+
+#if !defined(CL_DEVICE_SIMD_WIDTH_AMD)
+#define CL_DEVICE_SIMD_WIDTH_AMD                        0x4041
+#endif
+
+#if !defined(CL_DEVICE_SIMD_INSTRUCTION_WIDTH_AMD)
+#define CL_DEVICE_SIMD_INSTRUCTION_WIDTH_AMD            0x4042
+#endif
+
+#if !defined(CL_DEVICE_WAVEFRONT_WIDTH_AMD)
+#define CL_DEVICE_WAVEFRONT_WIDTH_AMD                   0x4043
+#endif
+
+#if !defined(CL_DEVICE_GLOBAL_MEM_CHANNELS_AMD)
+#define CL_DEVICE_GLOBAL_MEM_CHANNELS_AMD               0x4044
+#endif
+
+#if !defined(CL_DEVICE_GLOBAL_MEM_CHANNEL_BANKS_AMD)
+#define CL_DEVICE_GLOBAL_MEM_CHANNEL_BANKS_AMD          0x4045
+#endif
+
+#if !defined(CL_DEVICE_GLOBAL_MEM_CHANNEL_BANK_WIDTH_AMD)
+#define CL_DEVICE_GLOBAL_MEM_CHANNEL_BANK_WIDTH_AMD     0x4046
+#endif
+
+#if !defined(CL_DEVICE_LOCAL_MEM_SIZE_PER_COMPUTE_UNIT_AMD)
+#define CL_DEVICE_LOCAL_MEM_SIZE_PER_COMPUTE_UNIT_AMD   0x4047
+#endif
+
+#if !defined(CL_DEVICE_LOCAL_MEM_BANKS_AMD)
+#define CL_DEVICE_LOCAL_MEM_BANKS_AMD                   0x4048
+#endif
+
+#if !defined(CL_DEVICE_THREAD_TRACE_SUPPORTED_AMD)
+#define CL_DEVICE_THREAD_TRACE_SUPPORTED_AMD            0x4049
+#endif
+
+#if !defined(CL_DEVICE_GFXIP_MAJOR_AMD)
+#define CL_DEVICE_GFXIP_MAJOR_AMD                       0x404A
+#endif
+
+#if !defined(CL_DEVICE_GFXIP_MINOR_AMD)
+#define CL_DEVICE_GFXIP_MINOR_AMD                       0x404B
+#endif
+
+#if !defined(CL_DEVICE_AVAILABLE_ASYNC_QUEUES_AMD)
+#define CL_DEVICE_AVAILABLE_ASYNC_QUEUES_AMD            0x404C
+#endif
+
+#if !defined(CL_DEVICE_PREFERRED_WORK_GROUP_SIZE_AMD)
+#define CL_DEVICE_PREFERRED_WORK_GROUP_SIZE_AMD         0x4030
+#endif
+
+#if !defined(CL_DEVICE_MAX_WORK_GROUP_SIZE_AMD)
+#define CL_DEVICE_MAX_WORK_GROUP_SIZE_AMD               0x4031
+#endif
+
+#if !defined(CL_DEVICE_PREFERRED_CONSTANT_BUFFER_SIZE_AMD)
+#define CL_DEVICE_PREFERRED_CONSTANT_BUFFER_SIZE_AMD    0x4033
+#endif
+
+#if !defined(CL_DEVICE_PCIE_ID_AMD)
+#define CL_DEVICE_PCIE_ID_AMD 0x4034
+#endif
+
+#endif // vim:filetype=cpp

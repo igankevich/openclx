@@ -7,6 +7,15 @@
 #include <openclx/error>
 #include <openclx/platform>
 
+namespace {
+
+	const char* extension_function_names[] = {
+		"clCreateCommandQueueWithPropertiesKHR",
+		"clTerminateContextKHR",
+	};
+
+}
+
 CLX_METHOD_STRING(clx::platform::profile, ::clGetPlatformInfo, CL_PLATFORM_PROFILE);
 CLX_METHOD_STRING(clx::platform::version, ::clGetPlatformInfo, CL_PLATFORM_VERSION);
 CLX_METHOD_STRING(clx::platform::name, ::clGetPlatformInfo, CL_PLATFORM_NAME);
@@ -27,21 +36,19 @@ CLX_METHOD_SCALAR(
 
 std::vector<clx::platform>
 clx::platforms() {
-	std::vector<platform> result(4096 / sizeof(platform));
+	std::vector<platform_type> result(4096 / sizeof(platform));
 	unsigned_int_type actual_size = 0;
 	int_type ret;
 	bool success = false;
 	while (!success) {
-		ret = ::clGetPlatformIDs(
-			result.size(), downcast(result.data()), &actual_size
-		);
+		ret = ::clGetPlatformIDs(result.size(), result.data(), &actual_size);
 		result.resize(actual_size);
 		if (errc(ret) != errc::invalid_value && actual_size <= result.size()) {
 			CLX_CHECK(ret);
 			success = true;
 		}
 	}
-	return result;
+	return std::vector<platform>(result.begin(), result.end());
 }
 
 std::vector<clx::device>
@@ -85,9 +92,8 @@ clx::platform::context(
 	const context_properties& properties,
 	const array_view<device>& devices
 ) const {
-	std::vector<context_properties_type> prop;
-	prop.reserve(29);
-	prop << CL_CONTEXT_PLATFORM << this->_ptr << properties << 0;
+	auto prop = properties(*this);
+	prop << CL_CONTEXT_PLATFORM << this->_ptr << 0;
 	int_type ret = 0;
 	auto ctx = ::clCreateContext(
 		prop.data(), devices.size(), downcast(devices.data()),
@@ -120,9 +126,8 @@ clx::context clx::platform::context(
 	const context_properties& properties,
 	device_flags types
 ) const {
-	std::vector<context_properties_type> prop;
-	prop.reserve(29);
-	prop << CL_CONTEXT_PLATFORM << this->_ptr << properties << 0;
+	auto prop = properties(*this);
+	prop << CL_CONTEXT_PLATFORM << this->_ptr << 0;
 	int_type ret = 0;
 	auto ctx =
 		::clCreateContextFromType(
@@ -135,3 +140,18 @@ clx::context clx::platform::context(
 	CLX_CHECK(ret);
 	return static_cast<clx::context>(ctx);
 }
+
+clx::platform::function_address
+clx::platform::do_function(extension_function func) {
+	if (this->_functions.empty()) {
+		this->_functions.resize(static_cast<size_t>(extension_function::size));
+	}
+	auto i = static_cast<size_t>(func);
+	auto& ptr = this->_functions[i];
+	if (!ptr) {
+		ptr = this->extension_function_address(extension_function_names[i]);
+	}
+	if (!ptr) { throw std::runtime_error(extension_function_names[i]); }
+	return ptr;
+}
+

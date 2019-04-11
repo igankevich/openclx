@@ -59,6 +59,7 @@ namespace clx {
 		#endif
 
 		nanoseconds timer_resolution() const;
+		nanoseconds timer_offset() const;
 
 		std::string name() const;
 		std::string profile() const;
@@ -143,6 +144,33 @@ namespace clx {
 
 		command_queue_flags queue_properties() const;
 		device_flags type() const;
+
+		unsigned_int_type compute_capability_major() const;
+		unsigned_int_type compute_capability_minor() const;
+		unsigned_int_type max_registers() const;
+		unsigned_int_type warp_size() const;
+		bool overlap() const;
+		bool kernel_execution_timeout() const;
+		bool integrated_memory() const;
+
+		std::string board_name() const;
+		unsigned_int_type wavefront_width() const;
+		unsigned_int_type simd_per_compute_unit() const;
+		unsigned_int_type simd_width() const;
+		unsigned_int_type simd_instruction_width() const;
+		unsigned_int_type num_global_memory_channels() const;
+		unsigned_int_type num_global_memory_channel_banks() const;
+		unsigned_int_type num_global_memory_channel_bank_width() const;
+		unsigned_int_type local_memory_size_per_compute_unit() const;
+		unsigned_int_type num_local_memory_banks() const;
+		bool supports_thread_trace() const;
+		unsigned_int_type gfxip_major() const;
+		unsigned_int_type gfxip_minor() const;
+		unsigned_int_type num_asynchronous_queues() const;
+		size_t preferred_work_group_size() const;
+		unsigned_long_type preferred_constant_buffer_size() const;
+		unsigned_int_type pcie_id() const;
+		std::vector<size_t> global_free_memory() const;
 
 		inline device_type
 		get() noexcept {
