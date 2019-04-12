@@ -118,10 +118,6 @@
 - [ ] ~cl_arm_import_memory~
 - [ ] ~cl_arm_shared_virtual_memory~
 - [ ] ~cl_ext_device_fission~
-- [ ] ~cl_ext_migrate_memobject~
-- [ ] ~cl_img_cached_allocations~
-- [ ] ~cl_img_use_gralloc_ptr~
-- [ ] ~cl_img_yuv_image~
 - [ ] ~cl_intel_accelerator~
 - [ ] ~cl_intel_advanced_motion_estimation~
 - [ ] ~cl_intel_device_partition_by_names~
@@ -144,11 +140,8 @@
 - [ ] ~cl_khr_gl_event~
 - [ ] ~cl_khr_gl_sharing~
 - [ ] ~cl_khr_image2D_buffer~
-- [ ] ~cl_khr_initialize_memory~
-- [ ] ~cl_khr_mipmap_image~
 - [ ] ~cl_khr_priority_hints~
 - [ ] ~cl_khr_subgroup_named_barrier~
-- [ ] ~cl_khr_subgroups~
 - [ ] ~cl_khr_throttle_hints~
 - [ ] ~cl_qcom_android_native_buffer_host_ptr~
 - [ ] ~cl_qcom_ext_host_ptr_iocoherent~
@@ -156,9 +149,16 @@
 - [ ] ~cl_qcom_ion_host_ptr~
 - [X] ~cl_amd_device_attribute_query~
 - [X] ~cl_arm_printf~
+- [X] ~cl_ext_migrate_memobject~
+- [X] ~cl_img_cached_allocations~
+- [X] ~cl_img_use_gralloc_ptr~
+- [X] ~cl_img_yuv_image~
 - [X] ~cl_khr_create_command_queue~
 - [X] ~cl_khr_icd~
 - [X] ~cl_khr_il_program~
+- [X] ~cl_khr_initialize_memory~
+- [X] ~cl_khr_mipmap_image~
 - [X] ~cl_khr_spir~
+- [X] ~cl_khr_subgroups~
 - [X] ~cl_khr_terminate_context~
 - [X] ~cl_nv_device_attribute_query~

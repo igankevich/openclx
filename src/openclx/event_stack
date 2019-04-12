@@ -148,17 +148,29 @@ namespace clx {
 		void copy(const buffer_slice_3d& src, const host_slice_3d& dst);
 		#endif
 
+		inline void
+		migrate(migration_flags flags, const memory_object_array& objects) {
+			#if CL_TARGET_VERSION >= 120
+			this->migrate_120(flags, objects);
+			#else
+			this->migrate_ext(flags, objects);
+			#endif
+		}
+
 		#if CL_TARGET_VERSION >= 120
 		void fill(const buffer_slice& dst, const pattern& pattern);
 		void fill(const buffer& dst, const pattern& pattern);
 		void fill(const image_slice_3d& dst, const color& col);
 		void fill(const image& dst, const color& col);
-		void migrate(migration_flags flags, const memory_object_array& objects);
 		template <class ... Args> inline void
 		migrate(migration_flags flags, const Args& ... objects) {
 			memory_object arr[] {objects...};
 			this->migrate(flags, {arr, sizeof...(objects)});
 		}
+		#if defined(cl_img_use_gralloc_ptr)
+		void acquire_gralloc(const memory_object_array& objects);
+		void release_gralloc(const memory_object_array& objects);
+		#endif
 		#endif
 
 		#if CL_TARGET_VERSION >= 200
@@ -257,6 +269,16 @@ namespace clx {
 		#if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
 		void
 		marker_100();
+		#endif
+
+		#if CL_TARGET_VERSION >= 120
+		void
+		migrate_120(migration_flags flags, const memory_object_array& objects);
+		#endif
+
+		#if defined(cl_ext_migrate_memobject)
+		void
+		migrate_ext(migration_flags flags, const memory_object_array& objects);
 		#endif
 
 		#if CL_TARGET_VERSION >= 120

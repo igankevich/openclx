@@ -153,16 +153,19 @@ clx::to_string(errc rhs) {
 		case errc::platform_not_found:
 			return "Platform not found";
 		#endif
+		#if defined(CL_DEVICE_PARTITION_FAILED_EXT)
+		case errc::device_partition_failed_ext: return "Partition failed";
+		#endif
 		#if defined(CL_INVALID_PARTITION_COUNT_EXT)
-		case errc::invalid_partition_count:
-			return "Invalid partition count";
+		case errc::invalid_partition_count: return "Invalid partition count";
 		#endif
 		#if defined(CL_INVALID_PARTITION_NAME_EXT)
-		case errc::invalid_partition_name:
-			return "Invalid partition name";
+		case errc::invalid_partition_name: return "Invalid partition name";
 		#endif
-		default:
-			return nullptr;
+		#if defined(CL_GRALLOC_RESOURCE_NOT_ACQUIRED_IMG)
+		case errc::resource_not_acquired: return "Resource not acquired";
+		#endif
+		default: return nullptr;
 	}
 }
 

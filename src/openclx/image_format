@@ -32,6 +32,12 @@ namespace clx {
 		sbgra = CL_sBGRA,
 		abgr = CL_ABGR,
 		#endif
+		#if defined(CL_NV21_IMG)
+		nv21 = CL_NV21_IMG,
+		#endif
+		#if defined(CL_YV12_IMG)
+		yv12 = CL_YV12_IMG,
+		#endif
 	};
 
 	enum class channel_data: channel_data_type {

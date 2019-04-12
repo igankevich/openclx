@@ -12,6 +12,8 @@ namespace {
 	const char* extension_function_names[] = {
 		"clCreateCommandQueueWithPropertiesKHR",
 		"clTerminateContextKHR",
+		"clEnqueueMigrateMemObjectEXT",
+		"clGetKernelSubGroupInfoKHR",
 	};
 
 }

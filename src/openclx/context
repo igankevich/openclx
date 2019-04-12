@@ -81,15 +81,11 @@ namespace clx {
 		) const;
 
 		inline ::clx::sampler
-		sampler(
-			bool normalised,
-			addressing_mode amode,
-			filter_mode fmode
-		) const {
+		sampler(const sampler_properties& prop) const {
 			#if CL_TARGET_VERSION >= 200
-			return this->sampler_200(normalised, amode, fmode);
+			return this->sampler_200(prop);
 			#else
-			return this->sampler_100(normalised, amode, fmode);
+			return this->sampler_100(prop);
 			#endif
 		}
 
@@ -199,21 +195,11 @@ namespace clx {
 		#endif
 
 		#if CL_TARGET_VERSION >= 200
-		::clx::sampler
-		sampler_200(
-			bool normalised,
-			addressing_mode amode,
-			filter_mode fmode
-		) const;
+		::clx::sampler sampler_200(const sampler_properties& prop) const;
 		#endif
 
 		#if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
-		::clx::sampler
-		sampler_100(
-			bool normalised,
-			addressing_mode amode,
-			filter_mode fmode
-		) const;
+		::clx::sampler sampler_100(const sampler_properties& prop) const;
 		#endif
 
 	};

@@ -10,13 +10,14 @@ openclx_src = files([
 	'event.cc',
 	'event_stack.cc',
 	'image.cc',
-	'kernel_argument.cc',
 	'kernel.cc',
+	'kernel_argument.cc',
 	'memory_object.cc',
 	'pipe.cc',
 	'platform.cc',
 	'program.cc',
 	'sampler.cc',
+	'sampler_properties.cc',
 	'svm_block.cc',
 ])
 

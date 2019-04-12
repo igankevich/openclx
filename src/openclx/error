@@ -92,11 +92,17 @@ namespace clx {
 		#if defined(CL_PLATFORM_NOT_FOUND_KHR)
 		platform_not_found=CL_PLATFORM_NOT_FOUND_KHR,
 		#endif
+		#if defined(CL_DEVICE_PARTITION_FAILED_EXT)
+		device_partition_failed_ext=CL_DEVICE_PARTITION_FAILED_EXT,
+		#endif
 		#if defined(CL_INVALID_PARTITION_COUNT_EXT)
 		invalid_partition_count=CL_INVALID_PARTITION_COUNT_EXT,
 		#endif
 		#if defined(CL_INVALID_PARTITION_NAME_EXT)
 		invalid_partition_name=CL_INVALID_PARTITION_NAME_EXT,
+		#endif
+		#if defined(CL_GRALLOC_RESOURCE_NOT_ACQUIRED_IMG)
+		resource_not_acquired=CL_GRALLOC_RESOURCE_NOT_ACQUIRED_IMG,
 		#endif
 	};
 

@@ -61,5 +61,7 @@
 #endif
 
 #include <CL/opencl.h>
+#include <openclx/bits/cl_img_use_gralloc_ptr>
+#include <openclx/bits/cl_khr_initialize_memory>
 
 #endif // vim:filetype=cpp

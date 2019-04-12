@@ -24,6 +24,10 @@ clx::context_properties::operator()(const platform& platform) const {
 			prop.push_back(context_properties_type(printf_buffer_size()));
 		}
 	}
+	if (supports("cl_khr_initialize_memory")) {
+		prop.push_back(context_properties_type(CL_CONTEXT_MEMORY_INITIALIZE_KHR));
+		prop.push_back(context_properties_type(init_memory()));
+	}
 	return prop;
 }
 

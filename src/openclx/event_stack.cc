@@ -291,7 +291,7 @@ clx::event_stack::fill(const image& dst, const color& col) {
 
 #if CL_TARGET_VERSION >= 120
 void
-clx::event_stack::migrate(
+clx::event_stack::migrate_120(
 	migration_flags flags,
 	const memory_object_array& objects
 ) {
@@ -299,6 +299,32 @@ clx::event_stack::migrate(
 		::clEnqueueMigrateMemObjects,
 		objects.size(), downcast(objects.data()), downcast(flags)
 	);
+}
+#endif
+
+#if defined(cl_ext_migrate_memobject)
+void
+clx::event_stack::migrate_ext(
+	migration_flags flags,
+	const memory_object_array& objects
+) {
+	auto func = CLX_EXTENSION(clEnqueueMigrateMemObjectEXT, queue().context().platform());
+	CLX_BODY_ENQUEUE(func, objects.size(), downcast(objects.data()), downcast(flags));
+}
+#endif
+
+
+#if defined(cl_img_use_gralloc_ptr)
+void
+clx::event_stack::acquire_gralloc(const memory_object_array& objects) {
+	auto func = CLX_EXTENSION(clEnqueueAcquireGrallocObjectsIMG, queue().context().platform());
+	CLX_BODY_ENQUEUE(func, objects.size(), downcast(objects.data()), downcast(flags));
+}
+
+void
+clx::event_stack::release_gralloc(const memory_object_array& objects) {
+	auto func = CLX_EXTENSION(clEnqueueReleaseGrallocObjectsIMG, queue().context().platform());
+	CLX_BODY_ENQUEUE(func, objects.size(), downcast(objects.data()), downcast(flags));
 }
 #endif
 

@@ -117,7 +117,7 @@ clx::kernel::num_sub_groups(const device& device) const {
 }
 
 size_t
-clx::kernel::max_sub_group_size(const device& device, const range& range) const {
+clx::kernel::max_sub_group_size_210(const device& device, const range& range) const {
 	CLX_BODY_SCALAR(
 		::clGetKernelSubGroupInfo,
 		size_t,
@@ -128,7 +128,7 @@ clx::kernel::max_sub_group_size(const device& device, const range& range) const 
 }
 
 size_t
-clx::kernel::num_sub_groups(const device& device, const range& range) const {
+clx::kernel::num_sub_groups_210(const device& device, const range& range) const {
 	CLX_BODY_SCALAR(
 		::clGetKernelSubGroupInfo,
 		size_t,
@@ -151,5 +151,30 @@ clx::kernel::local_size(const device& device, size_t nsubgroups) const {
 		)
 	);
 	return value;
+}
+
+#elif CL_TARGET_VERSION >= 200 && defined(cl_khr_subgroups)
+
+size_t
+clx::kernel::max_sub_group_size_khr(const device& device, const range& range) const {
+	auto func = CLX_EXTENSION(clGetKernelSubGroupInfoKHR, context().platform());
+	CLX_BODY_SCALAR(
+		::clGetKernelSubGroupInfo,
+		size_t,
+		device.get(),
+		CL_KERNEL_MAX_SUB_GROUP_SIZE_FOR_NDRANGE_KHR,
+		range.dimensions()*sizeof(size_t), range.data()
+	);
+}
+
+size_t
+clx::kernel::num_sub_groups_khr(const device& device, const range& range) const {
+	CLX_BODY_SCALAR(
+		::clGetKernelSubGroupInfo,
+		size_t,
+		device.get(),
+		CL_KERNEL_SUB_GROUP_COUNT_FOR_NDRANGE_KHR,
+		range.dimensions()*sizeof(size_t), range.data()
+	);
 }
 #endif

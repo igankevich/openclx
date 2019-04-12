@@ -1,4 +1,3 @@
-#include <openclx/addressing_mode>
 #include <openclx/binary>
 #include <openclx/bits/macros>
 #include <openclx/bits/pragmas>
@@ -13,6 +12,7 @@
 #include <openclx/platform>
 #include <openclx/program>
 #include <openclx/sampler>
+#include <openclx/sampler_properties>
 #include <openclx/svm_block>
 
 CLX_WARNING_PUSH
@@ -262,21 +262,9 @@ clx::context::buffer(
 
 #if CL_TARGET_VERSION >= 200
 clx::sampler
-clx::context::sampler_200(
-	bool normalised,
-	addressing_mode amode,
-	filter_mode fmode
-) const {
+clx::context::sampler_200(const sampler_properties& prop) const {
 	int_type ret = 0;
-	std::vector<sampler_properties_type> props{
-		sampler_properties_type(CL_SAMPLER_NORMALIZED_COORDS),
-		sampler_properties_type(normalised),
-		sampler_properties_type(CL_SAMPLER_ADDRESSING_MODE),
-		sampler_properties_type(amode),
-		sampler_properties_type(CL_SAMPLER_FILTER_MODE),
-		sampler_properties_type(fmode),
-		sampler_properties_type(0)
-	};
+	auto props = prop(platform());
 	auto sm = ::clCreateSamplerWithProperties(this->_ptr, props.data(), &ret);
 	CLX_CHECK(ret);
 	return static_cast<::clx::sampler>(sm);
@@ -285,11 +273,7 @@ clx::context::sampler_200(
 
 #if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
 clx::sampler
-clx::context::sampler_100(
-	bool normalised,
-	addressing_mode amode,
-	filter_mode fmode
-) const {
+clx::context::sampler_100(const sampler_properties& prop) const {
 	int_type ret = 0;
 	auto sm = ::clCreateSampler(
 		this->_ptr,

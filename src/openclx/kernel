@@ -75,9 +75,28 @@ namespace clx {
 		#if CL_TARGET_VERSION >= 210
 		size_t max_sub_groups(const device& device) const;
 		size_t num_sub_groups(const device& device) const;
-		size_t max_sub_group_size(const device& device, const range& range) const;
-		size_t num_sub_groups(const device& device, const range& range) const;
 		range local_size(const device& device, size_t nsubgroups) const;
+		#endif
+
+		#if CL_TARGET_VERSION >= 210 || \
+			(CL_TARGET_VERSION >= 200 && defined(cl_khr_subgroups))
+		inline size_t
+		max_sub_group_size(const device& device, const range& range) const {
+			#if CL_TARGET_VERSION >= 210
+			return this->max_sub_group_size_210(device, range);
+			#else
+			return this->max_sub_group_size_khr(device, range);
+			#endif
+		}
+
+		inline size_t
+		num_sub_groups(const device& device, const range& range) const {
+			#if CL_TARGET_VERSION >= 210
+			return this->num_sub_groups_210(device, range);
+			#else
+			return this->num_sub_groups_khr(device, range);
+			#endif
+		}
 		#endif
 
 		std::string name() const;
@@ -130,6 +149,16 @@ namespace clx {
 		swap(kernel& rhs) {
 			std::swap(this->_ptr, rhs._ptr);
 		}
+
+	private:
+
+		#if CL_TARGET_VERSION >= 210
+		size_t max_sub_group_size_210(const device& device, const range& range) const;
+		size_t num_sub_groups_210(const device& device, const range& range) const;
+		#elif CL_TARGET_VERSION >= 200 && defined(cl_khr_subgroups)
+		size_t max_sub_group_size_khr(const device& device, const range& range) const;
+		size_t num_sub_groups_khr(const device& device, const range& range) const;
+		#endif
 
 	};
 

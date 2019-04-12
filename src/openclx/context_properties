@@ -19,6 +19,7 @@ namespace clx {
 		bool_type _terminated{CL_FALSE};
 		printf_callback_type _printf_callback = nullptr;
 		size_t _printf_buffer_size = 0;
+		unsigned_int_type _initmemory = 0;
 
 	public:
 		inline bool_type can_be_terminated() const { return this->_terminated; }
@@ -37,6 +38,9 @@ namespace clx {
 
 		inline void printf_buffer_size(size_t n) { this->_printf_buffer_size = n; }
 		inline size_t printf_buffer_size() const { return this->_printf_buffer_size; }
+
+		inline void init_memory(unsigned_int_type rhs) { this->_initmemory = rhs; }
+		inline unsigned_int_type init_memory() const { return this->_initmemory; }
 
 		std::vector<context_properties_type>
 		operator()(const platform& platform) const;

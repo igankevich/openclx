@@ -23,6 +23,15 @@ namespace clx {
 		svm_atomics = CL_MEM_SVM_ATOMICS,
 		kernel_read_and_write = CL_MEM_KERNEL_READ_AND_WRITE,
 		#endif
+		#if defined(CL_MEM_USE_UNCACHED_CPU_MEMORY_IMG)
+		uncached = CL_MEM_USE_UNCACHED_CPU_MEMORY_IMG,
+		#endif
+		#if defined(CL_MEM_USE_CACHED_CPU_MEMORY_IMG)
+		cached = CL_MEM_USE_CACHED_CPU_MEMORY_IMG,
+		#endif
+		#if CL_TARGET_VERSION >= 120 && defined(CL_MEM_USE_GRALLOC_PTR_IMG)
+		use_gralloc_ptr = CL_MEM_USE_GRALLOC_PTR_IMG,
+		#endif
 	};
 
 	CLX_FLAGS(memory_flags, memory_flags_type)
