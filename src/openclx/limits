@@ -1,11 +1,7 @@
 #ifndef OPENCLX_LIMITS
 #define OPENCLX_LIMITS
 
-#include <openclx/bits/pragmas>
 #include <openclx/forward>
-
-CLX_WARNING_PUSH
-CLX_IGNORED_ATTRIBUTES
 
 namespace clx {
 

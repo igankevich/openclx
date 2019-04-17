@@ -27,6 +27,12 @@ namespace clx {
 		typedef array_view<memory_object> memory_object_array;
 		typedef void* svm_pointer;
 		typedef array_view<void> svm_array;
+		#if defined(cl_khr_gl_sharing)
+		typedef array_view<gl::buffer> gl_memory_object_array;
+		#endif
+		#if defined(cl_khr_egl_image)
+		typedef array_view<egl::image> egl_memory_object_array;
+		#endif
 
 	private:
 
@@ -156,6 +162,16 @@ namespace clx {
 			this->migrate_ext(flags, objects);
 			#endif
 		}
+
+		#if defined(cl_khr_gl_sharing)
+		void acquire(const gl_memory_object_array& objects);
+		void release(const gl_memory_object_array& objects);
+		#endif
+
+		#if defined(cl_khr_egl_image)
+		void acquire(const egl_memory_object_array& objects);
+		void release(const egl_memory_object_array& objects);
+		#endif
 
 		#if CL_TARGET_VERSION >= 120
 		void fill(const buffer_slice& dst, const pattern& pattern);

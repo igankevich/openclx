@@ -5,6 +5,7 @@
 #include <openclx/device>
 #include <openclx/downcast>
 #include <openclx/error>
+#include <openclx/extensions>
 #include <openclx/platform>
 
 namespace {
@@ -14,6 +15,8 @@ namespace {
 		"clTerminateContextKHR",
 		"clEnqueueMigrateMemObjectEXT",
 		"clGetKernelSubGroupInfoKHR",
+		"clGetGLContextInfoKHR",
+		"clCreateEventFromEGLSyncKHR",
 	};
 
 }
@@ -22,7 +25,12 @@ CLX_METHOD_STRING(clx::platform::profile, ::clGetPlatformInfo, CL_PLATFORM_PROFI
 CLX_METHOD_STRING(clx::platform::version, ::clGetPlatformInfo, CL_PLATFORM_VERSION);
 CLX_METHOD_STRING(clx::platform::name, ::clGetPlatformInfo, CL_PLATFORM_NAME);
 CLX_METHOD_STRING(clx::platform::vendor, ::clGetPlatformInfo, CL_PLATFORM_VENDOR);
-CLX_METHOD_STRING(clx::platform::extensions, ::clGetPlatformInfo, CL_PLATFORM_EXTENSIONS);
+CLX_METHOD_STRING2(
+	clx::platform::extensions,
+	::clGetPlatformInfo,
+	::clx::extensions,
+	CL_PLATFORM_EXTENSIONS
+);
 #if defined(CL_PLATFORM_ICD_SUFFIX_KHR)
 CLX_METHOD_STRING(clx::platform::suffix, ::clGetPlatformInfo, CL_PLATFORM_ICD_SUFFIX_KHR);
 #endif
@@ -94,7 +102,7 @@ clx::platform::context(
 	const context_properties& properties,
 	const array_view<device>& devices
 ) const {
-	auto prop = properties(*this);
+	auto prop = properties(extensions());
 	prop << CL_CONTEXT_PLATFORM << this->_ptr << 0;
 	int_type ret = 0;
 	auto ctx = ::clCreateContext(
@@ -128,7 +136,7 @@ clx::context clx::platform::context(
 	const context_properties& properties,
 	device_flags types
 ) const {
-	auto prop = properties(*this);
+	auto prop = properties(extensions());
 	prop << CL_CONTEXT_PLATFORM << this->_ptr << 0;
 	int_type ret = 0;
 	auto ctx =

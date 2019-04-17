@@ -1,0 +1,28 @@
+#ifndef OPENCLX_EXTENSIONS
+#define OPENCLX_EXTENSIONS
+
+#include <openclx/forward>
+
+namespace clx {
+
+	class extensions {
+
+	private:
+		std::string _str;
+
+	public:
+		inline extensions(const std::string& s): _str(s) {}
+		inline extensions(std::string&& s): _str(std::move(s)) {}
+
+		inline bool
+		have(const char* name) const {
+			return this->_str.find(name) != std::string::npos;
+		}
+
+		inline bool operator()(const char* name) const { return this->have(name); }
+
+	};
+
+}
+
+#endif // vim:filetype=cpp

@@ -4,10 +4,8 @@
 #include <openclx/context>
 #include <openclx/device>
 #include <openclx/downcast>
+#include <openclx/extensions>
 #include <openclx/platform>
-
-CLX_WARNING_PUSH
-CLX_IGNORED_ATTRIBUTES
 
 #define CLX_DEVICE_PREFERRED_VECTOR_WIDTH(type, type2) \
 	template <> \
@@ -22,7 +20,12 @@ CLX_METHOD_STRING(clx::device::profile, ::clGetDeviceInfo, CL_DEVICE_PROFILE)
 CLX_METHOD_STRING(clx::device::vendor, ::clGetDeviceInfo, CL_DEVICE_VENDOR)
 CLX_METHOD_STRING(clx::device::version, ::clGetDeviceInfo, CL_DEVICE_VERSION)
 CLX_METHOD_STRING(clx::device::driver_version, ::clGetDeviceInfo, CL_DRIVER_VERSION)
-CLX_METHOD_STRING(clx::device::extensions, ::clGetDeviceInfo, CL_DEVICE_EXTENSIONS)
+CLX_METHOD_STRING2(
+	clx::device::extensions,
+	::clGetDeviceInfo,
+	::clx::extensions,
+	CL_DEVICE_EXTENSIONS
+)
 
 #if defined(CL_DEVICE_SPIR_VERSIONS)
 CLX_METHOD_STRING(
@@ -104,37 +107,10 @@ clx::context clx::device::context() const {
 
 #if CL_TARGET_VERSION >= 200
 clx::command_queue
-clx::device::queue_200(context_type ctx, command_queue_flags flags) const {
-	queue_properties_type props[] = {
-		queue_properties_type(CL_QUEUE_PROPERTIES),
-		queue_properties_type(flags),
-		queue_properties_type(0)
-	};
+clx::device::queue_200(context_type ctx, const command_queue_properties& prop) const {
+	const auto& props = prop(extensions());
 	int_type ret = 0;
-	auto result =
-		::clCreateCommandQueueWithProperties(ctx, this->_ptr, props, &ret);
-	CLX_CHECK(ret);
-	return static_cast<::clx::command_queue>(result);
-}
-#endif
-
-#if CL_TARGET_VERSION >= 200
-clx::command_queue
-clx::device::queue_200(
-	context_type ctx,
-	command_queue_flags flags,
-	unsigned_int_type size
-) const {
-	queue_properties_type props[] = {
-		queue_properties_type(CL_QUEUE_PROPERTIES),
-		queue_properties_type(flags),
-		queue_properties_type(CL_QUEUE_SIZE),
-		queue_properties_type(size),
-		queue_properties_type(0)
-	};
-	int_type ret = 0;
-	auto result =
-		::clCreateCommandQueueWithProperties(ctx, this->_ptr, props, &ret);
+	auto result = ::clCreateCommandQueueWithProperties(ctx, this->_ptr, props.data(), &ret);
 	CLX_CHECK(ret);
 	return static_cast<::clx::command_queue>(result);
 }
@@ -142,31 +118,18 @@ clx::device::queue_200(
 
 #if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
 clx::command_queue
-clx::device::queue_100(context_type ctx, command_queue_flags flags) const {
+clx::device::queue_100(context_type ctx, const command_queue_properties& prop) const {
 	int_type ret = 0;
-	auto result = ::clCreateCommandQueue(ctx, this->_ptr, downcast(flags), &ret);
-	CLX_CHECK(ret);
-	return static_cast<::clx::command_queue>(result);
-}
-#endif
-
-#if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
-clx::command_queue
-clx::device::queue_100(
-	context_type ctx,
-	command_queue_flags flags,
-	unsigned_int_type size
-) const {
-	queue_properties_type props[] = {
-		queue_properties_type(CL_QUEUE_PROPERTIES),
-		queue_properties_type(flags),
-		queue_properties_type(CL_QUEUE_SIZE),
-		queue_properties_type(size),
-		queue_properties_type(0)
-	};
-	int_type ret = 0;
-	auto func = CLX_EXTENSION(clCreateCommandQueueWithPropertiesKHR, platform());
-	auto result = func(ctx, this->_ptr, props, &ret);
+	#if defined(cl_khr_create_command_queue)
+	const auto& ext = extensions();
+	command_queue_type result;
+	if (ext("cl_khr_create_command_queue")) {
+		auto func = CLX_EXTENSION(clCreateCommandQueueWithPropertiesKHR, platform());
+		const auto& props = prop(extensions());
+		result = func(ctx, this->_ptr, props.data(), &ret);
+	} else
+	#endif
+	{ result = ::clCreateCommandQueue(ctx, this->_ptr, downcast(prop.flags()), &ret); }
 	CLX_CHECK(ret);
 	return static_cast<::clx::command_queue>(result);
 }
@@ -179,7 +142,21 @@ CLX_METHOD_BOOL(clx::device::supports_error_correction, ::clGetDeviceInfo, CL_DE
 CLX_METHOD_BOOL(clx::device::supports_images, ::clGetDeviceInfo, CL_DEVICE_IMAGE_SUPPORT)
 
 CLX_METHOD_SCALAR(clx::device::image2d_max_width, ::clGetDeviceInfo, size_t, CL_DEVICE_IMAGE2D_MAX_WIDTH)
-CLX_METHOD_SCALAR(clx::device::image2d_max_height, ::clGetDeviceInfo, size_t, CL_DEVICE_IMAGE2D_MAX_HEIGHT)
+CLX_METHOD_SCALAR(clx::device::image2d_max_height, ::clGetDeviceInfo, size_t, CL_DEVICE_IMAGE2D_MAX_HEIGHT);
+#if CL_TARGET_VERSION >= 120
+CLX_METHOD_SCALAR(
+	clx::device::image2d_base_address_alignment,
+	::clGetDeviceInfo,
+	unsigned_int_type,
+	CL_DEVICE_IMAGE_BASE_ADDRESS_ALIGNMENT
+);
+CLX_METHOD_SCALAR(
+	clx::device::image2d_pitch_alignment,
+	::clGetDeviceInfo,
+	unsigned_int_type,
+	CL_DEVICE_IMAGE_PITCH_ALIGNMENT
+);
+#endif
 CLX_METHOD_SCALAR(clx::device::image3d_max_width, ::clGetDeviceInfo, size_t, CL_DEVICE_IMAGE3D_MAX_WIDTH)
 CLX_METHOD_SCALAR(clx::device::image3d_max_height, ::clGetDeviceInfo, size_t, CL_DEVICE_IMAGE3D_MAX_HEIGHT)
 CLX_METHOD_SCALAR(clx::device::image3d_max_depth, ::clGetDeviceInfo, size_t, CL_DEVICE_IMAGE3D_MAX_DEPTH)
@@ -429,6 +406,16 @@ CLX_METHOD_ARRAY(
 	size_t
 )
 
+
+#if defined(CL_DEVICE_MAX_NAMED_BARRIER_COUNT_KHR)
+CLX_METHOD_SCALAR(
+	clx::device::max_named_barriers,
+	::clGetDeviceInfo,
+	unsigned_int_type,
+	CL_DEVICE_MAX_NAMED_BARRIER_COUNT_KHR
+)
+#endif
+
 #if CL_TARGET_VERSION >= 120
 CLX_METHOD_SCALAR(clx::device::parent, ::clGetDeviceInfo, device, CL_DEVICE_PARENT_DEVICE)
 CLX_METHOD_SCALAR(clx::device::max_subordinate_devices, ::clGetDeviceInfo, unsigned_int_type, CL_DEVICE_PARTITION_MAX_SUB_DEVICES)
@@ -504,5 +491,3 @@ clx::device::partition(const std::vector<unsigned int>& num_compute_units) const
 	return result;
 }
 #endif
-
-CLX_WARNING_POP

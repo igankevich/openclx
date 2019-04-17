@@ -3,9 +3,6 @@
 #include <openclx/context>
 #include <openclx/device>
 
-CLX_WARNING_PUSH
-CLX_IGNORED_ATTRIBUTES
-
 CLX_METHOD_SCALAR(
 	clx::command_queue::context,
 	::clGetCommandQueueInfo,
@@ -43,5 +40,3 @@ clx::command_queue::make_default() {
 	));
 }
 #endif
-
-CLX_WARNING_POP

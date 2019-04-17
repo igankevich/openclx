@@ -1,8 +1,9 @@
+#include <openclx/extensions>
 #include <openclx/platform>
 #include <openclx/sampler_properties>
 
 std::vector<clx::sampler_properties_type>
-clx::sampler_properties::operator()(const platform& platform) const {
+clx::sampler_properties::operator()(const extensions& extensions) const {
 	std::vector<sampler_properties_type> prop{
 		sampler_properties_type(CL_SAMPLER_NORMALIZED_COORDS),
 		sampler_properties_type(normalised()),
@@ -11,9 +12,7 @@ clx::sampler_properties::operator()(const platform& platform) const {
 		sampler_properties_type(CL_SAMPLER_FILTER_MODE),
 		sampler_properties_type(get_filter_mode())
 	};
-	const auto& ext = platform.extensions();
-	auto supports = [&ext] (const char* n) { return ext.find(n) != std::string::npos; };
-	if (supports("cl_khr_mipmap_image")) {
+	if (extensions("cl_khr_mipmap_image")) {
 		prop.push_back(sampler_properties_type(CL_SAMPLER_MIP_FILTER_MODE));
 		prop.push_back(sampler_properties_type(mipmode()));
 		prop.push_back(sampler_properties_type(CL_SAMPLER_LOD_MIN));

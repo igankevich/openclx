@@ -2,6 +2,7 @@ openclx_src = files([
 	'binary.cc',
 	'buffer.cc',
 	'command_queue.cc',
+	'command_queue_flags.cc',
 	'compiler.cc',
 	'context.cc',
 	'context_properties.cc',
@@ -20,6 +21,9 @@ openclx_src = files([
 	'sampler_properties.cc',
 	'svm_block.cc',
 ])
+
+subdir('gl')
+subdir('egl')
 
 openclx_deps = [
 	dependency('OpenCL')

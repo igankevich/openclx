@@ -1,0 +1,30 @@
+#ifndef OPENCLX_GL_TEXTURE
+#define OPENCLX_GL_TEXTURE
+
+#include <openclx/forward>
+#include <openclx/gl/buffer>
+
+namespace clx {
+
+	namespace gl {
+
+		class texture: public ::clx::buffer {
+
+		public:
+
+			inline explicit
+			texture(memory_object_type ptr): ::clx::buffer(ptr) {}
+
+			enum_type target() const;
+			int_type mipmap_level() const;
+			#if CL_TARGET_VERSION >= 120
+			int_type num_samples() const;
+			#endif
+
+		};
+
+	}
+
+}
+
+#endif // vim:filetype=cpp

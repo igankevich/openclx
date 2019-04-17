@@ -20,6 +20,17 @@ namespace clx {
 		printf_callback_type _printf_callback = nullptr;
 		size_t _printf_buffer_size = 0;
 		unsigned_int_type _initmemory = 0;
+		#if defined(cl_khr_gl_sharing)
+		void* _gl_context = nullptr;
+		union {
+			void* _glx_display = nullptr;
+			void* _egl_display;
+			void* _wgl_display;
+			void* _any_display;
+		};
+		context_properties_type _display = 0;
+		void* _cgl_sharegroup = nullptr;
+		#endif
 
 	public:
 		inline bool_type can_be_terminated() const { return this->_terminated; }
@@ -42,8 +53,28 @@ namespace clx {
 		inline void init_memory(unsigned_int_type rhs) { this->_initmemory = rhs; }
 		inline unsigned_int_type init_memory() const { return this->_initmemory; }
 
+		#if defined(cl_khr_gl_sharing)
+		inline void gl_context(void* rhs) { this->_gl_context = rhs; }
+		inline const void* gl_context() const { return this->_gl_context; }
+		inline void
+		glx_display(void* rhs) {
+			this->_glx_display = rhs, this->_display = CL_GLX_DISPLAY_KHR;
+		}
+		inline void
+		egl_display(void* rhs) {
+			this->_egl_display = rhs, this->_display = CL_EGL_DISPLAY_KHR;
+		}
+		inline void
+		wgl_display(void* rhs) {
+			this->_wgl_display = rhs, this->_display = CL_WGL_HDC_KHR;
+		}
+		inline const void* gl_display() const { return this->_any_display; }
+		inline void gl_sharegroup(void* rhs) { this->_cgl_sharegroup = rhs; }
+		inline const void* gl_sharegroup() const { return this->_cgl_sharegroup; }
+		#endif
+
 		std::vector<context_properties_type>
-		operator()(const platform& platform) const;
+		operator()(const extensions& extensions) const;
 
 	};
 

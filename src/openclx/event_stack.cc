@@ -1,8 +1,10 @@
 #include <openclx/array_view>
 #include <openclx/buffer>
 #include <openclx/downcast>
+#include <openclx/egl/image>
 #include <openclx/error>
 #include <openclx/event_stack>
+#include <openclx/gl/buffer>
 #include <openclx/image>
 #include <openclx/kernel>
 
@@ -313,6 +315,31 @@ clx::event_stack::migrate_ext(
 }
 #endif
 
+#if defined(cl_khr_gl_sharing)
+void
+clx::event_stack::acquire(const gl_memory_object_array& objects) {
+	CLX_BODY_ENQUEUE(::clEnqueueAcquireGLObjects, objects.size(), downcast(objects.data()));
+}
+
+void
+clx::event_stack::release(const gl_memory_object_array& objects) {
+	CLX_BODY_ENQUEUE(::clEnqueueReleaseGLObjects, objects.size(), downcast(objects.data()));
+}
+#endif
+
+#if defined(cl_khr_egl_image)
+void
+clx::event_stack::acquire(const egl_memory_object_array& objects) {
+	auto func = CLX_EXTENSION(clEnqueueAcquireEGLObjectsKHR, queue().context().platform());
+	CLX_BODY_ENQUEUE(func, objects.size(), downcast(objects.data()));
+}
+
+void
+clx::event_stack::release(const egl_memory_object_array& objects) {
+	auto func = CLX_EXTENSION(clEnqueueReleaseEGLObjectsKHR, queue().context().platform());
+	CLX_BODY_ENQUEUE(func, objects.size(), downcast(objects.data()));
+}
+#endif
 
 #if defined(cl_img_use_gralloc_ptr)
 void

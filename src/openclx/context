@@ -7,6 +7,8 @@
 #include <openclx/command_queue>
 #include <openclx/command_queue_flags>
 #include <openclx/error>
+#include <openclx/forward>
+#include <openclx/gl/texture>
 #include <openclx/image>
 #include <openclx/image_descriptor>
 #include <openclx/image_format>
@@ -14,7 +16,7 @@
 #include <openclx/memory_objects>
 #include <openclx/sampler>
 #include <openclx/svm_flags>
-#include <openclx/forward>
+#include <openclx/platform>
 
 namespace clx {
 
@@ -22,6 +24,7 @@ namespace clx {
 
 	private:
 		context_type _ptr = nullptr;
+		mutable ::clx::platform _platform;
 
 	public:
 
@@ -32,11 +35,11 @@ namespace clx {
 		devices() const;
 
 		inline std::vector<command_queue>
-		command_queues(command_queue_flags flags) const {
+		command_queues(const command_queue_properties& prop) const {
 			#if CL_TARGET_VERSION >= 200
-			return this->command_queues_200(flags);
+			return this->command_queues_200(prop);
 			#else
-			return this->command_queues_100(flags);
+			return this->command_queues_100(prop);
 			#endif
 		}
 
@@ -73,12 +76,21 @@ namespace clx {
 		::clx::event event() const;
 		#endif
 
-		::clx::buffer
-		buffer(
+		#if CL_TARGET_VERSION >= 110 && defined(cl_khr_gl_sharing)
+		::clx::event gl_event(gl::sync_type name) const;
+		#endif
+
+		#if defined(cl_khr_egl_event)
+		::clx::event egl_event(egl::sync_type name, egl::display_type display) const;
+		egl::image egl_image(
 			memory_flags flags,
-			size_t size,
-			void* host_pointer=nullptr
+			egl::image_type name,
+			egl::display_type display
 		) const;
+		#endif
+
+		::clx::buffer
+		buffer(memory_flags flags, size_t size, void* host_pointer=nullptr) const;
 
 		inline ::clx::sampler
 		sampler(const sampler_properties& prop) const {
@@ -105,13 +117,52 @@ namespace clx {
 		) const;
 		#endif
 
+		#if defined(cl_khr_gl_sharing)
+		gl::buffer gl_buffer(memory_flags flags, gl::unsigned_int_type name) const;
+		gl::buffer gl_renderbuffer(memory_flags flags, gl::unsigned_int_type name) const;
+		#if CL_TARGET_VERSION >= 120
+		gl::texture gl_texture(
+			memory_flags flags,
+			gl::enum_type target,
+			gl::int_type miplevel,
+			gl::unsigned_int_type name
+		) const;
+		#endif
+		inline gl::texture gl_texture_2d(
+			memory_flags flags,
+			gl::enum_type target,
+			gl::int_type miplevel,
+			gl::unsigned_int_type name
+		) const {
+			#if CL_TARGET_VERSION >= 120
+			return this->gl_texture(flags, target, miplevel, name);
+			#else
+			return this->gl_texture_2d_100(flags, target, miplevel, name);
+			#endif
+		}
+		inline gl::texture gl_texture_3d(
+			memory_flags flags,
+			gl::enum_type target,
+			gl::int_type miplevel,
+			gl::unsigned_int_type name
+		) const {
+			#if CL_TARGET_VERSION >= 120
+			return this->gl_texture(flags, target, miplevel, name);
+			#else
+			return this->gl_texture_3d_100(flags, target, miplevel, name);
+			#endif
+		}
+		#endif
+
 		#if CL_TARGET_VERSION >= 120 && defined(cl_khr_terminate_context)
 		void terminate();
 		#endif
 
-		std::vector<context_properties_type>
-		properties() const;
-
+		std::vector<context_properties_type> properties() const;
+		#if defined(cl_khr_gl_sharing)
+		::clx::device gl_device() const;
+		std::vector<device> gl_available_devices() const;
+		#endif
 		::clx::platform platform() const;
 
 		unsigned_int_type
@@ -166,12 +217,12 @@ namespace clx {
 
 		#if CL_TARGET_VERSION >= 200
 		std::vector<command_queue>
-		command_queues_200(command_queue_flags flags) const;
+		command_queues_200(const command_queue_properties& prop) const;
 		#endif
 
 		#if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
 		std::vector<command_queue>
-		command_queues_100(command_queue_flags flags) const;
+		command_queues_100(const command_queue_properties& prop) const;
 		#endif
 
 		#if CL_TARGET_VERSION >= 200
@@ -198,8 +249,25 @@ namespace clx {
 		::clx::sampler sampler_200(const sampler_properties& prop) const;
 		#endif
 
-		#if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
+		#if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
 		::clx::sampler sampler_100(const sampler_properties& prop) const;
+		#endif
+
+		#if defined(cl_khr_gl_sharing)
+		#if (CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS))
+		gl::texture gl_texture_2d_100(
+			memory_flags flags,
+			gl::enum_type target,
+			gl::int_type miplevel,
+			gl::unsigned_int_type name
+		) const;
+		gl::texture gl_texture_3d_100(
+			memory_flags flags,
+			gl::enum_type target,
+			gl::int_type miplevel,
+			gl::unsigned_int_type name
+		) const;
+		#endif
 		#endif
 
 	};

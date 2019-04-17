@@ -66,7 +66,7 @@ namespace clx {
 		std::string vendor() const;
 		std::string version() const;
 		std::string driver_version() const;
-		std::string extensions() const;
+		::clx::extensions extensions() const;
 		#if defined(CL_DEVICE_SPIR_VERSIONS)
 		std::string spir_versions() const;
 		#endif
@@ -77,19 +77,24 @@ namespace clx {
 
 		inline ::clx::command_queue
 		queue(command_queue_flags flags) const {
+			command_queue_properties prop;
+			prop.flags(flags);
 			#if CL_TARGET_VERSION >= 200
-			return this->queue_200(this->context().get(), flags);
+			return this->queue_200(this->context().get(), prop);
 			#else
-			return this->queue_100(this->context().get(), flags);
+			return this->queue_100(this->context().get(), prop);
 			#endif
 		}
 
 		inline ::clx::command_queue
 		queue(command_queue_flags flags, unsigned_int_type size) const {
+			command_queue_properties prop;
+			prop.flags(flags);
+			prop.size(size);
 			#if CL_TARGET_VERSION >= 200
-			return this->queue_200(this->context().get(), flags, size);
+			return this->queue_200(this->context().get(), prop);
 			#else
-			return this->queue_100(this->context().get(), flags, size);
+			return this->queue_100(this->context().get(), prop);
 			#endif
 		}
 
@@ -101,6 +106,11 @@ namespace clx {
 
 		size_t image2d_max_width() const;
 		size_t image2d_max_height() const;
+		#if CL_TARGET_VERSION >= 120
+		unsigned_int_type image2d_pitch_alignment() const;
+		unsigned_int_type image2d_base_address_alignment() const;
+		#endif
+
 		size_t image3d_max_width() const;
 		size_t image3d_max_height() const;
 		size_t image3d_max_depth() const;
@@ -172,6 +182,8 @@ namespace clx {
 		unsigned_int_type pcie_id() const;
 		std::vector<size_t> global_free_memory() const;
 
+		unsigned_int_type max_named_barriers() const;
+
 		inline device_type
 		get() noexcept {
 			return this->_ptr;
@@ -225,30 +237,12 @@ namespace clx {
 
 		#if CL_TARGET_VERSION >= 200
 		::clx::command_queue
-		queue_200(context_type ctx, command_queue_flags flags) const;
-		#endif
-
-		#if CL_TARGET_VERSION >= 200
-		::clx::command_queue
-		queue_200(
-			context_type ctx,
-			command_queue_flags flags,
-			unsigned_int_type size
-		) const;
+		queue_200(context_type ctx, const command_queue_properties& prop) const;
 		#endif
 
 		#if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
 		::clx::command_queue
-		queue_100(context_type ctx, command_queue_flags flags) const;
-		#endif
-
-		#if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
-		::clx::command_queue
-		queue_100(
-			context_type ctx,
-			command_queue_flags flags,
-			unsigned_int_type size
-		) const;
+		queue_100(context_type ctx, const command_queue_properties& prop) const;
 		#endif
 
 		friend class context;

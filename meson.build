@@ -10,7 +10,7 @@ with_tests = get_option('with_tests')
 
 cpp = meson.get_compiler('cpp')
 
-foreach arg : ['-Werror=return-type']
+foreach arg : ['-Werror=return-type', '-Wno-ignored-attributes']
 	if cpp.has_argument(arg)
 		add_global_arguments(arg, language: 'cpp')
 	endif

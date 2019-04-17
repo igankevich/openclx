@@ -46,7 +46,7 @@ namespace clx {
 		inline float lod_max() const { return this->_lod_max; }
 
 		std::vector<sampler_properties_type>
-		operator()(const platform& platform) const;
+		operator()(const extensions& extensions) const;
 
 	};
 

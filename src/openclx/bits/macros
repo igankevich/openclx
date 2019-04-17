@@ -2,6 +2,8 @@
 #define OPENCLX_BITS_MACROS
 
 #include <string>
+#include <vector>
+
 #include <openclx/error>
 
 namespace clx {
@@ -29,6 +31,26 @@ namespace clx {
 			}
 			while (!value.empty() && value.back() == 0) { value.pop_back(); }
 			return value;
+		}
+
+		template <class T, class ... Args>
+		std::vector<T>
+		body_array(info_type function, void* ptr, Args ... args) {
+			size_t actual_size = 0;
+			std::vector<T> result(4096 / sizeof(T));
+			int_type ret;
+			bool success = false;
+			while (!success) {
+				ret = function(ptr, args..., result.size()*sizeof(T),
+					result.data(), &actual_size);
+				auto nvalues = actual_size / sizeof(T);
+				result.resize(nvalues);
+				if (errc(ret) != errc::invalid_value && nvalues <= result.size()) {
+					CLX_CHECK(ret);
+					success = true;
+				}
+			}
+			return result;
 		}
 
 	}
@@ -62,6 +84,12 @@ namespace clx {
 
 #define CLX_METHOD_STRING(method, function, ...) \
 	std::string \
+	method() const { \
+		CLX_BODY_STRING(function, __VA_ARGS__); \
+	}
+
+#define CLX_METHOD_STRING2(method, function, return_type, ...) \
+	return_type \
 	method() const { \
 		CLX_BODY_STRING(function, __VA_ARGS__); \
 	}

@@ -16,6 +16,11 @@ namespace clx {
 		clTerminateContextKHR,
 		clEnqueueMigrateMemObjectEXT,
 		clGetKernelSubGroupInfoKHR,
+		clGetGLContextInfoKHR,
+		clCreateEventFromEGLSyncKHR,
+		clCreateFromEGLImageKHR,
+		clEnqueueAcquireEGLObjectsKHR,
+		clEnqueueReleaseEGLObjectsKHR,
 		size
 	};
 
@@ -38,7 +43,7 @@ namespace clx {
 		std::string version() const;
 		std::string name() const;
 		std::string vendor() const;
-		std::string extensions() const;
+		::clx::extensions extensions() const;
 		#if defined(CL_PLATFORM_ICD_SUFFIX_KHR)
 		std::string suffix() const;
 		#endif

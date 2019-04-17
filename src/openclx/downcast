@@ -38,6 +38,9 @@ namespace clx {
 	#if CL_TARGET_VERSION >= 200
 	CLX_MAKE_DOWNCAST_TYPE(svm_flags);
 	#endif
+	#if defined(cl_khr_gl_sharing)
+	CLX_MAKE_DOWNCAST_TYPE2(::clx::gl::buffer, memory_object_type);
+	#endif
 
 	#undef CLX_MAKE_DOWNCAST_TYPE
 	#undef CLX_MAKE_DOWNCAST_TYPE2

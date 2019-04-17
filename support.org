@@ -135,14 +135,6 @@
 - [ ] ~cl_khr_d3d10_sharing~
 - [ ] ~cl_khr_d3d11_sharing~
 - [ ] ~cl_khr_dx9_media_sharing~
-- [ ] ~cl_khr_egl_event~
-- [ ] ~cl_khr_egl_image~
-- [ ] ~cl_khr_gl_event~
-- [ ] ~cl_khr_gl_sharing~
-- [ ] ~cl_khr_image2D_buffer~
-- [ ] ~cl_khr_priority_hints~
-- [ ] ~cl_khr_subgroup_named_barrier~
-- [ ] ~cl_khr_throttle_hints~
 - [ ] ~cl_qcom_android_native_buffer_host_ptr~
 - [ ] ~cl_qcom_ext_host_ptr_iocoherent~
 - [ ] ~cl_qcom_ext_host_ptr~
@@ -154,11 +146,19 @@
 - [X] ~cl_img_use_gralloc_ptr~
 - [X] ~cl_img_yuv_image~
 - [X] ~cl_khr_create_command_queue~
+- [X] ~cl_khr_egl_event~
+- [X] ~cl_khr_egl_image~
+- [X] ~cl_khr_gl_event~
+- [X] ~cl_khr_gl_sharing~
 - [X] ~cl_khr_icd~
 - [X] ~cl_khr_il_program~
+- [X] ~cl_khr_image2D_buffer~
 - [X] ~cl_khr_initialize_memory~
 - [X] ~cl_khr_mipmap_image~
+- [X] ~cl_khr_priority_hints~
 - [X] ~cl_khr_spir~
+- [X] ~cl_khr_subgroup_named_barrier~
 - [X] ~cl_khr_subgroups~
 - [X] ~cl_khr_terminate_context~
+- [X] ~cl_khr_throttle_hints~
 - [X] ~cl_nv_device_attribute_query~

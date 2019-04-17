@@ -1,12 +1,14 @@
 #include <openclx/binary>
 #include <openclx/bits/macros>
-#include <openclx/bits/pragmas>
 #include <openclx/buffer>
 #include <openclx/command_queue>
 #include <openclx/context>
 #include <openclx/device>
 #include <openclx/downcast>
 #include <openclx/event>
+#include <openclx/extensions>
+#include <openclx/gl/buffer>
+#include <openclx/gl/texture>
 #include <openclx/image>
 #include <openclx/pipe>
 #include <openclx/platform>
@@ -14,9 +16,6 @@
 #include <openclx/sampler>
 #include <openclx/sampler_properties>
 #include <openclx/svm_block>
-
-CLX_WARNING_PUSH
-CLX_IGNORED_ATTRIBUTES
 
 CLX_METHOD_ARRAY(
 	clx::context::devices,
@@ -26,12 +25,12 @@ CLX_METHOD_ARRAY(
 
 #if CL_TARGET_VERSION >= 200
 std::vector<clx::command_queue>
-clx::context::command_queues_200(command_queue_flags flags) const {
+clx::context::command_queues_200(const command_queue_properties& prop) const {
 	const auto& devices = this->devices();
 	std::vector<command_queue> result;
 	result.reserve(devices.size());
 	for (const auto& device : devices) {
-		result.emplace_back(device.queue_200(this->_ptr, flags));
+		result.emplace_back(device.queue_200(this->_ptr, prop));
 	}
 	return result;
 }
@@ -39,12 +38,12 @@ clx::context::command_queues_200(command_queue_flags flags) const {
 
 #if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
 std::vector<clx::command_queue>
-clx::context::command_queues_100(command_queue_flags flags) const {
+clx::context::command_queues_100(const command_queue_properties& prop) const {
 	const auto& devices = this->devices();
 	std::vector<command_queue> result;
 	result.reserve(devices.size());
 	for (const auto& device : devices) {
-		result.emplace_back(device.queue_100(this->_ptr, flags));
+		result.emplace_back(device.queue_100(this->_ptr, prop));
 	}
 	return result;
 }
@@ -154,6 +153,36 @@ CLX_METHOD_ARRAY(
 	context_properties_type
 );
 
+#if defined(cl_khr_gl_sharing)
+clx::device
+clx::context::gl_device() const {
+	const auto& prop = this->properties();
+	auto func = CLX_EXTENSION(clGetGLContextInfoKHR, platform());
+	device_type value = nullptr;
+	CLX_CHECK(func(
+		prop.data(),
+		CL_CURRENT_DEVICE_FOR_GL_CONTEXT_KHR,
+		sizeof(device_type),
+		&value,
+		nullptr
+	));
+	return static_cast<device>(value);
+}
+#endif
+
+#if defined(cl_khr_gl_sharing)
+std::vector<clx::device>
+clx::context::gl_available_devices() const {
+	const auto& prop = this->properties();
+	auto func = CLX_EXTENSION(clGetGLContextInfoKHR, platform());
+	return ::clx::bits::body_array<device>(
+		reinterpret_cast<bits::info_type>(func),
+		const_cast<context_properties_type*>(prop.data()),
+		CL_DEVICES_FOR_GL_CONTEXT_KHR
+	);
+}
+#endif
+
 CLX_METHOD_SCALAR(
 	clx::context::num_references,
 	::clGetContextInfo,
@@ -241,6 +270,40 @@ clx::context::event() const {
 	return static_cast<::clx::event>(ev);
 }
 
+#if CL_TARGET_VERSION >= 110 && defined(cl_khr_gl_sharing)
+clx::event
+clx::context::gl_event(gl::sync_type name) const {
+	int_type ret = 0;
+	auto ev = ::clCreateEventFromGLsyncKHR(this->_ptr, name, &ret);
+	CLX_CHECK(ret);
+	return static_cast<::clx::event>(ev);
+}
+#endif
+
+#if defined(cl_khr_egl_event)
+clx::event
+clx::context::egl_event(egl::sync_type name, egl::display_type display) const {
+	auto func = CLX_EXTENSION(clCreateEventFromEGLSyncKHR, platform());
+	int_type ret = 0;
+	auto ev = func(this->_ptr, name, display, &ret);
+	CLX_CHECK(ret);
+	return static_cast<::clx::event>(ev);
+}
+
+clx::egl::image
+clx::context::egl_image(
+	memory_flags flags,
+	egl::image_type name,
+	egl::display_type display
+) const {
+	auto func = CLX_EXTENSION(clCreateFromEGLImageKHR, platform());
+	int_type ret = 0;
+	auto img = func(this->_ptr, display, name, downcast(flags), nullptr, &ret);
+	CLX_CHECK(ret);
+	return static_cast<egl::image>(img);
+}
+#endif
+
 clx::buffer
 clx::context::buffer(
 	memory_flags flags,
@@ -264,7 +327,7 @@ clx::context::buffer(
 clx::sampler
 clx::context::sampler_200(const sampler_properties& prop) const {
 	int_type ret = 0;
-	auto props = prop(platform());
+	auto props = prop(platform().extensions());
 	auto sm = ::clCreateSamplerWithProperties(this->_ptr, props.data(), &ret);
 	CLX_CHECK(ret);
 	return static_cast<::clx::sampler>(sm);
@@ -323,15 +386,92 @@ clx::context::shared_memory(
 
 clx::platform
 clx::context::platform() const {
+	if (this->_platform.get()) { return this->_platform; }
 	const auto& prop = this->properties();
 	const auto nprops = prop.size();
 	for (size_t i=0; i<nprops; ++i) {
-		if (prop[i] == CL_CONTEXT_PLATFORM && i < nprops) {
-			return ::clx::platform(reinterpret_cast<platform_type>(prop[i+1]));
+		if (prop[i] == CL_CONTEXT_PLATFORM && i < nprops-1) {
+			this->_platform = ::clx::platform(reinterpret_cast<platform_type>(prop[i+1]));
+			break;
 		}
 	}
-	return clx::platform();
+	return this->_platform;
 }
+
+
+#if defined(cl_khr_gl_sharing)
+clx::gl::buffer
+clx::context::gl_buffer(memory_flags flags, gl::unsigned_int_type name) const {
+	int_type ret = 0;
+	auto buf = ::clCreateFromGLBuffer(this->_ptr, downcast(flags), name, &ret);
+	CLX_CHECK(ret);
+	return static_cast<gl::buffer>(buf);
+}
+#endif
+
+#if defined(cl_khr_gl_sharing)
+clx::gl::buffer
+clx::context::gl_renderbuffer(memory_flags flags, gl::unsigned_int_type name) const {
+	int_type ret = 0;
+	auto buf = ::clCreateFromGLRenderbuffer(this->_ptr, downcast(flags), name, &ret);
+	CLX_CHECK(ret);
+	return static_cast<gl::buffer>(buf);
+}
+#endif
+
+#if CL_TARGET_VERSION >= 120 && defined(cl_khr_gl_sharing)
+clx::gl::texture
+clx::context::gl_texture(
+	memory_flags flags,
+	gl::enum_type target,
+	gl::int_type miplevel,
+	gl::unsigned_int_type name
+) const {
+	int_type ret = 0;
+	auto tex = ::clCreateFromGLTexture(
+		this->_ptr, downcast(flags),
+		target, miplevel, name, &ret
+	);
+	CLX_CHECK(ret);
+	return static_cast<gl::texture>(tex);
+}
+#endif
+
+#if defined(cl_khr_gl_sharing)
+#if (CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS))
+clx::gl::texture
+clx::context::gl_texture_2d_100(
+	memory_flags flags,
+	gl::enum_type target,
+	gl::int_type miplevel,
+	gl::unsigned_int_type name
+) const {
+	int_type ret = 0;
+	auto tex = ::clCreateFromGLTexture2D(
+		this->_ptr, downcast(flags),
+		target, miplevel, name, &ret
+	);
+	CLX_CHECK(ret);
+	return static_cast<gl::texture>(tex);
+}
+
+clx::gl::texture
+clx::context::gl_texture_3d_100(
+	memory_flags flags,
+	gl::enum_type target,
+	gl::int_type miplevel,
+	gl::unsigned_int_type name
+) const {
+	int_type ret = 0;
+	auto tex = ::clCreateFromGLTexture3D(
+		this->_ptr, downcast(flags),
+		target, miplevel, name, &ret
+	);
+	CLX_CHECK(ret);
+	return static_cast<gl::texture>(tex);
+}
+#endif
+#endif
 
 #if CL_TARGET_VERSION >= 120 && defined(cl_khr_terminate_context)
 void
@@ -340,5 +480,3 @@ clx::context::terminate() {
 	CLX_CHECK(func(this->_ptr));
 }
 #endif
-
-CLX_WARNING_POP

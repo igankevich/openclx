@@ -64,7 +64,6 @@ namespace clx {
 		invalid_event_wait_list=CL_INVALID_EVENT_WAIT_LIST,
 		invalid_event=CL_INVALID_EVENT,
 		invalid_operation=CL_INVALID_OPERATION,
-		invalid_gl_object=CL_INVALID_GL_OBJECT,
 		invalid_buffer_size=CL_INVALID_BUFFER_SIZE,
 		invalid_mip_level=CL_INVALID_MIP_LEVEL,
 		invalid_global_work_size=CL_INVALID_GLOBAL_WORK_SIZE,
@@ -86,8 +85,11 @@ namespace clx {
 		max_size_restriction_exceeded=CL_MAX_SIZE_RESTRICTION_EXCEEDED,
 		#endif
 		illegal_read_or_write_to_a_buffer=-9999,
+		#if defined(CL_INVALID_GL_OBJECT)
+		gl_invalid_object=CL_INVALID_GL_OBJECT,
+		#endif
 		#if defined(CL_INVALID_GL_SHAREGROUP_REFERENCE_KHR)
-		invalid_gl_sharegroup_reference=CL_INVALID_GL_SHAREGROUP_REFERENCE_KHR,
+		gl_invalid_sharegroup_reference=CL_INVALID_GL_SHAREGROUP_REFERENCE_KHR,
 		#endif
 		#if defined(CL_PLATFORM_NOT_FOUND_KHR)
 		platform_not_found=CL_PLATFORM_NOT_FOUND_KHR,
@@ -102,7 +104,13 @@ namespace clx {
 		invalid_partition_name=CL_INVALID_PARTITION_NAME_EXT,
 		#endif
 		#if defined(CL_GRALLOC_RESOURCE_NOT_ACQUIRED_IMG)
-		resource_not_acquired=CL_GRALLOC_RESOURCE_NOT_ACQUIRED_IMG,
+		gralloc_resource_not_acquired=CL_GRALLOC_RESOURCE_NOT_ACQUIRED_IMG,
+		#endif
+		#if defined(CL_INVALID_EGL_OBJECT_KHR)
+		egl_invalid_object=CL_INVALID_EGL_OBJECT_KHR,
+		#endif
+		#if defined(CL_EGL_RESOURCE_NOT_ACQUIRED_KHR)
+		egl_resource_not_acquired=CL_EGL_RESOURCE_NOT_ACQUIRED_KHR,
 		#endif
 	};
 

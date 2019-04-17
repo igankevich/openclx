@@ -1,0 +1,27 @@
+#ifndef OPENCLX_GL_BUFFER
+#define OPENCLX_GL_BUFFER
+
+#include <openclx/buffer>
+#include <openclx/forward>
+
+namespace clx {
+
+	namespace gl {
+
+		class buffer: public ::clx::buffer {
+
+		public:
+
+			inline explicit
+			buffer(memory_object_type ptr): ::clx::buffer(ptr) {}
+
+			memory_objects type() const;
+			unsigned_int_type name() const;
+
+		};
+
+	}
+
+}
+
+#endif // vim:filetype=cpp

@@ -1,0 +1,22 @@
+#ifndef OPENCLX_EGL_IMAGE
+#define OPENCLX_EGL_IMAGE
+
+#include <openclx/forward>
+#include <openclx/memory_object>
+
+namespace clx {
+
+	namespace egl {
+
+		class image: public ::clx::memory_object {
+
+			inline explicit
+			image(memory_object_type ptr): ::clx::memory_object(ptr) {}
+
+		};
+
+	}
+
+}
+
+#endif // vim:filetype=cpp

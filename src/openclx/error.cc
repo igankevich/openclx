@@ -109,8 +109,7 @@ clx::to_string(errc rhs) {
 			return "Invalid event";
 		case errc::invalid_operation:
 			return "Invalid operation";
-		case errc::invalid_gl_object:
-			return "Invalid GL object";
+		case errc::gl_invalid_object: return "Invalid object (GL)";
 		case errc::invalid_buffer_size:
 			return "Invalid buffer size";
 		case errc::invalid_mip_level:
@@ -146,12 +145,10 @@ clx::to_string(errc rhs) {
 		case errc::illegal_read_or_write_to_a_buffer:
 			return "Illegal read or write to a buffer";
 		#if defined(CL_INVALID_GL_SHAREGROUP_REFERENCE_KHR)
-		case errc::invalid_gl_sharegroup_reference:
-			return "Invalid GL share group references";
+		case errc::gl_invalid_sharegroup_reference: return "Invalid share group reference (GL)";
 		#endif
 		#if defined(CL_PLATFORM_NOT_FOUND_KHR)
-		case errc::platform_not_found:
-			return "Platform not found";
+		case errc::platform_not_found: return "Platform not found";
 		#endif
 		#if defined(CL_DEVICE_PARTITION_FAILED_EXT)
 		case errc::device_partition_failed_ext: return "Partition failed";
@@ -163,7 +160,13 @@ clx::to_string(errc rhs) {
 		case errc::invalid_partition_name: return "Invalid partition name";
 		#endif
 		#if defined(CL_GRALLOC_RESOURCE_NOT_ACQUIRED_IMG)
-		case errc::resource_not_acquired: return "Resource not acquired";
+		case errc::gralloc_resource_not_acquired: return "Resource not acquired (Gralloc)";
+		#endif
+		#if defined(CL_INVALID_EGL_OBJECT_KHR)
+		case errc::egl_invalid_object: return "Invalid object (EGL)";
+		#endif
+		#if defined(CL_EGL_RESOURCE_NOT_ACQUIRED_KHR)
+		case egl_resource_not_acquired: return "Resource not acquired (EGL)";
 		#endif
 		default: return nullptr;
 	}
