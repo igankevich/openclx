@@ -112,6 +112,18 @@ namespace clx {
 		#if defined(CL_EGL_RESOURCE_NOT_ACQUIRED_KHR)
 		egl_resource_not_acquired=CL_EGL_RESOURCE_NOT_ACQUIRED_KHR,
 		#endif
+		#if defined(CL_INVALID_DX9_MEDIA_ADAPTER_KHR)
+		dx9_invalid_media_adapter=CL_INVALID_DX9_MEDIA_ADAPTER_KHR,
+		#endif
+		#if defined(CL_INVALID_DX9_MEDIA_SURFACE_KHR)
+		dx9_invalid_media_surface=CL_INVALID_DX9_MEDIA_SURFACE_KHR,
+		#endif
+		#if defined(CL_DX9_MEDIA_SURFACE_ALREADY_ACQUIRED_KHR)
+		dx9_media_surface_already_acquired=CL_DX9_MEDIA_SURFACE_ALREADY_ACQUIRED_KHR,
+		#endif
+		#if defined(CL_DX9_MEDIA_SURFACE_NOT_ACQUIRED_KHR)
+		dx9_media_surface_not_acquired=CL_DX9_MEDIA_SURFACE_NOT_ACQUIRED_KHR,
+		#endif
 	};
 
 	const char*

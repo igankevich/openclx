@@ -17,6 +17,7 @@ namespace {
 		"clGetKernelSubGroupInfoKHR",
 		"clGetGLContextInfoKHR",
 		"clCreateEventFromEGLSyncKHR",
+		"clImportMemoryARM",
 	};
 
 }

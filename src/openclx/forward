@@ -230,6 +230,21 @@ namespace clx {
 	}
 	#endif
 
+	#if defined(cl_khr_dx9_media_sharing)
+	namespace dx9 {
+		typedef ::cl_dx9_media_adapter_type_khr media_adapter_type;
+		typedef ::cl_dx9_media_adapter_set_khr media_adapter_set;
+	}
+	#endif
+
+	#if defined(cl_arm_import_memory)
+	namespace arm {
+		typedef ::cl_import_properties_arm import_properties_type;
+		enum class memory_type: unsigned_int_type;
+		class import_properties;
+	}
+	#endif
+
 }
 
 #endif // vim:filetype=cpp

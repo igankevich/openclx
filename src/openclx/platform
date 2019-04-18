@@ -21,6 +21,7 @@ namespace clx {
 		clCreateFromEGLImageKHR,
 		clEnqueueAcquireEGLObjectsKHR,
 		clEnqueueReleaseEGLObjectsKHR,
+		clImportMemoryARM,
 		size
 	};
 

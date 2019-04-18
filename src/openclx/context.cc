@@ -304,6 +304,21 @@ clx::context::egl_image(
 }
 #endif
 
+#if defined(cl_arm_import_memory)
+::clx::buffer import(
+	memory_flags flags,
+	const arm::import_properties& prop,
+	void* memory,
+	size_t size
+) const {
+	auto func = CLX_EXTENSION(clImportMemoryARM, platform());
+	int_type ret = 0;
+	auto buf = func(this->_ptr, downcast(flags), prop.data(), memory, size, &ret);
+	CLX_CHECK(ret);
+	return static_cast<::clx::buffer>(buf);
+}
+#endif
+
 clx::buffer
 clx::context::buffer(
 	memory_flags flags,

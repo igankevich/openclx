@@ -1,0 +1,8 @@
+#ifndef OPENCLX_BITS_ARM
+#define OPENCLX_BITS_ARM
+
+#if defined(cl_arm_import_memory)
+using clImportMemoryARM_fn = decltype(clImportMemoryARM);
+#endif
+
+#endif // vim:filetype=cpp

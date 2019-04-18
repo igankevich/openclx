@@ -416,6 +416,15 @@ CLX_METHOD_SCALAR(
 )
 #endif
 
+#if defined(cl_arm_core_id) && CL_TARGET_VERSION >= 120
+CLX_METHOD_SCALAR(
+	clx::device::compute_units_mask,
+	::clGetDeviceInfo,
+	unsigned_long_type,
+	CL_DEVICE_COMPUTE_UNITS_BITFIELD_ARM
+)
+#endif
+
 #if CL_TARGET_VERSION >= 120
 CLX_METHOD_SCALAR(clx::device::parent, ::clGetDeviceInfo, device, CL_DEVICE_PARENT_DEVICE)
 CLX_METHOD_SCALAR(clx::device::max_subordinate_devices, ::clGetDeviceInfo, unsigned_int_type, CL_DEVICE_PARTITION_MAX_SUB_DEVICES)

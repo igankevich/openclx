@@ -184,6 +184,10 @@ namespace clx {
 
 		unsigned_int_type max_named_barriers() const;
 
+		#if defined(cl_arm_core_id) && CL_TARGET_VERSION >= 120
+		unsigned_long_type compute_units_mask() const;
+		#endif
+
 		inline device_type
 		get() noexcept {
 			return this->_ptr;

@@ -154,6 +154,15 @@ namespace clx {
 		}
 		#endif
 
+		#if defined(cl_arm_import_memory)
+		::clx::buffer import(
+			memory_flags flags,
+			const arm::import_properties& prop,
+			void* memory,
+			size_t size
+		) const;
+		#endif
+
 		#if CL_TARGET_VERSION >= 120 && defined(cl_khr_terminate_context)
 		void terminate();
 		#endif
