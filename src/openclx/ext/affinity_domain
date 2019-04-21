@@ -1,0 +1,40 @@
+#ifndef OPENCLX_EXT_AFFINITY_DOMAIN
+#define OPENCLX_EXT_AFFINITY_DOMAIN
+
+#include <openclx/bits/flags>
+#include <openclx/forward>
+
+namespace clx {
+
+	namespace ext {
+
+		#if defined(cl_ext_device_fission)
+		enum class affinity_domain: device_affinity_domain_type {
+			#if defined(CL_AFFINITY_DOMAIN_L1_CACHE_EXT)
+			L1_cache=CL_AFFINITY_DOMAIN_L1_CACHE_EXT,
+			#endif
+			#if defined(CL_AFFINITY_DOMAIN_L2_CACHE_EXT)
+			L2_cache=CL_AFFINITY_DOMAIN_L2_CACHE_EXT,
+			#endif
+			#if defined(CL_AFFINITY_DOMAIN_L3_CACHE_EXT)
+			L3_cache=CL_AFFINITY_DOMAIN_L3_CACHE_EXT,
+			#endif
+			#if defined(CL_AFFINITY_DOMAIN_L4_CACHE_EXT)
+			L4_cache=CL_AFFINITY_DOMAIN_L4_CACHE_EXT,
+			#endif
+			#if defined(CL_AFFINITY_DOMAIN_NUMA_EXT)
+			numa=CL_AFFINITY_DOMAIN_NUMA_EXT,
+			#endif
+			#if defined(CL_AFFINITY_DOMAIN_NEXT_FISSIONABLE_EXT)
+			next=CL_AFFINITY_DOMAIN_NEXT_FISSIONABLE_EXT,
+			#endif
+		};
+		CLX_FLAGS(affinity_domain, device_affinity_domain_type)
+		#endif
+
+	}
+
+}
+
+#endif // vim:filetype=cpp
+

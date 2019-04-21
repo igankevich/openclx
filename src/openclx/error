@@ -94,15 +94,6 @@ namespace clx {
 		#if defined(CL_PLATFORM_NOT_FOUND_KHR)
 		platform_not_found=CL_PLATFORM_NOT_FOUND_KHR,
 		#endif
-		#if defined(CL_DEVICE_PARTITION_FAILED_EXT)
-		device_partition_failed_ext=CL_DEVICE_PARTITION_FAILED_EXT,
-		#endif
-		#if defined(CL_INVALID_PARTITION_COUNT_EXT)
-		invalid_partition_count=CL_INVALID_PARTITION_COUNT_EXT,
-		#endif
-		#if defined(CL_INVALID_PARTITION_NAME_EXT)
-		invalid_partition_name=CL_INVALID_PARTITION_NAME_EXT,
-		#endif
 		#if defined(CL_GRALLOC_RESOURCE_NOT_ACQUIRED_IMG)
 		gralloc_resource_not_acquired=CL_GRALLOC_RESOURCE_NOT_ACQUIRED_IMG,
 		#endif
@@ -123,6 +114,15 @@ namespace clx {
 		#endif
 		#if defined(CL_DX9_MEDIA_SURFACE_NOT_ACQUIRED_KHR)
 		dx9_media_surface_not_acquired=CL_DX9_MEDIA_SURFACE_NOT_ACQUIRED_KHR,
+		#endif
+		#if defined(CL_DEVICE_PARTITION_FAILED_EXT)
+		ext_device_partition_failed=CL_DEVICE_PARTITION_FAILED_EXT,
+		#endif
+		#if defined(CL_INVALID_PARTITION_COUNT_EXT)
+		ext_invalid_partition_count=CL_INVALID_PARTITION_COUNT_EXT,
+		#endif
+		#if defined(CL_INVALID_PARTITION_NAME_EXT)
+		ext_invalid_partition_name=CL_INVALID_PARTITION_NAME_EXT,
 		#endif
 	};
 

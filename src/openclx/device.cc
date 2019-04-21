@@ -7,6 +7,11 @@
 #include <openclx/extensions>
 #include <openclx/platform>
 
+#if defined(cl_ext_device_fission)
+#include <openclx/ext/device>
+#include <openclx/ext/partition_properties>
+#endif
+
 #define CLX_DEVICE_PREFERRED_VECTOR_WIDTH(type, type2) \
 	template <> \
 	clx::unsigned_int_type \
@@ -500,3 +505,30 @@ clx::device::partition(const std::vector<unsigned int>& num_compute_units) const
 	return result;
 }
 #endif
+
+#if defined(cl_ext_device_fission)
+std::vector<clx::ext::device>
+clx::device::partition(const ext::partition_properties& properties) const {
+	auto func = CLX_EXTENSION(clCreateSubDevicesEXT, platform());
+	std::vector<ext::device> result(4096 / sizeof(device));
+	unsigned_int_type ndevices = 0;
+	int_type ret;
+	bool success = false;
+	while (!success) {
+		ret = func(
+			this->_ptr, properties.data(),
+			result.size(), downcast(result.data()),
+			&ndevices
+		);
+		result.resize(ndevices);
+		if ((errc(ret) != errc::invalid_value &&
+			ndevices <= result.size()) || ndevices == 0) {
+			CLX_CHECK(ret);
+			success = true;
+		}
+	}
+	result.resize(ndevices);
+	return result;
+}
+#endif
+

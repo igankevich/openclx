@@ -1,0 +1,31 @@
+#ifndef OPENCLX_EXT_DEVICE_PARTITION
+#define OPENCLX_EXT_DEVICE_PARTITION
+
+#include <openclx/forward>
+
+namespace clx {
+
+	namespace ext {
+
+		#if defined(cl_ext_device_fission)
+		enum class device_partition: device_partition_type {
+			#if defined(CL_DEVICE_PARTITION_EQUALLY_EXT)
+			equally=CL_DEVICE_PARTITION_EQUALLY_EXT,
+			#endif
+			#if defined(CL_DEVICE_PARTITION_BY_COUNTS_EXT)
+			by_counts=CL_DEVICE_PARTITION_BY_COUNTS_EXT,
+			#endif
+			#if defined(CL_DEVICE_PARTITION_BY_NAMES_EXT)
+			by_names=CL_DEVICE_PARTITION_BY_NAMES_EXT,
+			#endif
+			#if defined(CL_DEVICE_PARTITION_BY_AFFINITY_DOMAIN_EXT)
+			by_affinity_domain=CL_DEVICE_PARTITION_BY_AFFINITY_DOMAIN_EXT,
+			#endif
+		};
+		#endif
+
+	}
+
+}
+
+#endif // vim:filetype=cpp

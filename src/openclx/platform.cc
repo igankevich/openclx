@@ -18,6 +18,9 @@ namespace {
 		"clGetGLContextInfoKHR",
 		"clCreateEventFromEGLSyncKHR",
 		"clImportMemoryARM",
+		"clReleaseDeviceEXT",
+		"clRetainDeviceEXT",
+		"clCreateSubDevicesEXT",
 	};
 
 }

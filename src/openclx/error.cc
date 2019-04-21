@@ -151,13 +151,13 @@ clx::to_string(errc rhs) {
 		case errc::platform_not_found: return "Platform not found";
 		#endif
 		#if defined(CL_DEVICE_PARTITION_FAILED_EXT)
-		case errc::device_partition_failed_ext: return "Partition failed";
+		case errc::ext_device_partition_failed: return "Partition failed";
 		#endif
 		#if defined(CL_INVALID_PARTITION_COUNT_EXT)
-		case errc::invalid_partition_count: return "Invalid partition count";
+		case errc::ext_invalid_partition_count: return "Invalid partition count";
 		#endif
 		#if defined(CL_INVALID_PARTITION_NAME_EXT)
-		case errc::invalid_partition_name: return "Invalid partition name";
+		case errc::ext_invalid_partition_name: return "Invalid partition name";
 		#endif
 		#if defined(CL_GRALLOC_RESOURCE_NOT_ACQUIRED_IMG)
 		case errc::gralloc_resource_not_acquired: return "Resource not acquired (Gralloc)";

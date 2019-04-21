@@ -115,7 +115,6 @@
 - [ ] ~cl_APPLE_ContextLoggingFunctions~
 - [ ] ~cl_APPLE_SetMemObjectDestructor~
 - [ ] ~cl_arm_shared_virtual_memory~
-- [ ] ~cl_ext_device_fission~
 - [ ] ~cl_intel_accelerator~
 - [ ] ~cl_intel_advanced_motion_estimation~
 - [ ] ~cl_intel_device_partition_by_names~
@@ -141,6 +140,7 @@
 - [X] ~cl_arm_get_core_id~
 - [X] ~cl_arm_import_memory~
 - [X] ~cl_arm_printf~
+- [X] ~cl_ext_device_fission~
 - [X] ~cl_ext_migrate_memobject~
 - [X] ~cl_img_cached_allocations~
 - [X] ~cl_img_use_gralloc_ptr~

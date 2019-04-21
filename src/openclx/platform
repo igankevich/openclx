@@ -22,6 +22,9 @@ namespace clx {
 		clEnqueueAcquireEGLObjectsKHR,
 		clEnqueueReleaseEGLObjectsKHR,
 		clImportMemoryARM,
+		clReleaseDeviceEXT,
+		clRetainDeviceEXT,
+		clCreateSubDevicesEXT,
 		size
 	};
 

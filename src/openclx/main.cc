@@ -89,6 +89,11 @@ usage() {
 	option("1.2", "kernels", "-cl-kernel-arg-info");
 	option("2.0", "debugging", "-g");
 	option("2.0", "spir", "-x spir -spir-std=1.2");
+	option("", "nvidia", "-cl-nv-maxrregcount N");
+	option("", "", "-cl-nv-opt-level N");
+	option("", "", "-cl-nv-verbose");
+	option("", "arm", "-cl-arm-non-uniform-work-group-size");
+	option("", "", "-cl-arm-svm");
 	std::cout << "linker options:\n";
 	option("1.2", "library", "-create-library");
 	option("1.2", "", "-enable-link-options");
@@ -98,9 +103,6 @@ usage() {
 	option("1.2", "", "-cl-finite-math-only");
 	option("1.2", "", "-cl-fast-relaxed-math");
 	option("2.2", "", "-cl-no-subgroup-ifp");
-	option("", "nvidia", "-cl-nv-maxrregcount N");
-	option("", "", "-cl-nv-opt-level N");
-	option("", "", "-cl-nv-verbose");
 	std::cout << "Please, refer to OpenCL standard "
 		"for the full list of supported compiler options.\n";
 }

@@ -24,6 +24,7 @@ openclx_src = files([
 
 subdir('gl')
 subdir('egl')
+subdir('ext')
 
 openclx_deps = [
 	dependency('OpenCL')

@@ -43,7 +43,7 @@ namespace clx {
 		svm_unmap=CL_COMMAND_SVM_UNMAP,
 		#endif
 		#if defined(CL_COMMAND_MIGRATE_MEM_OBJECT_EXT)
-		migrate_mem_object_ext=CL_COMMAND_MIGRATE_MEM_OBJECT_EXT,
+		ext_migrate_mem_object=CL_COMMAND_MIGRATE_MEM_OBJECT_EXT,
 		#endif
 		#if defined(CL_COMMAND_GL_FENCE_SYNC_OBJECT_KHR)
 		gl_fence_sync_object=CL_COMMAND_GL_FENCE_SYNC_OBJECT_KHR,

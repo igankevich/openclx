@@ -25,7 +25,7 @@ namespace clx {
 	public:
 		typedef std::chrono::nanoseconds nanoseconds;
 
-	private:
+	protected:
 		device_type _ptr = nullptr;
 
 	public:
@@ -44,6 +44,11 @@ namespace clx {
 
 		std::vector<device>
 		partition(const std::vector<unsigned int>& num_compute_units) const;
+
+		#if defined(cl_ext_device_fission)
+		std::vector<ext::device>
+		partition(const ext::partition_properties& prop) const;
+		#endif
 
 		std::vector<device_partition>
 		supported_partitions() const;

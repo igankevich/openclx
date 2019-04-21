@@ -245,6 +245,16 @@ namespace clx {
 	}
 	#endif
 
+	#if defined(cl_ext_device_fission)
+	namespace ext {
+		typedef ::cl_device_partition_property_ext partition_property_type;
+		enum class device_partition: device_partition_type;
+		enum class affinity_domain: device_affinity_domain_type;
+		class device;
+		class partition_properties;
+	}
+	#endif
+
 }
 
 #endif // vim:filetype=cpp
