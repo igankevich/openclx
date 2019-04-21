@@ -199,9 +199,9 @@ CLX_METHOD_SCALAR(
 )
 #endif
 
-#if CL_TARGET_VERSION >= 200
+#if CL_TARGET_VERSION >= 120
 clx::image
-clx::context::image_200(
+clx::context::image_120(
 	memory_flags flags,
 	const image_format& format,
 	const image_descriptor& descriptor,
@@ -262,6 +262,7 @@ clx::context::image_100(
 }
 #endif
 
+#if CL_TARGET_VERSION >= 110
 clx::event
 clx::context::event() const {
 	int_type ret = 0;
@@ -269,6 +270,7 @@ clx::context::event() const {
 	CLX_CHECK(ret);
 	return static_cast<::clx::event>(ev);
 }
+#endif
 
 #if CL_TARGET_VERSION >= 110 && defined(cl_khr_gl_sharing)
 clx::event
@@ -355,9 +357,9 @@ clx::context::sampler_100(const sampler_properties& prop) const {
 	int_type ret = 0;
 	auto sm = ::clCreateSampler(
 		this->_ptr,
-		static_cast<bool_type>(normalised),
-		static_cast<addressing_mode_type>(amode),
-		static_cast<filter_mode_type>(fmode),
+		static_cast<bool_type>(prop.normalised()),
+		static_cast<addressing_mode_type>(prop.get_addressing_mode()),
+		static_cast<filter_mode_type>(prop.get_filter_mode()),
 		&ret
 	);
 	CLX_CHECK(ret);

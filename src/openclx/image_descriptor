@@ -16,19 +16,21 @@ namespace clx {
 
 	#if CL_TARGET_VERSION < 120
 	struct image_descriptor_type {
-		memory_object_type image_type;
-		size_t image_width;
-		size_t image_height;
-		size_t image_depth;
-		size_t image_array_size;
-		size_t image_row_pitch;
-		size_t image_slice_pitch;
-		int_type ip_levels;
-		int_type num_samples;
+		memory_objects_type image_type{};
+		size_t image_width{};
+		size_t image_height{};
+		size_t image_depth{};
+		size_t image_array_size{};
+		size_t image_row_pitch{};
+		size_t image_slice_pitch{};
+		int_type ip_levels{};
+		int_type num_samples{};
 		union {
-			memory_object buffer;
-			memory_object mem_object;
-		}
+			memory_object_type buffer{};
+			memory_object_type mem_object;
+		};
+		image_descriptor_type() {}
+		~image_descriptor_type() {}
 	};
 	#endif
 

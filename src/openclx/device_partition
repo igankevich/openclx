@@ -6,7 +6,7 @@
 namespace clx {
 
 	#if CL_TARGET_VERSION >= 120
-	enum class device_partition: device_partition_type {
+	enum class device_partition: partition_type {
 		equally=CL_DEVICE_PARTITION_EQUALLY,
 		by_counts=CL_DEVICE_PARTITION_BY_COUNTS,
 		by_counts_end=CL_DEVICE_PARTITION_BY_COUNTS_LIST_END,

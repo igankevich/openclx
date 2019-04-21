@@ -62,8 +62,8 @@ namespace clx {
 			const image_descriptor& descriptor,
 			void* host_pointer=nullptr
 		) const {
-			#if CL_TARGET_VERSION >= 200
-			return this->image_200(flags, format, descriptor, host_pointer);
+			#if CL_TARGET_VERSION >= 120
+			return this->image_120(flags, format, descriptor, host_pointer);
 			#else
 			return this->image_100(flags, format, descriptor, host_pointer);
 			#endif
@@ -234,9 +234,9 @@ namespace clx {
 		command_queues_100(const command_queue_properties& prop) const;
 		#endif
 
-		#if CL_TARGET_VERSION >= 200
+		#if CL_TARGET_VERSION >= 120
 		::clx::image
-		image_200(
+		image_120(
 			memory_flags flags,
 			const image_format& format,
 			const image_descriptor& descriptor,

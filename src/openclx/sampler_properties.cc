@@ -2,6 +2,7 @@
 #include <openclx/platform>
 #include <openclx/sampler_properties>
 
+#if CL_TARGET_VERSION >= 200
 std::vector<clx::sampler_properties_type>
 clx::sampler_properties::operator()(const extensions& extensions) const {
 	std::vector<sampler_properties_type> prop{
@@ -23,3 +24,4 @@ clx::sampler_properties::operator()(const extensions& extensions) const {
 	prop.emplace_back(0);
 	return prop;
 }
+#endif

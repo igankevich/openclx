@@ -44,6 +44,7 @@ namespace clx {
 	#if defined(cl_ext_device_fission)
 	CLX_MAKE_DOWNCAST_TYPE2(::clx::ext::device, device_type);
 	#endif
+	CLX_MAKE_DOWNCAST_TYPE2(command_queue_flags, queue_properties_type);
 
 	#undef CLX_MAKE_DOWNCAST_TYPE
 	#undef CLX_MAKE_DOWNCAST_TYPE2

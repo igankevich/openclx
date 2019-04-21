@@ -154,6 +154,8 @@ namespace clx {
 		void copy(const buffer_slice_3d& src, const host_slice_3d& dst);
 		#endif
 
+		#if (CL_TARGET_VERSION < 120 && defined(cl_ext_migrate_memobject)) || \
+			CL_TARGET_VERSION >= 120
 		inline void
 		migrate(migration_flags flags, const memory_object_array& objects) {
 			#if CL_TARGET_VERSION >= 120
@@ -162,6 +164,7 @@ namespace clx {
 			this->migrate_ext(flags, objects);
 			#endif
 		}
+		#endif
 
 		#if defined(cl_khr_gl_sharing)
 		void acquire(const gl_memory_object_array& objects);

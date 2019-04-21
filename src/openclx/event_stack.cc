@@ -63,10 +63,7 @@ clx::event_stack::barrier_120() {
 #if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
 void
 clx::event_stack::barrier_100() {
-	auto& frame = this->frame();
-	event_type ret;
-	CLX_CHECK(::clEnqueueBarrier(this->_queue.get(), &ret));
-	frame.emplace_back(std::move(ret));
+	CLX_CHECK(::clEnqueueBarrier(this->_queue.get()));
 }
 #endif
 
@@ -247,6 +244,7 @@ clx::event_stack::copy(const buffer& src, const image& dst) {
 	this->copy(src.slice(0,0), dst.slice({0,0,0},dst.dimensions()));
 }
 
+#if CL_TARGET_VERSION >= 110
 void
 clx::event_stack::copy(const buffer_slice_3d& src, const buffer_slice_3d& dst) {
 	CLX_BODY_ENQUEUE(
@@ -255,6 +253,7 @@ clx::event_stack::copy(const buffer_slice_3d& src, const buffer_slice_3d& dst) {
 		src.row_pitch, src.slice_pitch, dst.row_pitch, dst.slice_pitch
 	);
 }
+#endif
 
 #if CL_TARGET_VERSION >= 120
 void

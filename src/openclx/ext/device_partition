@@ -8,7 +8,7 @@ namespace clx {
 	namespace ext {
 
 		#if defined(cl_ext_device_fission)
-		enum class device_partition: device_partition_type {
+		enum class device_partition: partition_type {
 			#if defined(CL_DEVICE_PARTITION_EQUALLY_EXT)
 			equally=CL_DEVICE_PARTITION_EQUALLY_EXT,
 			#endif

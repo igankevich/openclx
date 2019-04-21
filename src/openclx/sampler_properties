@@ -45,8 +45,10 @@ namespace clx {
 		inline void lod_max(float f) { this->_lod_max = f; }
 		inline float lod_max() const { return this->_lod_max; }
 
+		#if CL_TARGET_VERSION >= 200
 		std::vector<sampler_properties_type>
 		operator()(const extensions& extensions) const;
+		#endif
 
 	};
 

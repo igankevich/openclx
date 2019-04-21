@@ -64,6 +64,13 @@ namespace clx {
 			return *this;
 		}
 
+		inline memory_object&
+		operator=(const memory_object_type& rhs) {
+			memory_object tmp(rhs);
+			this->swap(tmp);
+			return *this;
+		}
+
 		inline
 		memory_object(memory_object&& rhs):
 		_ptr(rhs._ptr) { rhs._ptr = nullptr; }

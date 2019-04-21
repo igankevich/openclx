@@ -64,8 +64,8 @@ namespace clx {
 
 	#if CL_TARGET_VERSION >= 120
 	typedef ::cl_mem_migration_flags migration_flags_type;
-	typedef ::cl_device_partition_property device_partition_type;
-	typedef ::cl_device_affinity_domain device_affinity_domain_type;
+	typedef ::cl_device_partition_property partition_type;
+	typedef ::cl_device_affinity_domain affinity_domain_type;
 	typedef ::cl_kernel_arg_type_qualifier argument_type_qualifiers_type;
 	typedef ::cl_kernel_arg_access_qualifier access_qualifiers_type;
 	typedef ::cl_kernel_arg_address_qualifier address_qualifiers_type;
@@ -73,10 +73,14 @@ namespace clx {
 	typedef ::cl_program_binary_type program_binary_type;
 
 	enum class migration_flags: migration_flags_type;
-	enum class device_partition: device_partition_type;
-	enum class device_affinity_domain: device_affinity_domain_type;
+	enum class device_partition: partition_type;
+	enum class device_affinity_domain: affinity_domain_type;
 	enum class argument_type_qualifiers: argument_type_qualifiers_type;
 	enum class binary_types: program_binary_type;
+	#endif
+
+	#if CL_TARGET_VERSION < 120 && defined(cl_ext_migrate_memobject)
+	typedef ::cl_mem_migration_flags_ext migration_flags_type;
 	#endif
 
 	#if CL_TARGET_VERSION < 200 && defined(cl_khr_create_command_queue)
@@ -248,8 +252,10 @@ namespace clx {
 	#if defined(cl_ext_device_fission)
 	namespace ext {
 		typedef ::cl_device_partition_property_ext partition_property_type;
-		enum class device_partition: device_partition_type;
-		enum class affinity_domain: device_affinity_domain_type;
+		typedef partition_property_type partition_type;
+		typedef partition_property_type affinity_domain_type;
+		enum class device_partition: partition_type;
+		enum class affinity_domain: affinity_domain_type;
 		class device;
 		class partition_properties;
 	}

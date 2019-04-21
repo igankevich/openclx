@@ -452,10 +452,10 @@ clx::device::supported_partitions() const {
 #if CL_TARGET_VERSION >= 120
 std::vector<clx::device>
 clx::device::partition(unsigned int num_compute_units) const {
-	std::vector<device_partition_type> properties{
-		device_partition_type(device_partition::equally),
-		device_partition_type(num_compute_units),
-		device_partition_type(0)
+	std::vector<partition_type> properties{
+		partition_type(device_partition::equally),
+		partition_type(num_compute_units),
+		partition_type(0)
 	};
 	std::vector<device> result(4096 / sizeof(device));
 	unsigned_int_type ndevices = 0;
@@ -482,16 +482,16 @@ clx::device::partition(unsigned int num_compute_units) const {
 #if CL_TARGET_VERSION >= 120
 std::vector<clx::device>
 clx::device::partition(const std::vector<unsigned int>& num_compute_units) const {
-	std::vector<device_partition_type> properties;
+	std::vector<partition_type> properties;
 	properties.reserve(2 + num_compute_units.size());
 	properties.emplace_back(
-		static_cast<device_partition_type>(device_partition::by_counts)
+		static_cast<partition_type>(device_partition::by_counts)
 	);
 	for (const auto& n : num_compute_units) {
 		properties.emplace_back(n);
 	}
 	properties.emplace_back(
-		static_cast<device_partition_type>(device_partition::by_counts_end)
+		static_cast<partition_type>(device_partition::by_counts_end)
 	);
 	properties.emplace_back(0);
 	std::vector<device> result(num_compute_units.size());
@@ -506,7 +506,7 @@ clx::device::partition(const std::vector<unsigned int>& num_compute_units) const
 }
 #endif
 
-#if defined(cl_ext_device_fission)
+#if CL_TARGET_VERSION >= 110 && defined(cl_ext_device_fission)
 std::vector<clx::ext::device>
 clx::device::partition(const ext::partition_properties& properties) const {
 	auto func = CLX_EXTENSION(clCreateSubDevicesEXT, platform());

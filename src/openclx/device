@@ -45,16 +45,16 @@ namespace clx {
 		std::vector<device>
 		partition(const std::vector<unsigned int>& num_compute_units) const;
 
-		#if defined(cl_ext_device_fission)
-		std::vector<ext::device>
-		partition(const ext::partition_properties& prop) const;
-		#endif
-
 		std::vector<device_partition>
 		supported_partitions() const;
 
 		std::vector<device_partition>
 		partitions() const;
+		#endif
+
+		#if CL_TARGET_VERSION >= 110 && defined(cl_ext_device_fission)
+		std::vector<ext::device>
+		partition(const ext::partition_properties& prop) const;
 		#endif
 
 		#if CL_TARGET_VERSION >= 210

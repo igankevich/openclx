@@ -84,10 +84,10 @@ clx::kernel::work_group(const device& dev) const {
 	::clx::work_group wg{};
 	CLX_WG_FIELD(wg.size, CL_KERNEL_WORK_GROUP_SIZE);
 	CLX_WG_FIELD(wg.size_hint, CL_KERNEL_COMPILE_WORK_GROUP_SIZE);
-	CLX_WG_FIELD(wg.local_memory_size, CL_KERNEL_LOCAL_MEM_SIZE);
-	#if CL_TARGET_VERSION >= 110
-	CLX_WG_FIELD(wg.private_memory_size, CL_KERNEL_PRIVATE_MEM_SIZE);
 	CLX_WG_FIELD(wg.size_multiple, CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE);
+	#if CL_TARGET_VERSION >= 110
+	CLX_WG_FIELD(wg.local_memory_size, CL_KERNEL_LOCAL_MEM_SIZE);
+	CLX_WG_FIELD(wg.private_memory_size, CL_KERNEL_PRIVATE_MEM_SIZE);
 	#endif
 	return wg;
 	#undef CLX_WG_FIELD
@@ -159,7 +159,7 @@ size_t
 clx::kernel::max_sub_group_size_khr(const device& device, const range& range) const {
 	auto func = CLX_EXTENSION(clGetKernelSubGroupInfoKHR, context().platform());
 	CLX_BODY_SCALAR(
-		::clGetKernelSubGroupInfo,
+		func,
 		size_t,
 		device.get(),
 		CL_KERNEL_MAX_SUB_GROUP_SIZE_FOR_NDRANGE_KHR,
