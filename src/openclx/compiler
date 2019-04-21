@@ -53,8 +53,8 @@ namespace clx {
 			const char* name
 		);
 
-		void
-		devices(const device_array& rhs);
+		void devices(const device_array& rhs);
+		void devices(device_array&& rhs);
 
 		inline const device_array&
 		devices() const {

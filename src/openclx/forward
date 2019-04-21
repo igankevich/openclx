@@ -111,7 +111,7 @@ namespace clx {
 	class device;
 	class error_category;
 	class event;
-	class event_stack;
+	class command_stack;
 	class extensions;
 	class header;
 	class image;

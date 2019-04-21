@@ -15,11 +15,12 @@
 
 namespace clx {
 
-	class event_stack {
+	class command_stack {
 
 	public:
 		typedef std::vector<event> event_array;
 		typedef std::vector<event_array> frame_array;
+		typedef std::vector<device> device_array;
 		typedef slice_3d<const buffer&> buffer_slice_3d;
 		typedef slice_3d<const image&> image_slice_3d;
 		typedef slice_3d<host_pointer> host_slice_3d;
@@ -38,36 +39,65 @@ namespace clx {
 
 		struct step_guard {
 
-			bool& sync;
-			event_array& frame;
-			unsigned_int_type nevents = 0;
-			const event_type* events = nullptr;
+			typedef const event_type* const_pointer;
 
-			step_guard(bool& sync, event_array& frame):
-			sync(sync), frame(frame) {
-				if (sync && !frame.empty()) {
-					events = reinterpret_cast<const event_type*>(frame.data());
-					nevents = frame.size();
+			command_stack& stack;
+			unsigned_int_type nevents = 0;
+			const_pointer events = nullptr;
+
+			inline explicit
+			step_guard(command_stack& stack): stack(stack) {
+				unsigned_int_type n = stack.frame_size();
+				if (stack._sync && n > 0) {
+					events = stack.frame();
+					nevents = n;
 				}
 			}
 
+			inline
 			~step_guard() {
-				if (sync) { frame.clear(); sync = false; }
+				if (stack._sync) {
+					stack._offset = stack._events.size();
+					stack._sync = false;
+				}
 			}
 
 		};
 
+		struct queue_pair {
+			command_queue kernel_queue, data_queue;
+			inline queue_pair(command_queue q1, command_queue q2):
+			kernel_queue(q1), data_queue(q2) {}
+		};
+		typedef std::vector<queue_pair> queue_array;
+
 	private:
-		command_queue _queue;
-		frame_array _frames;
+		queue_array _devices;
+		unsigned_int_type _device_index = 0;
+		event_array _events;
+		unsigned_int_type _offset = 0;
 		bool _sync = false;
 
 	public:
 
-		event_stack() = default;
+		inline explicit
+		command_stack(command_queue queue): _devices{{queue,queue}} {
+			this->_events.reserve(4096 / sizeof(event_type));
+		}
 
 		inline explicit
-		event_stack(command_queue queue): _queue(queue) {}
+		command_stack(command_queue kernel_queue, command_queue data_queue):
+		_devices{{kernel_queue,data_queue}} {
+			this->_events.reserve(4096 / sizeof(event_type));
+		}
+
+		explicit
+		command_stack(const device_array& devices, const command_queue_properties& properties);
+
+		command_stack(const command_stack&) = default;
+		command_stack& operator=(const command_stack&) = default;
+		command_stack(command_stack&&) = default;
+		command_stack& operator=(command_stack&&) = default;
 
 		void
 		wait();
@@ -115,21 +145,20 @@ namespace clx {
 		inline void
 		kernel(native_kernel_type k, const Args& ... args_in) {
 			const auto& args = make_arguments(args_in...);
-			auto& frame = this->frame();
 			event_type ret;
 			{
-				step_guard g(this->_sync, frame);
+				step_guard g(*this);
 				unsigned_int_type nobjects = 0;
 				std::vector<memory_object_type> objects;
 				std::vector<void*> locations;
 				args.memory_objects(nobjects, objects, locations);
 				CLX_CHECK(::clEnqueueNativeKernel(
-					this->_queue.get(), k, &args, sizeof(args),
+					kernel_queue().get(), k, &args, sizeof(args),
 					nobjects, objects.data(), locations.data(),
 					g.nevents, g.events, &ret
 				));
 			}
-			frame.emplace_back(std::move(ret));
+			events().emplace_back(std::move(ret));
 		}
 
 		void copy(const buffer_slice& src, host_pointer dst);
@@ -225,49 +254,50 @@ namespace clx {
 			size_t& row_pitch, size_t& slice_pitch
 		);
 
-		void
-		unmap(const memory_object& obj, host_pointer ptr);
+		void unmap(const memory_object& obj, host_pointer ptr);
 
-		inline void
-		step() {
-			this->_sync = true;
+		inline void step() { this->_sync = true; }
+		inline void insert(event&& ev) { events().emplace_back(std::forward<event>(ev)); }
+
+		inline const command_queue& kernel_queue() const { return current_device().kernel_queue; }
+		inline command_queue& kernel_queue() { return current_device().kernel_queue; }
+		inline const command_queue& data_queue() const { return current_device().data_queue; }
+		inline command_queue& data_queue() { return current_device().data_queue; }
+
+		inline void next_device() {
+			auto& i = this->_device_index;
+			if (i == this->_devices.size()) { i = 0; }
+			else { ++i; }
 		}
 
-		inline void
-		insert(event&& ev) {
-			this->frame().emplace_back(std::forward<event>(ev));
-		}
-
-		inline const command_queue&
-		queue() const {
-			return this->_queue;
-		}
-
-		inline command_queue
-		queue() {
-			return this->_queue;
-		}
+		inline void set_device(unsigned_int_type rhs) { this->_device_index = rhs; }
+		inline unsigned_int_type num_devices() const { return this->_devices.size(); }
 
 	private:
 
-		inline void
-		step_in() {
-			this->_frames.emplace_back();
+		inline const queue_pair& current_device() const {
+			return this->_devices[this->_device_index];
 		}
 
-		inline void
-		step_out() {
-			this->_frames.pop_back();
+		inline queue_pair& current_device() {
+			return this->_devices[this->_device_index];
 		}
 
-		inline const event_array&
+		inline const event_type*
 		frame() const {
-			return this->_frames.back();
+			return downcast(this->_events.data() + this->_offset);
 		}
 
-		inline event_array&
+		inline event_type*
 		frame() {
-			return this->_frames.back();
+			return downcast(this->_events.data() + this->_offset);
+		}
+
+		inline event_array& events() { return this->_events; }
+
+		inline unsigned_int_type
+		frame_size() const {
+			return this->_events.size() - this->_offset;
 		}
 
 		#if CL_TARGET_VERSION >= 120

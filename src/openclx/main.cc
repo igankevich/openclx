@@ -6,6 +6,7 @@
 #include <string>
 
 #include <openclx/compiler>
+#include <openclx/extensions>
 #include <openclx/platform>
 
 template <class Ch, class Tr>
@@ -53,7 +54,8 @@ print_platforms() {
 	for (const auto& platform : clx::platforms()) {
 		std::cout
 			<< std::setw(20) << platform.suffix()
-			<< "    " << platform.name() << '\n';
+			<< "    " << platform.name()
+			<< '\n';
 	}
 }
 

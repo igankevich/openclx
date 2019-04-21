@@ -103,6 +103,15 @@ namespace clx {
 			#endif
 		}
 
+		inline ::clx::command_queue
+		queue(command_queue_properties properties) const {
+			#if CL_TARGET_VERSION >= 200
+			return this->queue_200(this->context().get(), properties);
+			#else
+			return this->queue_100(this->context().get(), properties);
+			#endif
+		}
+
 		bool available() const;
 		bool compiler_available() const;
 		bool little_endian() const;

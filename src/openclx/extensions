@@ -20,8 +20,11 @@ namespace clx {
 		}
 
 		inline bool operator()(const char* name) const { return this->have(name); }
+		inline const std::string& str() const { return this->_str; }
 
 	};
+
+	inline const std::string& to_string(const extensions& ext) { return ext.str(); }
 
 }
 

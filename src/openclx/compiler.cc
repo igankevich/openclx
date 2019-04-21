@@ -189,6 +189,12 @@ clx::compiler::devices(const device_array& rhs) {
 	this->_programs.clear();
 }
 
+void
+clx::compiler::devices(device_array&& rhs) {
+	this->_devices = std::move(rhs);
+	this->_programs.clear();
+}
+
 std::string
 clx::compiler::salt(const device& device) const {
 	std::string salt;
