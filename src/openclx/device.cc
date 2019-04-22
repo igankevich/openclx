@@ -20,6 +20,14 @@
 			CL_DEVICE_PREFERRED_VECTOR_WIDTH_##type2) \
 	}
 
+#define CLX_DEVICE_NATIVE_VECTOR_WIDTH(type, type2) \
+	template <> \
+	clx::unsigned_int_type \
+	clx::device::native_vector_width<clx::type>() const { \
+		CLX_BODY_SCALAR(::clGetDeviceInfo, unsigned_int_type, \
+			CL_DEVICE_NATIVE_VECTOR_WIDTH_##type2) \
+	}
+
 CLX_METHOD_STRING(clx::device::name, ::clGetDeviceInfo, CL_DEVICE_NAME)
 CLX_METHOD_STRING(clx::device::profile, ::clGetDeviceInfo, CL_DEVICE_PROFILE)
 CLX_METHOD_STRING(clx::device::vendor, ::clGetDeviceInfo, CL_DEVICE_VENDOR)
@@ -37,7 +45,23 @@ CLX_METHOD_STRING(
 	clx::device::spir_versions,
 	::clGetDeviceInfo,
 	CL_DEVICE_SPIR_VERSIONS
-)
+);
+#endif
+
+#if CL_TARGET_VERSION >= 110
+CLX_METHOD_STRING(
+	clx::device::c_version,
+	::clGetDeviceInfo,
+	CL_DEVICE_OPENCL_C_VERSION
+);
+#endif
+
+#if CL_TARGET_VERSION >= 120
+CLX_METHOD_STRING(
+	clx::device::builtin_kernels,
+	::clGetDeviceInfo,
+	CL_DEVICE_BUILT_IN_KERNELS
+);
 #endif
 
 #if CL_TARGET_VERSION >= 210
@@ -95,8 +119,16 @@ CLX_METHOD_SCALAR(
 	::clGetDeviceInfo,
 	::clx::platform,
 	CL_DEVICE_PLATFORM
-)
+);
 
+#if CL_TARGET_VERSION >= 120
+CLX_METHOD_SCALAR(
+	clx::device::num_references,
+	::clGetDeviceInfo,
+	unsigned_int_type,
+	CL_DEVICE_REFERENCE_COUNT
+)
+#endif
 
 clx::context clx::device::context() const {
 	std::vector<context_properties_type> prop{
@@ -140,14 +172,60 @@ clx::device::queue_100(context_type ctx, const command_queue_properties& prop) c
 }
 #endif
 
-CLX_METHOD_BOOL(clx::device::available, ::clGetDeviceInfo, CL_DEVICE_AVAILABLE)
-CLX_METHOD_BOOL(clx::device::compiler_available, ::clGetDeviceInfo, CL_DEVICE_COMPILER_AVAILABLE)
+CLX_METHOD_BOOL(
+	clx::device::available,
+	::clGetDeviceInfo,
+	CL_DEVICE_AVAILABLE
+);
+
+CLX_METHOD_BOOL(
+	clx::device::compiler_available,
+	::clGetDeviceInfo,
+	CL_DEVICE_COMPILER_AVAILABLE
+);
+
+#if CL_TARGET_VERSION >= 120
+CLX_METHOD_BOOL(
+	clx::device::linker_available,
+	::clGetDeviceInfo,
+	CL_DEVICE_LINKER_AVAILABLE
+);
+#endif
+
 CLX_METHOD_BOOL(clx::device::little_endian, ::clGetDeviceInfo, CL_DEVICE_ENDIAN_LITTLE)
 CLX_METHOD_BOOL(clx::device::supports_error_correction, ::clGetDeviceInfo, CL_DEVICE_ERROR_CORRECTION_SUPPORT)
-CLX_METHOD_BOOL(clx::device::supports_images, ::clGetDeviceInfo, CL_DEVICE_IMAGE_SUPPORT)
+CLX_METHOD_BOOL(clx::device::supports_images, ::clGetDeviceInfo, CL_DEVICE_IMAGE_SUPPORT);
+#if CL_TARGET_VERSION >= 120
+CLX_METHOD_BOOL(
+	clx::device::prefers_user_sync,
+	::clGetDeviceInfo,
+	CL_DEVICE_PREFERRED_INTEROP_USER_SYNC
+);
+#endif
 
-CLX_METHOD_SCALAR(clx::device::image2d_max_width, ::clGetDeviceInfo, size_t, CL_DEVICE_IMAGE2D_MAX_WIDTH)
-CLX_METHOD_SCALAR(clx::device::image2d_max_height, ::clGetDeviceInfo, size_t, CL_DEVICE_IMAGE2D_MAX_HEIGHT);
+#if CL_TARGET_VERSION >= 120
+CLX_METHOD_SCALAR(
+	clx::device::printf_buffer_size,
+	::clGetDeviceInfo,
+	size_t,
+	CL_DEVICE_PRINTF_BUFFER_SIZE
+);
+#endif
+
+CLX_METHOD_SCALAR(
+	clx::device::image2d_max_width,
+	::clGetDeviceInfo,
+	size_t,
+	CL_DEVICE_IMAGE2D_MAX_WIDTH
+);
+
+CLX_METHOD_SCALAR(
+	clx::device::image2d_max_height,
+	::clGetDeviceInfo,
+	size_t,
+	CL_DEVICE_IMAGE2D_MAX_HEIGHT
+);
+
 #if CL_TARGET_VERSION >= 120
 CLX_METHOD_SCALAR(
 	clx::device::image2d_base_address_alignment,
@@ -155,13 +233,30 @@ CLX_METHOD_SCALAR(
 	unsigned_int_type,
 	CL_DEVICE_IMAGE_BASE_ADDRESS_ALIGNMENT
 );
+
 CLX_METHOD_SCALAR(
 	clx::device::image2d_pitch_alignment,
 	::clGetDeviceInfo,
 	unsigned_int_type,
 	CL_DEVICE_IMAGE_PITCH_ALIGNMENT
 );
+
+CLX_METHOD_SCALAR(
+	clx::device::image_max_buffer_size,
+	::clGetDeviceInfo,
+	size_t,
+	CL_DEVICE_IMAGE_MAX_BUFFER_SIZE
+);
+
+CLX_METHOD_SCALAR(
+	clx::device::image_max_array_size,
+	::clGetDeviceInfo,
+	size_t,
+	CL_DEVICE_IMAGE_MAX_ARRAY_SIZE
+);
+
 #endif
+
 CLX_METHOD_SCALAR(clx::device::image3d_max_width, ::clGetDeviceInfo, size_t, CL_DEVICE_IMAGE3D_MAX_WIDTH)
 CLX_METHOD_SCALAR(clx::device::image3d_max_height, ::clGetDeviceInfo, size_t, CL_DEVICE_IMAGE3D_MAX_HEIGHT)
 CLX_METHOD_SCALAR(clx::device::image3d_max_depth, ::clGetDeviceInfo, size_t, CL_DEVICE_IMAGE3D_MAX_DEPTH)
@@ -197,24 +292,79 @@ clx::device::floating_point_capabilities<clx::double_type>() const {
 	CLX_BODY_SCALAR(::clGetDeviceInfo, floating_point_flags, CL_DEVICE_DOUBLE_FP_CONFIG)
 }
 
-CLX_DEVICE_PREFERRED_VECTOR_WIDTH(char_type, CHAR)
-CLX_DEVICE_PREFERRED_VECTOR_WIDTH(short_type, SHORT)
-CLX_DEVICE_PREFERRED_VECTOR_WIDTH(int_type, INT)
-CLX_DEVICE_PREFERRED_VECTOR_WIDTH(long_type, LONG)
-CLX_DEVICE_PREFERRED_VECTOR_WIDTH(float_type, FLOAT)
-CLX_DEVICE_PREFERRED_VECTOR_WIDTH(double_type, DOUBLE)
+CLX_DEVICE_PREFERRED_VECTOR_WIDTH(char_type, CHAR);
+CLX_DEVICE_PREFERRED_VECTOR_WIDTH(short_type, SHORT);
+CLX_DEVICE_PREFERRED_VECTOR_WIDTH(int_type, INT);
+CLX_DEVICE_PREFERRED_VECTOR_WIDTH(long_type, LONG);
+#if CL_TARGET_VERSION >= 110
+CLX_DEVICE_PREFERRED_VECTOR_WIDTH(half_type, HALF);
+#endif
+CLX_DEVICE_PREFERRED_VECTOR_WIDTH(float_type, FLOAT);
+CLX_DEVICE_PREFERRED_VECTOR_WIDTH(double_type, DOUBLE);
+
+#if CL_TARGET_VERSION >= 110
+CLX_DEVICE_NATIVE_VECTOR_WIDTH(char_type, CHAR);
+CLX_DEVICE_NATIVE_VECTOR_WIDTH(short_type, SHORT);
+CLX_DEVICE_NATIVE_VECTOR_WIDTH(int_type, INT);
+CLX_DEVICE_NATIVE_VECTOR_WIDTH(long_type, LONG);
+CLX_DEVICE_NATIVE_VECTOR_WIDTH(half_type, HALF);
+CLX_DEVICE_NATIVE_VECTOR_WIDTH(float_type, FLOAT);
+CLX_DEVICE_NATIVE_VECTOR_WIDTH(double_type, DOUBLE);
+#endif
 
 CLX_METHOD_SCALAR(clx::device::max_clock_frequency, ::clGetDeviceInfo, unsigned_int_type, CL_DEVICE_MAX_CLOCK_FREQUENCY)
 CLX_METHOD_SCALAR(clx::device::max_compute_units, ::clGetDeviceInfo, unsigned_int_type, CL_DEVICE_MAX_COMPUTE_UNITS)
 
 CLX_METHOD_SCALAR(clx::device::max_constant_arguments, ::clGetDeviceInfo, unsigned_int_type, CL_DEVICE_MAX_CONSTANT_ARGS)
 CLX_METHOD_SCALAR(clx::device::max_read_image_arguments, ::clGetDeviceInfo, unsigned_int_type, CL_DEVICE_MAX_READ_IMAGE_ARGS)
-CLX_METHOD_SCALAR(clx::device::max_write_image_arguments, ::clGetDeviceInfo, unsigned_int_type, CL_DEVICE_MAX_WRITE_IMAGE_ARGS)
+CLX_METHOD_SCALAR(
+	clx::device::max_write_image_arguments,
+	::clGetDeviceInfo,
+	unsigned_int_type,
+	CL_DEVICE_MAX_WRITE_IMAGE_ARGS
+);
+
+#if CL_TARGET_VERSION >= 200
+CLX_METHOD_SCALAR(
+	clx::device::max_read_write_image_arguments,
+	::clGetDeviceInfo,
+	unsigned_int_type,
+	CL_DEVICE_MAX_READ_WRITE_IMAGE_ARGS
+);
+CLX_METHOD_SCALAR(
+	clx::device::max_pipe_arguments,
+	::clGetDeviceInfo,
+	unsigned_int_type,
+	CL_DEVICE_MAX_PIPE_ARGS
+);
+#endif
+
 CLX_METHOD_SCALAR(clx::device::max_samplers, ::clGetDeviceInfo, unsigned_int_type, CL_DEVICE_MAX_SAMPLERS)
 CLX_METHOD_SCALAR(clx::device::max_parameter_size, ::clGetDeviceInfo, size_t, CL_DEVICE_MAX_PARAMETER_SIZE)
 
 CLX_METHOD_SCALAR(clx::device::max_constant_buffer_size, ::clGetDeviceInfo, unsigned_long_type, CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE)
-CLX_METHOD_SCALAR(clx::device::max_memory_allocation_size, ::clGetDeviceInfo, unsigned_long_type, CL_DEVICE_MAX_MEM_ALLOC_SIZE)
+
+CLX_METHOD_SCALAR(
+	clx::device::max_memory_allocation_size,
+	::clGetDeviceInfo,
+	unsigned_long_type,
+	CL_DEVICE_MAX_MEM_ALLOC_SIZE
+);
+
+#if CL_TARGET_VERSION >= 200
+CLX_METHOD_SCALAR(
+	clx::device::max_global_variable_size,
+	::clGetDeviceInfo,
+	unsigned_long_type,
+	CL_DEVICE_MAX_GLOBAL_VARIABLE_SIZE
+);
+CLX_METHOD_SCALAR(
+	clx::device::preferred_global_variable_size,
+	::clGetDeviceInfo,
+	unsigned_long_type,
+	CL_DEVICE_GLOBAL_VARIABLE_PREFERRED_TOTAL_SIZE
+);
+#endif
 
 CLX_METHOD_SCALAR(clx::device::max_work_group_size, ::clGetDeviceInfo, size_t, CL_DEVICE_MAX_WORK_GROUP_SIZE)
 CLX_METHOD_SCALAR(clx::device::max_work_item_dimensions, ::clGetDeviceInfo, unsigned_int_type, CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS)
@@ -242,7 +392,110 @@ clx::device::max_work_item_sizes() const {
 	return value;
 }
 
-CLX_METHOD_SCALAR(clx::device::queue_properties, ::clGetDeviceInfo, command_queue_flags, CL_DEVICE_QUEUE_PROPERTIES)
+#if CL_TARGET_VERSION >= 210
+CLX_METHOD_SCALAR(
+	clx::device::max_sub_groups,
+	::clGetDeviceInfo,
+	unsigned_int_type,
+	CL_DEVICE_MAX_NUM_SUB_GROUPS
+);
+CLX_METHOD_BOOL(
+	clx::device::sub_groups_have_independent_progress,
+	::clGetDeviceInfo,
+	CL_DEVICE_SUB_GROUP_INDEPENDENT_FORWARD_PROGRESS
+);
+#endif
+
+#if CL_TARGET_VERSION >= 200
+CLX_METHOD_SCALAR(
+	clx::device::pipe_max_reservations,
+	::clGetDeviceInfo,
+	unsigned_int_type,
+	CL_DEVICE_PIPE_MAX_ACTIVE_RESERVATIONS
+);
+CLX_METHOD_SCALAR(
+	clx::device::pipe_max_packet_size,
+	::clGetDeviceInfo,
+	unsigned_int_type,
+	CL_DEVICE_PIPE_MAX_PACKET_SIZE
+);
+#endif
+
+CLX_METHOD_SCALAR(
+	clx::device::host_queue_supported_flags,
+	::clGetDeviceInfo,
+	command_queue_flags,
+	#if CL_TARGET_VERSION >= 200
+	CL_DEVICE_QUEUE_ON_HOST_PROPERTIES
+	#else
+	CL_DEVICE_QUEUE_PROPERTIES
+	#endif
+);
+
+#if CL_TARGET_VERSION >= 200
+CLX_METHOD_SCALAR(
+	clx::device::device_queue_supported_flags,
+	::clGetDeviceInfo,
+	command_queue_flags,
+	CL_DEVICE_QUEUE_ON_DEVICE_PROPERTIES
+);
+CLX_METHOD_SCALAR(
+	clx::device::device_queue_max_size,
+	::clGetDeviceInfo,
+	unsigned_int_type,
+	CL_DEVICE_QUEUE_ON_DEVICE_MAX_SIZE
+);
+CLX_METHOD_SCALAR(
+	clx::device::device_queue_preferred_size,
+	::clGetDeviceInfo,
+	unsigned_int_type,
+	CL_DEVICE_QUEUE_ON_DEVICE_PREFERRED_SIZE
+);
+CLX_METHOD_SCALAR(
+	clx::device::device_queue_max_events,
+	::clGetDeviceInfo,
+	unsigned_int_type,
+	CL_DEVICE_MAX_ON_DEVICE_EVENTS
+);
+CLX_METHOD_SCALAR(
+	clx::device::max_device_queues,
+	::clGetDeviceInfo,
+	unsigned_int_type,
+	CL_DEVICE_MAX_ON_DEVICE_QUEUES
+);
+#endif
+
+#if CL_TARGET_VERSION >= 200
+CLX_METHOD_SCALAR(
+	clx::device::preferred_platform_atomic_alignment,
+	::clGetDeviceInfo,
+	unsigned_int_type,
+	CL_DEVICE_PREFERRED_PLATFORM_ATOMIC_ALIGNMENT
+);
+CLX_METHOD_SCALAR(
+	clx::device::preferred_global_atomic_alignment,
+	::clGetDeviceInfo,
+	unsigned_int_type,
+	CL_DEVICE_PREFERRED_GLOBAL_ATOMIC_ALIGNMENT
+);
+CLX_METHOD_SCALAR(
+	clx::device::preferred_local_atomic_alignment,
+	::clGetDeviceInfo,
+	unsigned_int_type,
+	CL_DEVICE_PREFERRED_LOCAL_ATOMIC_ALIGNMENT
+);
+#endif
+
+#if CL_TARGET_VERSION >= 200
+CLX_METHOD_SCALAR(
+	clx::device::supported_svm_flags,
+	::clGetDeviceInfo,
+	svm_flags,
+	CL_DEVICE_SVM_CAPABILITIES
+);
+#endif
+
+
 CLX_METHOD_SCALAR(clx::device::type, ::clGetDeviceInfo, device_flags, CL_DEVICE_TYPE);
 
 CLX_METHOD_SCALAR(
@@ -427,15 +680,52 @@ CLX_METHOD_SCALAR(
 	::clGetDeviceInfo,
 	unsigned_long_type,
 	CL_DEVICE_COMPUTE_UNITS_BITFIELD_ARM
-)
+);
+#endif
+
+#if CL_TARGET_VERSION >= 110
+CLX_METHOD_BOOL(
+	clx::device::has_unified_memory,
+	::clGetDeviceInfo,
+	CL_DEVICE_HOST_UNIFIED_MEMORY
+);
 #endif
 
 #if CL_TARGET_VERSION >= 120
-CLX_METHOD_SCALAR(clx::device::parent, ::clGetDeviceInfo, device, CL_DEVICE_PARENT_DEVICE)
-CLX_METHOD_SCALAR(clx::device::max_subordinate_devices, ::clGetDeviceInfo, unsigned_int_type, CL_DEVICE_PARTITION_MAX_SUB_DEVICES)
-CLX_METHOD_SCALAR(clx::device::affinity_domain, ::clGetDeviceInfo, device_affinity_domain, CL_DEVICE_PARTITION_AFFINITY_DOMAIN)
-CLX_METHOD_ARRAY(clx::device::supported_partitions_priv, ::clGetDeviceInfo, CL_DEVICE_PARTITION_PROPERTIES, device_partition)
-CLX_METHOD_ARRAY(clx::device::partitions, ::clGetDeviceInfo, CL_DEVICE_PARTITION_TYPE, device_partition)
+CLX_METHOD_SCALAR(
+	clx::device::parent,
+	::clGetDeviceInfo,
+	device,
+	CL_DEVICE_PARENT_DEVICE
+);
+
+CLX_METHOD_SCALAR(
+	clx::device::max_subordinate_devices,
+	::clGetDeviceInfo,
+	unsigned_int_type,
+	CL_DEVICE_PARTITION_MAX_SUB_DEVICES
+);
+
+CLX_METHOD_SCALAR(
+	clx::device::affinity_domain,
+	::clGetDeviceInfo,
+	device_affinity_domain,
+	CL_DEVICE_PARTITION_AFFINITY_DOMAIN
+);
+
+CLX_METHOD_ARRAY(
+	clx::device::supported_partitions_priv,
+	::clGetDeviceInfo,
+	CL_DEVICE_PARTITION_PROPERTIES,
+	device_partition
+);
+
+CLX_METHOD_ARRAY(
+	clx::device::partitions,
+	::clGetDeviceInfo,
+	CL_DEVICE_PARTITION_TYPE,
+	device_partition
+);
 
 
 std::vector<clx::device_partition>
@@ -531,4 +821,3 @@ clx::device::partition(const ext::partition_properties& properties) const {
 	return result;
 }
 #endif
-

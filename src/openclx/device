@@ -75,10 +75,17 @@ namespace clx {
 		#if defined(CL_DEVICE_SPIR_VERSIONS)
 		std::string spir_versions() const;
 		#endif
+		#if CL_TARGET_VERSION >= 110
+		std::string c_version() const;
+		#endif
+		#if CL_TARGET_VERSION >= 120
+		std::string builtin_kernels() const;
+		#endif
 
 		unsigned_int_type vendor_id() const;
 		::clx::platform platform() const;
 		::clx::context context() const;
+		unsigned_int_type num_references() const;
 
 		inline ::clx::command_queue
 		queue(command_queue_flags flags) const {
@@ -114,9 +121,17 @@ namespace clx {
 
 		bool available() const;
 		bool compiler_available() const;
+		bool linker_available() const;
 		bool little_endian() const;
 		bool supports_error_correction() const;
 		bool supports_images() const;
+		#if CL_TARGET_VERSION >= 120
+		bool prefers_user_sync() const;
+		#endif
+
+		#if CL_TARGET_VERSION >= 120
+		size_t printf_buffer_size() const;
+		#endif
 
 		size_t image2d_max_width() const;
 		size_t image2d_max_height() const;
@@ -128,6 +143,9 @@ namespace clx {
 		size_t image3d_max_width() const;
 		size_t image3d_max_height() const;
 		size_t image3d_max_depth() const;
+
+		size_t image_max_buffer_size() const;
+		size_t image_max_array_size() const;
 
 		unsigned_long_type global_memory_size() const;
 		unsigned_long_type global_memory_cache_size() const;
@@ -146,9 +164,10 @@ namespace clx {
 		floating_point_flags
 		floating_point_capabilities() const;
 
-		template <class T>
-		unsigned_int_type
-		preferred_vector_width() const;
+		template <class T> unsigned_int_type preferred_vector_width() const;
+		#if CL_TARGET_VERSION >= 110
+		template <class T> unsigned_int_type native_vector_width() const;
+		#endif
 
 		unsigned_int_type max_clock_frequency() const;
 		unsigned_int_type max_compute_units() const;
@@ -156,17 +175,53 @@ namespace clx {
 		unsigned_int_type max_constant_arguments() const;
 		unsigned_int_type max_read_image_arguments() const;
 		unsigned_int_type max_write_image_arguments() const;
+		#if CL_TARGET_VERSION >= 200
+		unsigned_int_type max_read_write_image_arguments() const;
+		unsigned_int_type max_pipe_arguments() const;
+		#endif
 		unsigned_int_type max_samplers() const;
 		size_t max_parameter_size() const;
 
 		unsigned_long_type max_constant_buffer_size() const;
 		unsigned_long_type max_memory_allocation_size() const;
+		#if CL_TARGET_VERSION >= 200
+		size_t max_global_variable_size() const;
+		size_t preferred_global_variable_size() const;
+		#endif
 
 		size_t max_work_group_size() const;
+		size_t preferred_work_group_size() const;
 		unsigned_int_type max_work_item_dimensions() const;
 		std::vector<size_t> max_work_item_sizes() const;
+		#if CL_TARGET_VERSION >= 210
+		unsigned_int_type max_sub_groups() const;
+		bool sub_groups_have_independent_progress() const;
+		#endif
 
-		command_queue_flags queue_properties() const;
+		#if CL_TARGET_VERSION >= 200
+		unsigned_int_type pipe_max_reservations() const;
+		unsigned_int_type pipe_max_packet_size() const;
+		#endif
+
+		command_queue_flags host_queue_supported_flags() const;
+		#if CL_TARGET_VERSION >= 200
+		command_queue_flags device_queue_supported_flags() const;
+		unsigned_int_type device_queue_max_size() const;
+		unsigned_int_type device_queue_preferred_size() const;
+		unsigned_int_type device_queue_max_events() const;
+		unsigned_int_type max_device_queues() const;
+		#endif
+
+		#if CL_TARGET_VERSION >= 200
+		unsigned_int_type preferred_platform_atomic_alignment() const;
+		unsigned_int_type preferred_global_atomic_alignment() const;
+		unsigned_int_type preferred_local_atomic_alignment() const;
+		#endif
+
+		#if CL_TARGET_VERSION >= 200
+		svm_flags supported_svm_flags() const;
+		#endif
+
 		device_flags type() const;
 
 		unsigned_int_type compute_capability_major() const;
@@ -191,7 +246,6 @@ namespace clx {
 		unsigned_int_type gfxip_major() const;
 		unsigned_int_type gfxip_minor() const;
 		unsigned_int_type num_asynchronous_queues() const;
-		size_t preferred_work_group_size() const;
 		unsigned_long_type preferred_constant_buffer_size() const;
 		unsigned_int_type pcie_id() const;
 		std::vector<size_t> global_free_memory() const;
@@ -200,6 +254,10 @@ namespace clx {
 
 		#if defined(cl_arm_core_id) && CL_TARGET_VERSION >= 120
 		unsigned_long_type compute_units_mask() const;
+		#endif
+
+		#if CL_TARGET_VERSION >= 110
+		bool has_unified_memory() const;
 		#endif
 
 		inline device_type
