@@ -30,6 +30,20 @@ namespace clx {
 		unsigned_int_type num_maps() const;
 		unsigned_int_type num_references() const;
 		::clx::context context() const;
+		#if CL_TARGET_VERSION >= 110
+		memory_object parent() const;
+		size_t offset() const;
+		#endif
+		#if CL_TARGET_VERSION >= 200 || \
+			(CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory))
+		inline bool uses_svm_pointer() const {
+			#if CL_TARGET_VERSION >= 200
+			return this->uses_svm_pointer_200();
+			#elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+			return this->uses_svm_pointer_arm();
+			#endif
+		}
+		#endif
 
 		#if CL_TARGET_VERSION >= 110
 		inline void
@@ -97,6 +111,14 @@ namespace clx {
 		swap(memory_object& rhs) {
 			std::swap(this->_ptr, rhs._ptr);
 		}
+
+	private:
+
+		#if CL_TARGET_VERSION >= 200
+		bool uses_svm_pointer_200() const;
+		#elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+		bool uses_svm_pointer_arm() const;
+		#endif
 
 	};
 

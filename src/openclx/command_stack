@@ -5,7 +5,9 @@
 
 #include <openclx/color>
 #include <openclx/command_queue>
+#include <openclx/downcast>
 #include <openclx/event>
+#include <openclx/forward>
 #include <openclx/map_flags>
 #include <openclx/migration_flags>
 #include <openclx/native_kernel>
@@ -221,12 +223,43 @@ namespace clx {
 		#endif
 		#endif
 
-		#if CL_TARGET_VERSION >= 200
-		void free(const array_view<svm_pointer>& pointers);
-		void fill(svm_array ptr, const pattern& pattern);
-		void copy(const svm_array& src, const svm_array& dst);
-		void map(const svm_array& src, map_flags flags);
-		void unmap(svm_pointer ptr);
+		#if CL_TARGET_VERSION >= 200 || \
+			(CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory))
+		inline void free(const array_view<svm_pointer>& pointers) {
+			#if CL_TARGET_VERSION >= 200
+			this->free_200(pointers);
+			#elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+			this->free_arm(pointers);
+			#endif
+		}
+		inline void fill(svm_array ptr, const pattern& pattern) {
+			#if CL_TARGET_VERSION >= 200
+			this->fill_200(ptr, pattern);
+			#elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+			this->fill_arm(ptr, pattern);
+			#endif
+		}
+		inline void copy(const svm_array& src, const svm_array& dst) {
+			#if CL_TARGET_VERSION >= 200
+			this->copy_200(src, dst);
+			#elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+			this->copy_arm(src, dst);
+			#endif
+		}
+		inline void map(const svm_array& src, map_flags flags) {
+			#if CL_TARGET_VERSION >= 200
+			this->map_200(src, flags);
+			#elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+			this->map_arm(src, flags);
+			#endif
+		}
+		inline void unmap(svm_pointer ptr) {
+			#if CL_TARGET_VERSION >= 200
+			this->unmap_200(ptr);
+			#elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+			this->unmap_arm(ptr);
+			#endif
+		}
 		#endif
 
 		#if CL_TARGET_VERSION >= 210
@@ -299,6 +332,22 @@ namespace clx {
 		frame_size() const {
 			return this->_events.size() - this->_offset;
 		}
+
+		#if CL_TARGET_VERSION >= 200
+		void free_200(const array_view<svm_pointer>& pointers);
+		void fill_200(svm_array ptr, const pattern& pattern);
+		void copy_200(const svm_array& src, const svm_array& dst);
+		void map_200(const svm_array& src, map_flags flags);
+		void unmap_200(svm_pointer ptr);
+		#endif
+
+		#if CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+		void free_arm(const array_view<svm_pointer>& pointers);
+		void fill_arm(svm_array ptr, const pattern& pattern);
+		void copy_arm(const svm_array& src, const svm_array& dst);
+		void map_arm(const svm_array& src, map_flags flags);
+		void unmap_arm(svm_pointer ptr);
+		#endif
 
 		#if CL_TARGET_VERSION >= 120
 		void

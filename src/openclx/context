@@ -109,12 +109,9 @@ namespace clx {
 		) const;
 		#endif
 
-		#if CL_TARGET_VERSION >= 200
-		::clx::svm_block shared_memory(
-			svm_flags flags,
-			size_t size,
-			size_t alignment
-		) const;
+		#if CL_TARGET_VERSION >= 200 || \
+			(CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory))
+		inline svm_block shared_memory(svm_flags flags, size_t size, size_t alignment) const;
 		#endif
 
 		#if defined(cl_khr_gl_sharing)
@@ -223,6 +220,22 @@ namespace clx {
 		}
 
 	private:
+
+		#if CL_TARGET_VERSION >= 200
+		::clx::svm_block shared_memory_200(
+			svm_flags flags,
+			size_t size,
+			size_t alignment
+		) const;
+		#endif
+
+		#if CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+		::clx::svm_block shared_memory_arm(
+			svm_flags flags,
+			size_t size,
+			size_t alignment
+		) const;
+		#endif
 
 		#if CL_TARGET_VERSION >= 200
 		std::vector<command_queue>

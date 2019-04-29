@@ -6,7 +6,8 @@
 
 namespace clx {
 
-	#if CL_TARGET_VERSION >= 200
+	#if CL_TARGET_VERSION >= 200 || \
+		(CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory))
 	class svm_block {
 
 	public:
@@ -71,6 +72,16 @@ namespace clx {
 	swap(svm_block& lhs, svm_block& rhs) {
 		lhs.swap(rhs);
 	}
+
+	inline svm_block
+	context::shared_memory(svm_flags flags, size_t size, size_t alignment) const {
+		#if CL_TARGET_VERSION >= 200
+		return this->shared_memory_200(flags, size, alignment);
+		#elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+		return this->shared_memory_arm(flags, size, alignment);
+		#endif
+	}
+
 	#endif
 
 }

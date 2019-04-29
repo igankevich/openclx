@@ -22,7 +22,7 @@ clx::kernel::argument(unsigned_int_type i) const {
 
 #if CL_TARGET_VERSION >= 200
 void
-clx::kernel::svm_pointers(const array_view<void*>& pointers) {
+clx::kernel::svm_pointers_200(const array_view<void*>& pointers) {
 	CLX_CHECK(::clSetKernelExecInfo(
 		this->_ptr, CL_KERNEL_EXEC_INFO_SVM_PTRS,
 		pointers.size()*sizeof(void*), pointers.data()
@@ -30,10 +30,31 @@ clx::kernel::svm_pointers(const array_view<void*>& pointers) {
 }
 
 void
-clx::kernel::fine_grain_system_svm_pointers(bool b) {
+clx::kernel::fine_grain_system_svm_pointers_200(bool b) {
 	bool_type value = static_cast<bool_type>(b);
 	CLX_CHECK(::clSetKernelExecInfo(
 		this->_ptr, CL_KERNEL_EXEC_INFO_SVM_FINE_GRAIN_SYSTEM,
+		sizeof(bool_type), &value
+	));
+}
+#endif
+
+#if CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+void
+clx::kernel::svm_pointers_arm(const array_view<void*>& pointers) {
+	auto func = CLX_EXTENSION(clSetKernelExecInfoARM, context().platform());
+	CLX_CHECK(func(
+		this->_ptr, CL_KERNEL_EXEC_INFO_SVM_PTRS_ARM,
+		pointers.size()*sizeof(void*), pointers.data()
+	));
+}
+
+void
+clx::kernel::fine_grain_system_svm_pointers_arm(bool b) {
+	auto func = CLX_EXTENSION(clSetKernelExecInfoARM, context().platform());
+	bool_type value = static_cast<bool_type>(b);
+	CLX_CHECK(func(
+		this->_ptr, CL_KERNEL_EXEC_INFO_SVM_FINE_GRAIN_SYSTEM_ARM,
 		sizeof(bool_type), &value
 	));
 }
@@ -153,7 +174,9 @@ clx::kernel::local_size(const device& device, size_t nsubgroups) const {
 	return value;
 }
 
-#elif CL_TARGET_VERSION >= 200 && defined(cl_khr_subgroups)
+#endif
+
+#if CL_TARGET_VERSION >= 200 && defined(cl_khr_subgroups)
 
 size_t
 clx::kernel::max_sub_group_size_khr(const device& device, const range& range) const {

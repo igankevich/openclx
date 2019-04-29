@@ -1,9 +1,0 @@
-#ifndef OPENCLX_BITS_CL_IMG_USE_GRALLOC_PTR
-#define OPENCLX_BITS_CL_IMG_USE_GRALLOC_PTR
-
-#if defined(cl_img_use_gralloc_ptr)
-using clEnqueueAcquireGrallocObjectsIMG_fn = decltype(clEnqueueAcquireGrallocObjectsIMG);
-using clEnqueueReleaseGrallocObjectsIMG_fn = decltype(clEnqueueReleaseGrallocObjectsIMG);
-#endif
-
-#endif // vim:filetype=cpp

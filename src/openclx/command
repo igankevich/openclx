@@ -57,6 +57,21 @@ namespace clx {
 		#if defined(CL_COMMAND_RELEASE_EGL_OBJECTS_KHR)
 		egl_release_objects=CL_COMMAND_RELEASE_EGL_OBJECTS_KHR,
 		#endif
+		#if defined(CL_COMMAND_SVM_FREE_ARM)
+		arm_svm_free=CL_COMMAND_SVM_FREE_ARM,
+		#endif
+		#if defined(CL_COMMAND_SVM_MEMCPY_ARM)
+		arm_svm_memcpy=CL_COMMAND_SVM_MEMCPY_ARM,
+		#endif
+		#if defined(CL_COMMAND_SVM_MEMFILL_ARM)
+		arm_svm_memfill=CL_COMMAND_SVM_MEMFILL_ARM,
+		#endif
+		#if defined(CL_COMMAND_SVM_MAP_ARM)
+		arm_svm_map=CL_COMMAND_SVM_MAP_ARM,
+		#endif
+		#if defined(CL_COMMAND_SVM_UNMAP_ARM)
+		arm_svm_unmap=CL_COMMAND_SVM_UNMAP_ARM,
+		#endif
 	};
 
 	enum class execution_status: execution_status_type {

@@ -62,14 +62,27 @@ namespace clx {
 		}
 		#endif
 
-		#if CL_TARGET_VERSION >= 200
-		void svm_pointers(const array_view<void*>& pointers);
+		#if CL_TARGET_VERSION >= 200 || \
+			(CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory))
+		inline void svm_pointers(const array_view<void*>& pointers) {
+			#if CL_TARGET_VERSION >= 200
+			return this->svm_pointers_200(pointers);
+			#elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+			return this->svm_pointers_arm(pointers);
+			#endif
+		}
 		template <class ... Args> inline void
 		svm_pointers(const Args& ... args) {
 			void* pointers[] {args...};
 			this->svm_pointers({pointers, sizeof...(args)});
 		}
-		void fine_grain_system_svm_pointers(bool b);
+		inline void fine_grain_system_svm_pointers(bool b) {
+			#if CL_TARGET_VERSION >= 200
+			return this->fine_grain_system_svm_pointers_200(b);
+			#elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+			return this->fine_grain_system_svm_pointers_arm(b);
+			#endif
+		}
 		#endif
 
 		#if CL_TARGET_VERSION >= 210
@@ -152,10 +165,22 @@ namespace clx {
 
 	private:
 
+		#if CL_TARGET_VERSION >= 200
+		void svm_pointers_200(const array_view<void*>& pointers);
+		void fine_grain_system_svm_pointers_200(bool b);
+		#endif
+
+		#if CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+		void svm_pointers_arm(const array_view<void*>& pointers);
+		void fine_grain_system_svm_pointers_arm(bool b);
+		#endif
+
 		#if CL_TARGET_VERSION >= 210
 		size_t max_sub_group_size_210(const device& device, const range& range) const;
 		size_t num_sub_groups_210(const device& device, const range& range) const;
-		#elif CL_TARGET_VERSION >= 200 && defined(cl_khr_subgroups)
+		#endif
+
+		#if CL_TARGET_VERSION >= 200 && defined(cl_khr_subgroups)
 		size_t max_sub_group_size_khr(const device& device, const range& range) const;
 		size_t num_sub_groups_khr(const device& device, const range& range) const;
 		#endif

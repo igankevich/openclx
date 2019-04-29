@@ -1,11 +1,12 @@
 #include <openclx/array_view>
+#include <openclx/bits/macros>
 #include <openclx/buffer>
 #include <openclx/command_queue_flags>
+#include <openclx/command_stack>
 #include <openclx/device>
 #include <openclx/downcast>
 #include <openclx/egl/image>
 #include <openclx/error>
-#include <openclx/command_stack>
 #include <openclx/gl/buffer>
 #include <openclx/image>
 #include <openclx/kernel>
@@ -320,7 +321,7 @@ clx::command_stack::migrate_ext(
 	migration_flags flags,
 	const memory_object_array& objects
 ) {
-	auto func = CLX_EXTENSION(clEnqueueMigrateMemObjectEXT, queue().context().platform());
+	auto func = CLX_EXTENSION(clEnqueueMigrateMemObjectEXT, kernel_queue().context().platform());
 	CLX_BODY_ENQUEUE(func, objects.size(), downcast(objects.data()), downcast(flags));
 }
 #endif
@@ -340,13 +341,13 @@ clx::command_stack::release(const gl_memory_object_array& objects) {
 #if defined(cl_khr_egl_image)
 void
 clx::command_stack::acquire(const egl_memory_object_array& objects) {
-	auto func = CLX_EXTENSION(clEnqueueAcquireEGLObjectsKHR, queue().context().platform());
+	auto func = CLX_EXTENSION(clEnqueueAcquireEGLObjectsKHR, kernel_queue().context().platform());
 	CLX_BODY_ENQUEUE(func, objects.size(), downcast(objects.data()));
 }
 
 void
 clx::command_stack::release(const egl_memory_object_array& objects) {
-	auto func = CLX_EXTENSION(clEnqueueReleaseEGLObjectsKHR, queue().context().platform());
+	auto func = CLX_EXTENSION(clEnqueueReleaseEGLObjectsKHR, kernel_queue().context().platform());
 	CLX_BODY_ENQUEUE(func, objects.size(), downcast(objects.data()));
 }
 #endif
@@ -354,20 +355,20 @@ clx::command_stack::release(const egl_memory_object_array& objects) {
 #if defined(cl_img_use_gralloc_ptr)
 void
 clx::command_stack::acquire_gralloc(const memory_object_array& objects) {
-	auto func = CLX_EXTENSION(clEnqueueAcquireGrallocObjectsIMG, queue().context().platform());
+	auto func = CLX_EXTENSION(clEnqueueAcquireGrallocObjectsIMG, kernel_queue().context().platform());
 	CLX_BODY_ENQUEUE(func, objects.size(), downcast(objects.data()), downcast(flags));
 }
 
 void
 clx::command_stack::release_gralloc(const memory_object_array& objects) {
-	auto func = CLX_EXTENSION(clEnqueueReleaseGrallocObjectsIMG, queue().context().platform());
+	auto func = CLX_EXTENSION(clEnqueueReleaseGrallocObjectsIMG, kernel_queue().context().platform());
 	CLX_BODY_ENQUEUE(func, objects.size(), downcast(objects.data()), downcast(flags));
 }
 #endif
 
 #if CL_TARGET_VERSION >= 200
 void
-clx::command_stack::free(const array_view<void*>& pointers) {
+clx::command_stack::free_200(const array_view<void*>& pointers) {
 	CLX_BODY_ENQUEUE(
 		::clEnqueueSVMFree,
 		pointers.size(), const_cast<void**>(pointers.data()),
@@ -376,7 +377,7 @@ clx::command_stack::free(const array_view<void*>& pointers) {
 }
 
 void
-clx::command_stack::fill(svm_array ptr, const pattern& pattern) {
+clx::command_stack::fill_200(svm_array ptr, const pattern& pattern) {
 	CLX_BODY_ENQUEUE(
 		::clEnqueueSVMMemFill, ptr.data(),
 		pattern.ptr(), pattern.size(),
@@ -385,7 +386,7 @@ clx::command_stack::fill(svm_array ptr, const pattern& pattern) {
 }
 
 void
-clx::command_stack::copy(const svm_array& src, const svm_array& dst) {
+clx::command_stack::copy_200(const svm_array& src, const svm_array& dst) {
 	CLX_BODY_ENQUEUE(
 		::clEnqueueSVMMemcpy, CL_FALSE,
 		dst.data(), src.data(), src.size()
@@ -393,7 +394,7 @@ clx::command_stack::copy(const svm_array& src, const svm_array& dst) {
 }
 
 void
-clx::command_stack::map(const svm_array& src, map_flags flags) {
+clx::command_stack::map_200(const svm_array& src, map_flags flags) {
 	CLX_BODY_ENQUEUE(
 		::clEnqueueSVMMap, CL_FALSE,
 		downcast(flags), src.data(), src.size()
@@ -401,8 +402,49 @@ clx::command_stack::map(const svm_array& src, map_flags flags) {
 }
 
 void
-clx::command_stack::unmap(svm_pointer ptr) {
+clx::command_stack::unmap_200(svm_pointer ptr) {
 	CLX_BODY_ENQUEUE(::clEnqueueSVMUnmap, ptr);
+}
+#endif
+
+#if CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+void
+clx::command_stack::free_arm(const array_view<void*>& pointers) {
+	CLX_BODY_ENQUEUE(
+		CLX_EXTENSION(clEnqueueSVMFreeARM, kernel_queue().context().platform()),
+		pointers.size(), const_cast<void**>(pointers.data()),
+		nullptr, nullptr
+	);
+}
+
+void
+clx::command_stack::fill_arm(svm_array ptr, const pattern& pattern) {
+	CLX_BODY_ENQUEUE(
+		CLX_EXTENSION(clEnqueueSVMMemFillARM, kernel_queue().context().platform()), ptr.data(),
+		pattern.ptr(), pattern.size(),
+		ptr.size()
+	);
+}
+
+void
+clx::command_stack::copy_arm(const svm_array& src, const svm_array& dst) {
+	CLX_BODY_ENQUEUE(
+		CLX_EXTENSION(clEnqueueSVMMemcpyARM, kernel_queue().context().platform()), CL_FALSE,
+		dst.data(), src.data(), src.size()
+	);
+}
+
+void
+clx::command_stack::map_arm(const svm_array& src, map_flags flags) {
+	CLX_BODY_ENQUEUE(
+		CLX_EXTENSION(clEnqueueSVMMapARM, kernel_queue().context().platform()), CL_FALSE,
+		downcast(flags), src.data(), src.size()
+	);
+}
+
+void
+clx::command_stack::unmap_arm(svm_pointer ptr) {
+	CLX_BODY_ENQUEUE(CLX_EXTENSION(clEnqueueSVMUnmapARM, kernel_queue().context().platform()), ptr);
 }
 #endif
 

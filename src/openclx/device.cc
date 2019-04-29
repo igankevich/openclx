@@ -1,4 +1,3 @@
-#include <openclx/bits/cl_amd_device_attribute_query>
 #include <openclx/bits/macros>
 #include <openclx/command_queue>
 #include <openclx/context>
@@ -488,12 +487,20 @@ CLX_METHOD_SCALAR(
 
 #if CL_TARGET_VERSION >= 200
 CLX_METHOD_SCALAR(
-	clx::device::supported_svm_flags,
+	clx::device::supported_svm_flags_200,
 	::clGetDeviceInfo,
 	svm_flags,
 	CL_DEVICE_SVM_CAPABILITIES
 );
+#elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+CLX_METHOD_SCALAR(
+	clx::device::supported_svm_flags_arm,
+	::clGetDeviceInfo,
+	svm_flags,
+	CL_DEVICE_SVM_CAPABILITIES_ARM
+);
 #endif
+
 
 
 CLX_METHOD_SCALAR(clx::device::type, ::clGetDeviceInfo, device_flags, CL_DEVICE_TYPE);

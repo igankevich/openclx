@@ -390,12 +390,26 @@ clx::context::pipe(
 
 #if CL_TARGET_VERSION >= 200
 clx::svm_block
-clx::context::shared_memory(
+clx::context::shared_memory_200(
 	svm_flags flags,
 	size_t size,
 	size_t alignment
 ) const {
 	auto ptr = ::clSVMAlloc(this->_ptr, downcast(flags), size, alignment);
+	if (!ptr) { throw std::bad_alloc{}; }
+	return svm_block{ptr, size};
+}
+#endif
+
+#if CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+clx::svm_block
+clx::context::shared_memory_arm(
+	svm_flags flags,
+	size_t size,
+	size_t alignment
+) const {
+	auto func = CLX_EXTENSION(clSVMAllocARM, platform());
+	auto ptr = func(this->_ptr, downcast(flags), size, alignment);
 	if (!ptr) { throw std::bad_alloc{}; }
 	return svm_block{ptr, size};
 }

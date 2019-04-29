@@ -1,7 +1,39 @@
-#ifndef OPENCLX_BITS_CL_AMD_DEVICE_ATTRIBUTE_QUERY
-#define OPENCLX_BITS_CL_AMD_DEVICE_ATTRIBUTE_QUERY
+#ifndef OPENCLX_BITS_EXTENSIONS
+#define OPENCLX_BITS_EXTENSIONS
 
-#include <openclx/cl>
+#if defined(cl_arm_import_memory)
+using clImportMemoryARM_fn = decltype(&clImportMemoryARM);
+#endif
+
+#if !defined(cl_arm_shared_virtual_memory) && \
+	defined(CL_DEVICE_SVM_CAPABILITIES_ARM)
+#define cl_arm_shared_virtual_memory 1
+#endif
+
+#if defined(cl_arm_shared_virtual_memory)
+using clSVMAllocARM_fn = decltype(&clSVMAllocARM);
+using clSVMFreeARM_fn = decltype(&clSVMFreeARM);
+using clEnqueueSVMFreeARM_fn = decltype(&clEnqueueSVMFreeARM);
+using clEnqueueSVMMemcpyARM_fn = decltype(&clEnqueueSVMMemcpyARM);
+using clEnqueueSVMMemFillARM_fn = decltype(&clEnqueueSVMMemFillARM);
+using clEnqueueSVMMapARM_fn = decltype(&clEnqueueSVMMapARM);
+using clEnqueueSVMUnmapARM_fn = decltype(&clEnqueueSVMUnmapARM);
+using clSetKernelArgSVMPointerARM_fn = decltype(&clSetKernelArgSVMPointerARM);
+using clSetKernelExecInfoARM_fn = decltype(&clSetKernelExecInfoARM);
+#endif
+
+#if defined(cl_img_use_gralloc_ptr)
+using clEnqueueAcquireGrallocObjectsIMG_fn = decltype(&clEnqueueAcquireGrallocObjectsIMG);
+using clEnqueueReleaseGrallocObjectsIMG_fn = decltype(&clEnqueueReleaseGrallocObjectsIMG);
+#endif
+
+#if !defined(CL_CONTEXT_MEMORY_INITIALIZE_LOCAL_KHR)
+#define CL_CONTEXT_MEMORY_INITIALIZE_LOCAL_KHR 1
+#endif
+
+#if !defined(CL_CONTEXT_MEMORY_INITIALIZE_PRIVATE_KHR)
+#define CL_CONTEXT_MEMORY_INITIALIZE_PRIVATE_KHR 2
+#endif
 
 #if !defined(CL_DEVICE_PROFILING_TIMER_OFFSET_AMD)
 #define CL_DEVICE_PROFILING_TIMER_OFFSET_AMD            0x4036

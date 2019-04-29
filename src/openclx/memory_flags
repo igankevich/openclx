@@ -19,9 +19,14 @@ namespace clx {
 		host_no_access = CL_MEM_HOST_NO_ACCESS,
 		#endif
 		#if CL_TARGET_VERSION >= 200
+		kernel_read_and_write = CL_MEM_KERNEL_READ_AND_WRITE,
+		#endif
+		#if CL_TARGET_VERSION >= 200
 		svm_fine_grain_buffer = CL_MEM_SVM_FINE_GRAIN_BUFFER,
 		svm_atomics = CL_MEM_SVM_ATOMICS,
-		kernel_read_and_write = CL_MEM_KERNEL_READ_AND_WRITE,
+		#elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+		svm_fine_grain_buffer_arm=CL_MEM_SVM_FINE_GRAIN_BUFFER_ARM,
+		svm_atomics_arm=CL_MEM_SVM_ATOMICS_ARM,
 		#endif
 		#if defined(CL_MEM_USE_UNCACHED_CPU_MEMORY_IMG)
 		uncached = CL_MEM_USE_UNCACHED_CPU_MEMORY_IMG,

@@ -6,12 +6,20 @@
 
 namespace clx {
 
-	#if CL_TARGET_VERSION >= 200
+	#if CL_TARGET_VERSION >= 200 || \
+		(CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory))
 	enum class svm_flags: svm_flags_type {
+		#if CL_TARGET_VERSION >= 200
 		coarse_grain_buffer=CL_DEVICE_SVM_COARSE_GRAIN_BUFFER,
 		fine_grain_buffer=CL_DEVICE_SVM_FINE_GRAIN_BUFFER,
 		fine_grain_system=CL_DEVICE_SVM_FINE_GRAIN_SYSTEM,
 		atomics=CL_DEVICE_SVM_ATOMICS,
+		#elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+		coarse_grain_buffer=CL_DEVICE_SVM_COARSE_GRAIN_BUFFER_ARM,
+		fine_grain_buffer=CL_DEVICE_SVM_FINE_GRAIN_BUFFER_ARM,
+		fine_grain_system=CL_DEVICE_SVM_FINE_GRAIN_SYSTEM_ARM,
+		atomics=CL_DEVICE_SVM_ATOMICS_ARM,
+		#endif
 	};
 
 	CLX_FLAGS(svm_flags, svm_flags_type)

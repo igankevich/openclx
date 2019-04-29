@@ -21,6 +21,15 @@ namespace {
 		"clReleaseDeviceEXT",
 		"clRetainDeviceEXT",
 		"clCreateSubDevicesEXT",
+		"clSVMAllocARM",
+		"clSVMFreeARM",
+		"clEnqueueSVMFreeARM",
+		"clEnqueueSVMMemcpyARM",
+		"clEnqueueSVMMemFillARM",
+		"clEnqueueSVMMapARM",
+		"clEnqueueSVMUnmapARM",
+		"clSetKernelArgSVMPointerARM",
+		"clSetKernelExecInfoARM",
 	};
 
 }

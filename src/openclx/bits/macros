@@ -142,6 +142,6 @@ namespace clx {
 	}
 
 #define CLX_EXTENSION(name, platform) \
-	platform.function<name##_fn>(extension_function::name)
+	platform.function<name##_fn>(::clx::extension_function::name)
 
 #endif // vim:filetype=cpp

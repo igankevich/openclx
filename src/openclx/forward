@@ -88,11 +88,17 @@ namespace clx {
 	#endif
 
 	#if CL_TARGET_VERSION >= 200
+	typedef ::cl_kernel_exec_info kernel_execution_info_type;
+	typedef ::cl_device_svm_capabilities svm_flags_type;
+	#elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+	typedef ::cl_kernel_exec_info_arm kernel_execution_info_type;
+	typedef ::cl_device_svm_capabilities_arm svm_flags_type;
+	#endif
+
+	#if CL_TARGET_VERSION >= 200
 	typedef ::cl_sampler_properties sampler_properties_type;
 	typedef ::cl_queue_properties queue_properties_type;
-	typedef ::cl_device_svm_capabilities svm_flags_type;
 	typedef ::cl_pipe_properties pipe_properties_type;
-	typedef ::cl_kernel_exec_info kernel_execution_info_type;
 
 	enum class svm_flags: svm_flags_type;
 	class svm_block;

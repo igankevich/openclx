@@ -218,8 +218,15 @@ namespace clx {
 		unsigned_int_type preferred_local_atomic_alignment() const;
 		#endif
 
-		#if CL_TARGET_VERSION >= 200
-		svm_flags supported_svm_flags() const;
+		#if CL_TARGET_VERSION >= 200 || \
+			(CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory))
+		inline svm_flags supported_svm_flags() const {
+			#if CL_TARGET_VERSION >= 200
+			return this->supported_svm_flags_200();
+			#elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+			return this->supported_svm_flags_arm();
+			#endif
+		}
 		#endif
 
 		device_flags type() const;
@@ -305,6 +312,12 @@ namespace clx {
 		}
 
 	private:
+
+		#if CL_TARGET_VERSION >= 200
+		svm_flags supported_svm_flags_200() const;
+		#elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+		svm_flags supported_svm_flags_arm() const;
+		#endif
 
 		#if CL_TARGET_VERSION >= 120
 		std::vector<device_partition>
