@@ -1,0 +1,6 @@
+#ifndef OPENCLX_CONFIG
+#define OPENCLX_CONFIG
+
+#mesondefine CLX_HAVE_CL_EXT_INTEL
+
+#endif // vim:filetype=cpp

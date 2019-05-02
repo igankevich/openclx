@@ -110,6 +110,9 @@ clx::kernel::work_group(const device& dev) const {
 	CLX_WG_FIELD(wg.local_memory_size, CL_KERNEL_LOCAL_MEM_SIZE);
 	CLX_WG_FIELD(wg.private_memory_size, CL_KERNEL_PRIVATE_MEM_SIZE);
 	#endif
+	#if CL_TARGET_VERSION >= 120 && defined(cl_intel_required_subgroup_size)
+	CLX_WG_FIELD(wg.spill_memory_size, CL_KERNEL_SPILL_MEM_SIZE_INTEL);
+	#endif
 	return wg;
 	#undef CLX_WG_FIELD
 }
@@ -201,3 +204,19 @@ clx::kernel::num_sub_groups_khr(const device& device, const range& range) const 
 	);
 }
 #endif
+
+#if CL_TARGET_VERSION >= 120 && defined(cl_intel_required_subgroup_size)
+size_t
+clx::kernel::sub_groups_size(const device& device) const {
+	size_t result = 0;
+	CLX_BODY_SCALAR(
+		::clGetKernelSubGroupInfo,
+		size_t,
+		device.get(),
+		CL_KERNEL_COMPILE_SUB_GROUP_SIZE_INTEL,
+		sizeof(size_t), &result
+	);
+	return result;
+}
+#endif
+

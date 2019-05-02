@@ -17,6 +17,10 @@
 #include <openclx/sampler_properties>
 #include <openclx/svm_block>
 
+#if CL_TARGET_VERSION >= 120 && defined(cl_intel_accelerator)
+#include <openclx/intel/me_accelerator>
+#endif
+
 CLX_METHOD_ARRAY(
 	clx::context::devices,
 	::clGetContextInfo, CL_CONTEXT_DEVICES,
@@ -291,16 +295,18 @@ clx::context::egl_event(egl::sync_type name, egl::display_type display) const {
 	CLX_CHECK(ret);
 	return static_cast<::clx::event>(ev);
 }
+#endif
 
+#if defined(cl_khr_egl_image)
 clx::egl::image
-clx::context::egl_image(
-	memory_flags flags,
-	egl::image_type name,
-	egl::display_type display
-) const {
+clx::context::egl_image(memory_flags flags, const egl::image_properties& prop) const {
 	auto func = CLX_EXTENSION(clCreateFromEGLImageKHR, platform());
 	int_type ret = 0;
-	auto img = func(this->_ptr, display, name, downcast(flags), nullptr, &ret);
+	auto img = func(
+		this->_ptr,
+		prop.display(), prop.name(), downcast(flags),
+		prop.commit(), &ret
+	);
 	CLX_CHECK(ret);
 	return static_cast<egl::image>(img);
 }
@@ -511,3 +517,28 @@ clx::context::terminate() {
 	CLX_CHECK(func(this->_ptr));
 }
 #endif
+
+#if CL_TARGET_VERSION >= 120 && defined(cl_intel_motion_estimation)
+clx::intel::me_accelerator
+clx::context::motion_estimation_accelerator(const intel::me_descriptor& desc) const {
+	auto pf = platform();
+	auto func = CLX_EXTENSION(clCreateAcceleratorINTEL, pf);
+	int_type ret = 0;
+	auto acc = func(
+		this->_ptr, downcast(intel::accelerators::motion_estimation),
+		sizeof(desc), &desc, &ret
+	);
+	CLX_CHECK(ret);
+	return intel::me_accelerator(acc, pf);
+}
+#endif
+
+#if CL_TARGET_VERSION >= 120 && defined(cl_intel_advanced_motion_estimation)
+CLX_METHOD_SCALAR(
+	clx::context::motion_estimation_version,
+	::clGetContextInfo,
+	unsigned_int_type,
+	CL_DEVICE_ME_VERSION_INTEL
+)
+#endif
+

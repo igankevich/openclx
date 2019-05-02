@@ -46,8 +46,13 @@ namespace clx {
 	#endif
 	CLX_MAKE_DOWNCAST_TYPE2(command_queue_flags, queue_properties_type);
 
-	#undef CLX_MAKE_DOWNCAST_TYPE
-	#undef CLX_MAKE_DOWNCAST_TYPE2
+	CLX_MAKE_DOWNCAST_TYPE2(::clx::intel::device, ::clx::device_type);
+	#if defined(cl_intel_accelerator)
+	CLX_MAKE_DOWNCAST_TYPE(::clx::intel::accelerators);
+	#endif
+	#if defined(cl_intel_driver_diagnostics)
+	CLX_MAKE_DOWNCAST_TYPE(::clx::intel::diagnostics_level);
+	#endif
 
 	template <class T>
 	inline const typename downcast_type<T>::type*

@@ -1,0 +1,27 @@
+#ifndef OPENCLX_INTEL_DEVICE
+#define OPENCLX_INTEL_DEVICE
+
+#include <openclx/device>
+#include <openclx/forward>
+
+namespace clx {
+
+	namespace intel {
+
+		class device: public ::clx::device {
+
+		public:
+			using ::clx::device::device;
+
+			#if CL_TARGET_VERSION >= 120 && defined(cl_intel_device_partition_by_names)
+			std::vector<device>
+			partition_by_names(const std::vector<unsigned int>& names) const;
+			#endif
+
+		};
+
+	}
+
+}
+
+#endif // vim:filetype=cpp

@@ -124,6 +124,18 @@ namespace clx {
 		#if defined(CL_INVALID_PARTITION_NAME_EXT)
 		ext_invalid_partition_name=CL_INVALID_PARTITION_NAME_EXT,
 		#endif
+		#if defined(CL_INVALID_ACCELERATOR_INTEL)
+		intel_invalid_accelerator=CL_INVALID_ACCELERATOR_INTEL,
+		#endif
+		#if defined(CL_INVALID_ACCELERATOR_TYPE_INTEL)
+		intel_invalid_accelerator_type=CL_INVALID_ACCELERATOR_TYPE_INTEL,
+		#endif
+		#if defined(CL_INVALID_ACCELERATOR_DESCRIPTOR_INTEL)
+		intel_invalid_accelerator_descriptor=CL_INVALID_ACCELERATOR_DESCRIPTOR_INTEL,
+		#endif
+		#if defined(CL_ACCELERATOR_TYPE_NOT_SUPPORTED_INTEL)
+		intel_accelerator_type_not_supported=CL_ACCELERATOR_TYPE_NOT_SUPPORTED_INTEL,
+		#endif
 	};
 
 	const char*

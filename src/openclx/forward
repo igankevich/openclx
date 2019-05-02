@@ -64,7 +64,7 @@ namespace clx {
 
 	#if CL_TARGET_VERSION >= 120
 	typedef ::cl_mem_migration_flags migration_flags_type;
-	typedef ::cl_device_partition_property partition_type;
+	typedef ::cl_device_partition_property partition_property_type;
 	typedef ::cl_device_affinity_domain affinity_domain_type;
 	typedef ::cl_kernel_arg_type_qualifier argument_type_qualifiers_type;
 	typedef ::cl_kernel_arg_access_qualifier access_qualifiers_type;
@@ -73,7 +73,7 @@ namespace clx {
 	typedef ::cl_program_binary_type program_binary_type;
 
 	enum class migration_flags: migration_flags_type;
-	enum class device_partition: partition_type;
+	enum class device_partition: partition_property_type;
 	enum class device_affinity_domain: affinity_domain_type;
 	enum class argument_type_qualifiers: argument_type_qualifiers_type;
 	enum class binary_types: program_binary_type;
@@ -235,6 +235,8 @@ namespace clx {
 		typedef ::CLeglSyncKHR sync_type;
 		#if defined(cl_khr_egl_image)
 		typedef ::CLeglImageKHR image_type;
+		typedef ::cl_egl_image_properties_khr image_properties_type;
+		class image_properties;
 		class image;
 		#endif
 	}
@@ -258,14 +260,39 @@ namespace clx {
 	#if defined(cl_ext_device_fission)
 	namespace ext {
 		typedef ::cl_device_partition_property_ext partition_property_type;
-		typedef partition_property_type partition_type;
+		typedef partition_property_type partition_property_type;
 		typedef partition_property_type affinity_domain_type;
-		enum class device_partition: partition_type;
+		enum class device_partition: partition_property_type;
 		enum class affinity_domain: affinity_domain_type;
 		class device;
 		class partition_properties;
 	}
 	#endif
+
+
+	namespace intel {
+
+		class device;
+
+		#if defined(cl_intel_accelerator)
+		using accelerator_type = ::cl_accelerator_intel;
+		using accelerators_type = ::cl_accelerator_type_intel;
+		enum class accelerators: accelerators_type;
+		class accelerator;
+		#endif
+
+		#if defined(cl_intel_motion_estimation)
+		using me_descriptor_type = ::cl_motion_estimation_desc_intel;
+		class me_accelerator;
+		class me_descriptor;
+		#endif
+
+		#if defined(cl_intel_driver_diagnostics)
+		using diagnostics_level_type = ::cl_diagnostics_verbose_level;
+		enum class diagnostics_level: diagnostics_level_type;
+		#endif
+
+	}
 
 }
 

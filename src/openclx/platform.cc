@@ -30,6 +30,10 @@ namespace {
 		"clEnqueueSVMUnmapARM",
 		"clSetKernelArgSVMPointerARM",
 		"clSetKernelExecInfoARM",
+		"clCreateAcceleratorINTEL",
+		"clGetAcceleratorInfoINTEL",
+		"clRetainAcceleratorINTEL",
+		"clReleaseAcceleratorINTEL",
 	};
 
 }
@@ -165,7 +169,7 @@ clx::context clx::platform::context(
 }
 
 clx::platform::function_address
-clx::platform::do_function(extension_function func) {
+clx::platform::do_function(extension_function func) const {
 	if (this->_functions.empty()) {
 		this->_functions.resize(static_cast<size_t>(extension_function::size));
 	}

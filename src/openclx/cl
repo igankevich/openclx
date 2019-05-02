@@ -1,6 +1,8 @@
 #ifndef OPENCL_CL
 #define OPENCL_CL
 
+#include <openclx/config>
+
 #if !defined(CL_TARGET_VERSION)
 #define CL_TARGET_VERSION 220
 #endif
@@ -61,6 +63,11 @@
 #endif
 
 #include <CL/opencl.h>
+
+#if defined(CLX_HAVE_CL_EXT_INTEL)
+#include <CL/cl_ext_intel.h>
+#endif
+
 #include <openclx/bits/extensions>
 
 #endif // vim:filetype=cpp

@@ -34,6 +34,10 @@ namespace clx {
 		clEnqueueSVMUnmapARM,
 		clSetKernelArgSVMPointerARM,
 		clSetKernelExecInfoARM,
+		clCreateAcceleratorINTEL,
+		clGetAcceleratorInfoINTEL,
+		clRetainAcceleratorINTEL,
+		clReleaseAcceleratorINTEL,
 		size
 	};
 
@@ -45,7 +49,7 @@ namespace clx {
 
 	private:
 		platform_type _ptr = nullptr;
-		std::vector<function_address> _functions;
+		mutable std::vector<function_address> _functions;
 
 	public:
 
@@ -95,7 +99,7 @@ namespace clx {
 
 		template <class Function>
 		inline Function
-		function(extension_function func) {
+		function(extension_function func) const {
 			return reinterpret_cast<Function>(this->do_function(func));
 		}
 
@@ -138,7 +142,7 @@ namespace clx {
 	private:
 
 		function_address
-		do_function(extension_function func);
+		do_function(extension_function func) const;
 
 	};
 

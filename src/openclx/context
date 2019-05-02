@@ -82,11 +82,10 @@ namespace clx {
 
 		#if defined(cl_khr_egl_event)
 		::clx::event egl_event(egl::sync_type name, egl::display_type display) const;
-		egl::image egl_image(
-			memory_flags flags,
-			egl::image_type name,
-			egl::display_type display
-		) const;
+		#endif
+
+		#if defined(cl_khr_egl_image)
+		egl::image egl_image(memory_flags flags, const egl::image_properties& prop) const;
 		#endif
 
 		::clx::buffer
@@ -158,6 +157,15 @@ namespace clx {
 			void* memory,
 			size_t size
 		) const;
+		#endif
+
+		#if CL_TARGET_VERSION >= 120 && defined(cl_intel_motion_estimation)
+		clx::intel::me_accelerator
+		motion_estimation_accelerator(const intel::me_descriptor& desc) const;
+		#endif
+
+		#if CL_TARGET_VERSION >= 120 && defined(cl_intel_advanced_motion_estimation)
+		unsigned_int_type motion_estimation_version() const;
 		#endif
 
 		#if CL_TARGET_VERSION >= 120 && defined(cl_khr_terminate_context)

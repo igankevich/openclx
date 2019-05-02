@@ -1,0 +1,26 @@
+#ifndef OPENCLX_INTEL_ME_ACCELERATOR
+#define OPENCLX_INTEL_ME_ACCELERATOR
+
+#include <openclx/forward>
+#include <openclx/intel/accelerator>
+
+namespace clx {
+
+	namespace intel {
+
+		class me_descriptor: public me_descriptor_type {};
+
+		class me_accelerator: public accelerator {
+
+		public:
+			using accelerator::accelerator;
+
+			me_descriptor descriptor() const;
+
+		};
+
+	}
+
+}
+
+#endif // vim:filetype=cpp

@@ -38,6 +38,12 @@ clx::context_properties::operator()(const extensions& extensions) const {
 		}
 	}
 	#endif
+	#if defined(cl_intel_driver_diagnostics)
+	if (extensions("cl_intel_driver_diagnostics")) {
+		prop.push_back(CL_CONTEXT_SHOW_DIAGNOSTICS_INTEL);
+		prop.push_back(context_properties_type(diagnostics()));
+	}
+	#endif
 	return prop;
 }
 

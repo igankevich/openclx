@@ -1,0 +1,29 @@
+#ifndef OPENCLX_INTEL_DIAGNOSTICS_LEVEL
+#define OPENCLX_INTEL_DIAGNOSTICS_LEVEL
+
+#include <openclx/bits/flags>
+#include <openclx/forward>
+
+namespace clx {
+
+	namespace intel {
+
+		#if defined(cl_intel_driver_diagnostics)
+		enum class diagnostics_level: diagnostics_level_type {
+			all=CL_CONTEXT_DIAGNOSTICS_LEVEL_ALL_INTEL,
+			good=CL_CONTEXT_DIAGNOSTICS_LEVEL_GOOD_INTEL,
+			bad=CL_CONTEXT_DIAGNOSTICS_LEVEL_BAD_INTEL,
+			neutral=CL_CONTEXT_DIAGNOSTICS_LEVEL_NEUTRAL_INTEL,
+		};
+
+		CLX_FLAGS(diagnostics_level, diagnostics_level_type)
+		#endif
+
+	}
+
+}
+
+#endif // vim:filetype=cpp
+
+
+

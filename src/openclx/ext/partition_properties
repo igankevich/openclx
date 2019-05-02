@@ -42,6 +42,7 @@ namespace clx {
 				prop.emplace_back(CL_PROPERTIES_LIST_END_EXT);
 			}
 
+			#if defined(cl_ext_device_fission)
 			inline void
 			by_names(std::vector<unsigned_int_type> names) {
 				prop.reserve(3 + names.size());
@@ -52,6 +53,7 @@ namespace clx {
 				prop.emplace_back(CL_PARTITION_BY_NAMES_LIST_END_EXT);
 				prop.emplace_back(CL_PROPERTIES_LIST_END_EXT);
 			}
+			#endif
 
 			inline const partition_property_type* data() const { return prop.data(); }
 

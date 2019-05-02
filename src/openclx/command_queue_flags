@@ -13,6 +13,9 @@ namespace clx {
 		on_device=CL_QUEUE_ON_DEVICE,
 		on_device_default=CL_QUEUE_ON_DEVICE_DEFAULT,
 		#endif
+		#if defined(cl_intel_thread_local_exec)
+		thread_local_execute=CL_QUEUE_THREAD_LOCAL_EXEC_ENABLE_INTEL,
+		#endif
 	};
 
 	CLX_FLAGS(command_queue_flags, command_queue_flags_type);

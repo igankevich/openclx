@@ -1,3 +1,9 @@
+configure_file(
+	input: 'config.in',
+	output: 'config',
+	configuration: config
+)
+
 openclx_src = files([
 	'binary.cc',
 	'buffer.cc',
@@ -25,6 +31,7 @@ openclx_src = files([
 subdir('gl')
 subdir('egl')
 subdir('ext')
+subdir('intel')
 
 openclx_deps = [
 	dependency('OpenCL')

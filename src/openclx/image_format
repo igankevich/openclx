@@ -38,6 +38,15 @@ namespace clx {
 		#if defined(CL_YV12_IMG)
 		yv12 = CL_YV12_IMG,
 		#endif
+		#if CL_TARGET_VERSION >= 120 && defined(cl_intel_packed_yuv)
+		yuyv = CL_YUYV_INTEL,
+		uyvy = CL_UYVY_INTEL,
+		yvyu = CL_YVYU_INTEL,
+		vyuy = CL_VYUY_INTEL,
+		#endif
+		#if CL_TARGET_VERSION >= 120 && defined(cl_intel_planar_yuv)
+		nv12 = CL_NV12_INTEL,
+		#endif
 	};
 
 	enum class channel_data: channel_data_type {

@@ -22,6 +22,9 @@ namespace clx {
 		unsigned_long_type local_memory_size = 0;
 		unsigned_long_type private_memory_size = 0;
 		#endif
+		#if CL_TARGET_VERSION >= 120 && defined(cl_intel_required_subgroup_size)
+		unsigned_long_type spill_memory_size = 0;
+		#endif
 	};
 
 	class kernel {
@@ -110,6 +113,10 @@ namespace clx {
 			return this->num_sub_groups_khr(device, range);
 			#endif
 		}
+		#endif
+
+		#if CL_TARGET_VERSION >= 120 && defined(cl_intel_required_subgroup_size)
+		size_t sub_groups_size(const device& device) const;
 		#endif
 
 		std::string name() const;

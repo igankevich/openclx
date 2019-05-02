@@ -166,7 +166,21 @@ clx::to_string(errc rhs) {
 		case errc::egl_invalid_object: return "Invalid object (EGL)";
 		#endif
 		#if defined(CL_EGL_RESOURCE_NOT_ACQUIRED_KHR)
-		case egl_resource_not_acquired: return "Resource not acquired (EGL)";
+		case errc::egl_resource_not_acquired: return "Resource not acquired (EGL)";
+		#endif
+		#if defined(CL_INVALID_ACCELERATOR_INTEL)
+		case errc::intel_invalid_accelerator: return "Invalid accelerator";
+		#endif
+		#if defined(CL_INVALID_ACCELERATOR_TYPE_INTEL)
+		case errc::intel_invalid_accelerator_type: return "Invalid accelerator type";
+		#endif
+		#if defined(CL_INVALID_ACCELERATOR_DESCRIPTOR_INTEL)
+		case errc::intel_invalid_accelerator_descriptor:
+			return "Invalid accelerator descriptor";
+		#endif
+		#if defined(CL_ACCELERATOR_TYPE_NOT_SUPPORTED_INTEL)
+		case errc::intel_accelerator_type_not_supported:
+			return "Accelerator type not supported";
 		#endif
 		default: return nullptr;
 	}

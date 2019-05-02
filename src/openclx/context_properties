@@ -2,6 +2,7 @@
 #define OPENCLX_CONTEXT_PROPERTIES
 
 #include <openclx/forward>
+#include <openclx/intel/diagnostics_level>
 
 namespace clx {
 
@@ -30,6 +31,9 @@ namespace clx {
 		};
 		context_properties_type _display = 0;
 		void* _cgl_sharegroup = nullptr;
+		#endif
+		#if defined(cl_intel_driver_diagnostics)
+		intel::diagnostics_level _level;
 		#endif
 
 	public:
@@ -71,6 +75,13 @@ namespace clx {
 		inline const void* gl_display() const { return this->_any_display; }
 		inline void gl_sharegroup(void* rhs) { this->_cgl_sharegroup = rhs; }
 		inline const void* gl_sharegroup() const { return this->_cgl_sharegroup; }
+		#endif
+
+		#if defined(cl_intel_driver_diagnostics)
+		inline intel::diagnostics_level diagnostics() const {
+			return this->_level;
+		}
+		inline void diagnostics(intel::diagnostics_level rhs) { this->_level = rhs; }
 		#endif
 
 		std::vector<context_properties_type>

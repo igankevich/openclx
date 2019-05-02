@@ -63,6 +63,64 @@ CLX_METHOD_STRING(
 );
 #endif
 
+#if CL_TARGET_VERSION >= 120 && defined(cl_intel_device_side_avc_motion_estimation)
+CLX_METHOD_SCALAR(
+	clx::device::video_motion_estimation_version,
+	::clGetDeviceInfo,
+	unsigned_int_type,
+	CL_DEVICE_AVC_ME_VERSION_INTEL
+);
+CLX_METHOD_BOOL(
+	clx::device::supports_texture_sampler,
+	::clGetDeviceInfo,
+	CL_DEVICE_AVC_ME_SUPPORTS_TEXTURE_SAMPLER_USE_INTEL
+);
+CLX_METHOD_BOOL(
+	clx::device::supports_preemption,
+	::clGetDeviceInfo,
+	CL_DEVICE_AVC_ME_SUPPORTS_PREEMPTION_INTEL
+);
+#endif
+
+#if CL_TARGET_VERSION >= 120 && defined(cl_intel_planar_yuv)
+CLX_METHOD_SCALAR(
+	clx::device::planar_yuv_image_max_width,
+	::clGetDeviceInfo,
+	size_t,
+	CL_DEVICE_PLANAR_YUV_MAX_WIDTH_INTEL
+);
+CLX_METHOD_SCALAR(
+	clx::device::planar_yuv_image_max_height,
+	::clGetDeviceInfo,
+	size_t,
+	CL_DEVICE_PLANAR_YUV_MAX_HEIGHT_INTEL
+);
+#endif
+
+#if CL_TARGET_VERSION >= 120 && defined(cl_intel_required_subgroup_size)
+CLX_METHOD_ARRAY(
+	clx::device::supported_sub_group_sizes,
+	::clGetDeviceInfo,
+	CL_DEVICE_SUB_GROUP_SIZES_INTEL,
+	size_t
+)
+#endif
+
+#if CL_TARGET_VERSION >= 120 && defined(cl_intel_simultaneous_sharing)
+CLX_METHOD_SCALAR(
+	clx::device::num_simultaneous_graphics,
+	::clGetDeviceInfo,
+	unsigned_int_type,
+	CL_DEVICE_NUM_SIMULTANEOUS_INTEROPS_INTEL
+);
+CLX_METHOD_ARRAY(
+	clx::device::simultaneous_graphics_combinations,
+	::clGetDeviceInfo,
+	CL_DEVICE_SIMULTANEOUS_INTEROPS_INTEL,
+	unsigned_int_type
+)
+#endif
+
 #if CL_TARGET_VERSION >= 210
 auto
 clx::device::host_time() const -> nanoseconds {
@@ -749,10 +807,10 @@ clx::device::supported_partitions() const {
 #if CL_TARGET_VERSION >= 120
 std::vector<clx::device>
 clx::device::partition(unsigned int num_compute_units) const {
-	std::vector<partition_type> properties{
-		partition_type(device_partition::equally),
-		partition_type(num_compute_units),
-		partition_type(0)
+	std::vector<partition_property_type> properties{
+		partition_property_type(device_partition::equally),
+		partition_property_type(num_compute_units),
+		partition_property_type(0)
 	};
 	std::vector<device> result(4096 / sizeof(device));
 	unsigned_int_type ndevices = 0;
@@ -779,16 +837,16 @@ clx::device::partition(unsigned int num_compute_units) const {
 #if CL_TARGET_VERSION >= 120
 std::vector<clx::device>
 clx::device::partition(const std::vector<unsigned int>& num_compute_units) const {
-	std::vector<partition_type> properties;
+	std::vector<partition_property_type> properties;
 	properties.reserve(2 + num_compute_units.size());
 	properties.emplace_back(
-		static_cast<partition_type>(device_partition::by_counts)
+		static_cast<partition_property_type>(device_partition::by_counts)
 	);
 	for (const auto& n : num_compute_units) {
 		properties.emplace_back(n);
 	}
 	properties.emplace_back(
-		static_cast<partition_type>(device_partition::by_counts_end)
+		static_cast<partition_property_type>(device_partition::by_counts_end)
 	);
 	properties.emplace_back(0);
 	std::vector<device> result(num_compute_units.size());

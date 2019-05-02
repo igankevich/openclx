@@ -112,19 +112,7 @@
 
 * Extensions
 
-- [ ] ~cl_intel_accelerator~
-- [ ] ~cl_intel_advanced_motion_estimation~
-- [ ] ~cl_intel_device_partition_by_names~
-- [ ] ~cl_intel_device_side_avc_motion_estimation~
-- [ ] ~cl_intel_driver_diagnostics~
 - [ ] ~cl_intel_dx9_media_sharing~
-- [ ] ~cl_intel_egl_image_yuv~
-- [ ] ~cl_intel_motion_estimation~
-- [ ] ~cl_intel_packed_yuv~
-- [ ] ~cl_intel_planar_yuv~
-- [ ] ~cl_intel_required_subgroup_size~
-- [ ] ~cl_intel_simultaneous_sharing~
-- [ ] ~cl_intel_thread_local_exec~
 - [ ] ~cl_intel_va_api_media_sharing~
 - [ ] ~cl_khr_d3d10_sharing~
 - [ ] ~cl_khr_d3d11_sharing~
@@ -143,6 +131,18 @@
 - [X] ~cl_img_cached_allocations~
 - [X] ~cl_img_use_gralloc_ptr~
 - [X] ~cl_img_yuv_image~
+- [X] ~cl_intel_accelerator~
+- [X] ~cl_intel_advanced_motion_estimation~
+- [X] ~cl_intel_device_partition_by_names~
+- [X] ~cl_intel_device_side_avc_motion_estimation~
+- [X] ~cl_intel_driver_diagnostics~
+- [X] ~cl_intel_egl_image_yuv~
+- [X] ~cl_intel_motion_estimation~
+- [X] ~cl_intel_packed_yuv~
+- [X] ~cl_intel_planar_yuv~
+- [X] ~cl_intel_required_subgroup_size~
+- [X] ~cl_intel_simultaneous_sharing~
+- [X] ~cl_intel_thread_local_exec~
 - [X] ~cl_khr_create_command_queue~
 - [X] ~cl_khr_egl_event~
 - [X] ~cl_khr_egl_image~

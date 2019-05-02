@@ -37,6 +37,10 @@ namespace clx {
 		#if CL_TARGET_VERSION >= 120 && defined(CL_MEM_USE_GRALLOC_PTR_IMG)
 		use_gralloc_ptr = CL_MEM_USE_GRALLOC_PTR_IMG,
 		#endif
+		#if CL_TARGET_VERSION >= 120 && defined(cl_intel_planar_yuv)
+		intel_no_access=CL_MEM_NO_ACCESS_INTEL,
+		intel_access_flags_unrestricted=CL_MEM_ACCESS_FLAGS_UNRESTRICTED_INTEL,
+		#endif
 	};
 
 	CLX_FLAGS(memory_flags, memory_flags_type)

@@ -1,0 +1,76 @@
+#ifndef OPENCLX_INTEL_ACCELERATOR
+#define OPENCLX_INTEL_ACCELERATOR
+
+#include <openclx/forward>
+#include <openclx/platform>
+
+namespace clx {
+
+	namespace intel {
+
+		enum class accelerators: accelerators_type {
+			#if defined(cl_intel_motion_estimation)
+			motion_estimation=CL_ACCELERATOR_TYPE_MOTION_ESTIMATION_INTEL,
+			#endif
+		};
+
+		class accelerator {
+
+		protected:
+			accelerator_type _ptr = nullptr;
+			platform _platform;
+
+		public:
+
+			inline explicit accelerator(accelerator_type ptr, platform p):
+			_ptr(ptr), _platform(p) {}
+
+			::clx::context context() const;
+			unsigned_int_type num_references() const;
+			accelerators type() const;
+
+			inline accelerator_type
+			get() noexcept {
+				return this->_ptr;
+			}
+
+			inline const accelerator_type
+			get() const noexcept {
+				return this->_ptr;
+			}
+
+			accelerator() = default;
+			inline ~accelerator() { this->release(); }
+			inline accelerator(const accelerator& rhs): _ptr(rhs._ptr) { this->retain(); }
+
+			inline accelerator&
+			operator=(const accelerator& rhs) {
+				accelerator tmp(rhs);
+				this->swap(tmp);
+				return *this;
+			}
+
+			inline accelerator(accelerator&& rhs):
+			_ptr(rhs._ptr), _platform(rhs._platform) {
+				rhs._ptr = nullptr;
+			}
+			inline accelerator& operator=(accelerator&& rhs) { this->swap(rhs); return *this; }
+
+			void release();
+			void retain();
+
+			inline void
+			swap(accelerator& rhs) {
+				using std::swap;
+				using clx::swap;
+				swap(this->_ptr, rhs._ptr);
+				swap(this->_platform, rhs._platform);
+			}
+
+		};
+
+	}
+
+}
+
+#endif // vim:filetype=cpp

@@ -20,6 +20,21 @@ foreach arg : [
 	endif
 endforeach
 
+# config {{{
+config = configuration_data()
+all_defines = []
+foreach pair : [
+	['CL/cl_ext_intel.h', 'cl_ext_intel'],
+]
+	header = pair[0]
+	name = pair[1]
+	all_defines += 'CLX_HAVE_' + name.to_upper()
+	if cpp.has_header(header)
+		config.set(all_defines[-1], true)
+	endif
+endforeach
+# }}}
+
 src = include_directories('src')
 
 subdir('src')
