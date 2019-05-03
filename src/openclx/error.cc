@@ -220,17 +220,27 @@ clx::to_string(errc rhs) {
 		#if defined(CL_D3D11_RESOURCE_NOT_ACQUIRED_KHR)
 		case errc::d3d11_resource_not_acquired: return "Resource not acquired (D3D11)";
 		#endif
+		#if defined(CL_INVALID_VA_API_MEDIA_ADAPTER_INTEL)
+		case errc::va_invalid_media_adapter: return "Invalid media adapter (VA)";
+		#endif
+		#if defined(CL_INVALID_VA_API_MEDIA_SURFACE_INTEL)
+		case errc::va_invalid_media_surface: return "Invalid media surface (VA)";
+		#endif
+		#if defined(CL_VA_API_MEDIA_SURFACE_ALREADY_ACQUIRED_INTEL)
+		case errc::va_media_surface_already_acquired:
+			return "Media surface already acquired (VA)";
+		#endif
+		#if defined(CL_VA_API_MEDIA_SURFACE_NOT_ACQUIRED_INTEL)
+		case errc::va_media_surface_not_acquired: return "Media surface not acquired (VA)";
+		#endif
 		default: return nullptr;
 	}
 }
 
 std::ostream&
 clx::operator<<(std::ostream& out, const errc& rhs) {
-	if (const char* s = to_string(rhs)) {
-		out << s;
-	} else {
-		out << static_cast<int_type>(rhs);
-	}
+	if (const char* s = to_string(rhs)) { out << s; }
+	else { out << static_cast<int_type>(rhs); }
 	return out;
 }
 

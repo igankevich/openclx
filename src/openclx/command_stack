@@ -48,6 +48,9 @@ namespace clx {
 		#if defined(cl_intel_dx9_media_sharing)
 		typedef array_view<intel::memory_object> intel_memory_object_array;
 		#endif
+		#if defined(cl_intel_va_api_media_sharing)
+		typedef array_view<intel::va::memory_object> intel_va_memory_object_array;
+		#endif
 
 	private:
 
@@ -237,6 +240,11 @@ namespace clx {
 		#if defined(cl_intel_dx9_media_sharing)
 		void acquire(const intel_memory_object_array& objects);
 		void release(const intel_memory_object_array& objects);
+		#endif
+
+		#if defined(cl_intel_va_api_media_sharing)
+		void acquire(const intel_va_memory_object_array& objects);
+		void release(const intel_va_memory_object_array& objects);
 		#endif
 
 		#if CL_TARGET_VERSION >= 120

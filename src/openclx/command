@@ -96,6 +96,12 @@ namespace clx {
 		#if defined(CL_COMMAND_RELEASE_DX9_OBJECTS_INTEL)
 		intel_d3d9_release_objects=CL_COMMAND_RELEASE_DX9_OBJECTS_INTEL,
 		#endif
+		#if defined(CL_COMMAND_ACQUIRE_VA_API_MEDIA_SURFACES_INTEL)
+		va_acquire_media_surfaces=CL_COMMAND_ACQUIRE_VA_API_MEDIA_SURFACES_INTEL,
+		#endif
+		#if defined(CL_COMMAND_RELEASE_VA_API_MEDIA_SURFACES_INTEL)
+		va_release_media_surfaces=CL_COMMAND_RELEASE_VA_API_MEDIA_SURFACES_INTEL,
+		#endif
 	};
 
 	enum class execution_status: execution_status_type {

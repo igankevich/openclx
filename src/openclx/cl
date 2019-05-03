@@ -76,6 +76,10 @@
 #include <CL/cl_dx9_media_sharing_intel.h>
 #endif
 
+#if defined(CLX_HAVE_CL_VA_API_MEDIA_SHARING_INTEL) && defined(CLX_HAVE_VA)
+#include <CL/cl_va_api_media_sharing_intel.h>
+#endif
+
 #if defined(CLX_HAVE_CL_D3D10)
 #include <CL/cl_d3d10.h>
 #endif

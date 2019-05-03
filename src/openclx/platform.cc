@@ -55,6 +55,10 @@ namespace {
 		"clCreateFromDX9MediaSurfaceINTEL",
 		"clEnqueueAcquireDX9ObjectsINTEL",
 		"clEnqueueReleaseDX9ObjectsINTEL",
+		"clGetDeviceIDsFromVA_APIMediaAdapterINTEL",
+		"clCreateFromVA_APIMediaSurfaceINTEL",
+		"clEnqueueAcquireVA_APIMediaSurfacesINTEL",
+		"clEnqueueReleaseVA_APIMediaSurfacesINTEL",
 	};
 
 }
@@ -254,6 +258,33 @@ clx::platform::devices(intel::device_source src, void* object, intel::device_set
 	while (!success) {
 		ret = func(
 			this->_ptr, src, object, set,
+			result.size(), downcast(result.data()), &actual_size
+		);
+		result.resize(actual_size);
+		if (errc(ret) != errc::invalid_value && actual_size <= result.size()) {
+			CLX_CHECK(ret);
+			success = true;
+		}
+	}
+	return result;
+}
+#endif
+
+#if defined(cl_intel_va_api_media_sharing)
+std::vector<clx::device>
+clx::platform::devices(
+	intel::va::device_source src,
+	void* object,
+	intel::va::device_set set
+) const {
+	auto func = CLX_EXTENSION(clGetDeviceIDsFromVA_APIMediaAdapterINTEL, *this);
+	std::vector<device> result(4096 / sizeof(device));
+	unsigned_int_type actual_size = 0;
+	int_type ret;
+	bool success = false;
+	while (!success) {
+		ret = func(
+			this->_ptr, downcast(src), object, downcast(set),
 			result.size(), downcast(result.data()), &actual_size
 		);
 		result.resize(actual_size);

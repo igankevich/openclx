@@ -6,5 +6,7 @@
 #mesondefine CLX_HAVE_CL_DX9_MEDIA_SHARING_INTEL
 #mesondefine CLX_HAVE_CL_D3D10
 #mesondefine CLX_HAVE_CL_D3D11
+#mesondefine CLX_HAVE_CL_VA_API_MEDIA_SHARING_INTEL
+#mesondefine CLX_HAVE_VA
 
 #endif // vim:filetype=cpp

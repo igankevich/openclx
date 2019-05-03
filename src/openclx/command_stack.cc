@@ -430,6 +430,26 @@ clx::command_stack::release(const intel_memory_object_array& objects) {
 }
 #endif
 
+#if defined(cl_intel_va_api_media_sharing)
+void
+clx::command_stack::acquire(const intel_va_memory_object_array& objects) {
+	auto func = CLX_EXTENSION(
+		clEnqueueAcquireVA_APIMediaSurfacesINTEL,
+		kernel_queue().context().platform()
+	);
+	CLX_BODY_ENQUEUE(func, objects.size(), downcast(objects.data()));
+}
+
+void
+clx::command_stack::release(const intel_va_memory_object_array& objects) {
+	auto func = CLX_EXTENSION(
+		clEnqueueReleaseVA_APIMediaSurfacesINTEL,
+		kernel_queue().context().platform()
+	);
+	CLX_BODY_ENQUEUE(func, objects.size(), downcast(objects.data()));
+}
+#endif
+
 #if defined(cl_img_use_gralloc_ptr)
 void
 clx::command_stack::acquire_gralloc(const memory_object_array& objects) {

@@ -112,12 +112,27 @@
 
 * Extensions
 
-- [ ] ~cl_intel_va_api_media_sharing~
+- [ ] ~cl_altera_compiler_mode~
+- [ ] ~cl_altera_live_object_tracking~
+- [ ] ~cl_amd_bus_addressable_memory~
+- [ ] ~cl_amd_planar_yuv~
+- [ ] ~cl_nv_d3d10_sharing~
+- [ ] ~cl_nv_d3d11_sharing~
+- [ ] ~cl_nv_d3d9_sharing~
+- [X] ~cl_altera_device_temperature~
 - [X] ~cl_amd_device_attribute_query~
+- [X] ~cl_amd_fp64~
+- [X] ~cl_amd_media_ops2~
+- [X] ~cl_amd_media_ops~
 - [X] ~cl_arm_get_core_id~
 - [X] ~cl_arm_import_memory~
+- [X] ~cl_arm_integer_dot_product~
+- [X] ~cl_arm_non_uniform_work_group_size~
 - [X] ~cl_arm_printf~
 - [X] ~cl_arm_shared_virtual_memory~
+- [X] ~cl_arm_thread_limit_hint~
+- [X] ~cl_ext_atomic_counters_32~
+- [X] ~cl_ext_atomic_counters_64~
 - [X] ~cl_ext_device_fission~
 - [X] ~cl_ext_migrate_memobject~
 - [X] ~cl_img_cached_allocations~
@@ -125,17 +140,20 @@
 - [X] ~cl_img_yuv_image~
 - [X] ~cl_intel_accelerator~
 - [X] ~cl_intel_advanced_motion_estimation~
+- [X] ~cl_intel_d3d11_nv12_media_sharing~
 - [X] ~cl_intel_device_partition_by_names~
 - [X] ~cl_intel_device_side_avc_motion_estimation~
 - [X] ~cl_intel_driver_diagnostics~
 - [X] ~cl_intel_dx9_media_sharing~
 - [X] ~cl_intel_egl_image_yuv~
+- [X] ~cl_intel_media_block_io~
 - [X] ~cl_intel_motion_estimation~
 - [X] ~cl_intel_packed_yuv~
 - [X] ~cl_intel_planar_yuv~
 - [X] ~cl_intel_required_subgroup_size~
 - [X] ~cl_intel_simultaneous_sharing~
 - [X] ~cl_intel_thread_local_exec~
+- [X] ~cl_intel_va_api_media_sharing~
 - [X] ~cl_khr_create_command_queue~
 - [X] ~cl_khr_d3d10_sharing~
 - [X] ~cl_khr_d3d11_sharing~
@@ -155,7 +173,9 @@
 - [X] ~cl_khr_subgroups~
 - [X] ~cl_khr_terminate_context~
 - [X] ~cl_khr_throttle_hints~
+- [X] ~cl_nv_compiler_options~
 - [X] ~cl_nv_device_attribute_query~
+- [X] ~cl_nv_pragma_unroll~
 - [X] ~cl_qcom_android_native_buffer_host_ptr~
 - [X] ~cl_qcom_ext_host_ptr_iocoherent~
 - [X] ~cl_qcom_ext_host_ptr~

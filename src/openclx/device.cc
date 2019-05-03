@@ -794,6 +794,24 @@ CLX_METHOD_BOOL(
 );
 #endif
 
+#if defined(CL_DEVICE_CORE_TEMPERATURE_ALTERA)
+CLX_METHOD_SCALAR(
+	clx::device::core_temperature,
+	::clGetDeviceInfo,
+	int_type,
+	CL_DEVICE_CORE_TEMPERATURE_ALTERA
+);
+#endif
+
+#if defined(CL_DEVICE_MAX_ATOMIC_COUNTERS_EXT)
+CLX_METHOD_SCALAR(
+	clx::device::max_atomic_counters,
+	::clGetDeviceInfo,
+	unsigned_int_type,
+	CL_DEVICE_MAX_ATOMIC_COUNTERS_EXT
+);
+#endif
+
 #if CL_TARGET_VERSION >= 120
 CLX_METHOD_SCALAR(
 	clx::device::parent,

@@ -119,4 +119,35 @@ using clEnqueueReleaseGrallocObjectsIMG_fn = decltype(&clEnqueueReleaseGrallocOb
 #define CL_DEVICE_PCIE_ID_AMD 0x4034
 #endif
 
+#if !defined(CL_DEVICE_CORE_TEMPERATURE_ALTERA)
+#define CL_DEVICE_CORE_TEMPERATURE_ALTERA        0x40F3
+#endif
+
+#if !defined(CL_MEM_BUS_ADDRESSABLE_AMD)
+#define CL_MEM_BUS_ADDRESSABLE_AMD               (1<<30)
+#endif
+#if !defined(CL_MEM_EXTERNAL_PHYSICAL_AMD)
+#define CL_MEM_EXTERNAL_PHYSICAL_AMD             (1<<31)
+#endif
+#if !defined(CL_COMMAND_WAIT_SIGNAL_AMD)
+#define CL_COMMAND_WAIT_SIGNAL_AMD                0x4080
+#endif
+#if !defined(CL_COMMAND_WRITE_SIGNAL_AMD)
+#define CL_COMMAND_WRITE_SIGNAL_AMD               0x4081
+#endif
+#if !defined(CL_COMMAND_MAKE_BUFFERS_RESIDENT_AMD)
+#define CL_COMMAND_MAKE_BUFFERS_RESIDENT_AMD      0x4082
+#endif
+
+#if !defined(CL_YUV_IMAGE_Y_PLANE_AMD)
+#define CL_YUV_IMAGE_Y_PLANE_AMD           0x0
+#endif
+#if !defined(CL_YUV_IMAGE_UV_PLANE_AMD)
+#define CL_YUV_IMAGE_UV_PLANE_AMD          0x1
+#endif
+
+#if !defined(CL_DEVICE_MAX_ATOMIC_COUNTERS_EXT)
+#define CL_DEVICE_MAX_ATOMIC_COUNTERS_EXT  0x4032
+#endif
+
 #endif // vim:filetype=cpp

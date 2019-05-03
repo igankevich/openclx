@@ -29,6 +29,8 @@ foreach pair : [
 	['CL/cl_dx9_media_sharing_intel.h', 'cl_dx9_media_sharing_intel'],
 	['CL/cl_d3d10.h', 'cl_d3d10'],
 	['CL/cl_d3d11.h', 'cl_d3d11'],
+	['CL/cl_va_api_media_sharing_intel.h', 'cl_va_api_media_sharing_intel'],
+	['va/va.h', 'va'],
 ]
 	header = pair[0]
 	name = pair[1]

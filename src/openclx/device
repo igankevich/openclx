@@ -297,6 +297,14 @@ namespace clx {
 		bool has_unified_memory() const;
 		#endif
 
+		#if defined(CL_DEVICE_CORE_TEMPERATURE_ALTERA)
+		int_type core_temperature() const;
+		#endif
+
+		#if defined(CL_DEVICE_MAX_ATOMIC_COUNTERS_EXT)
+		unsigned_int_type max_atomic_counters() const;
+		#endif
+
 		inline device_type
 		get() noexcept {
 			return this->_ptr;

@@ -95,6 +95,14 @@ clx::context_properties::operator()(const extensions& extensions) const {
 		}
 	}
 	#endif
+	#if defined(cl_intel_va_api_media_sharing)
+	if (extensions("cl_intel_va_api_media_sharing")) {
+		if (va_display()) {
+			prop.push_back(CL_CONTEXT_VA_API_DISPLAY_INTEL);
+			prop.push_back(context_properties_type(va_display()));
+		}
+	}
+	#endif
 	return prop;
 }
 

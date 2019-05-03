@@ -59,6 +59,10 @@ namespace clx {
 		clCreateFromDX9MediaSurfaceINTEL,
 		clEnqueueAcquireDX9ObjectsINTEL,
 		clEnqueueReleaseDX9ObjectsINTEL,
+		clGetDeviceIDsFromVA_APIMediaAdapterINTEL,
+		clCreateFromVA_APIMediaSurfaceINTEL,
+		clEnqueueAcquireVA_APIMediaSurfacesINTEL,
+		clEnqueueReleaseVA_APIMediaSurfacesINTEL,
 		size
 	};
 
@@ -153,6 +157,11 @@ namespace clx {
 		#if defined(cl_intel_dx9_media_sharing)
 		std::vector<device>
 		devices(intel::device_source src, void* object, intel::device_set set) const;
+		#endif
+
+		#if defined(cl_intel_va_api_media_sharing)
+		std::vector<device>
+		devices(intel::va::device_source src, void* object, intel::va::device_set set) const;
 		#endif
 
 		platform() = default;

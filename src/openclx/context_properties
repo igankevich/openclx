@@ -46,6 +46,9 @@ namespace clx {
 		#if defined(cl_khr_d3d11_sharing)
 		void* _d3d11_device = nullptr;
 		#endif
+		#if defined(cl_intel_va_api_media_sharing)
+		void* _va_display = nullptr;
+		#endif
 
 	public:
 		inline bool_type can_be_terminated() const { return this->_terminated; }
@@ -112,6 +115,11 @@ namespace clx {
 		#if defined(cl_khr_d3d11_sharing)
 		inline void d3d11_device(void* rhs) { this->_d3d11_device = rhs; }
 		inline const void* d3d11_device() { return this->_d3d11_device; }
+		#endif
+
+		#if defined(cl_intel_va_api_media_sharing)
+		inline void va_display(void* rhs) { this->_va_display = rhs; }
+		inline void* va_display() const { return this->_va_display; }
 		#endif
 
 		std::vector<context_properties_type>

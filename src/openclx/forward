@@ -300,14 +300,35 @@ namespace clx {
 			device=CL_D3D9_DEVICE_INTEL,
 			device_ex=CL_D3D9EX_DEVICE_INTEL,
 			dxgi_adapter=CL_D3D9_DXGI_ADAPTER_INTEL,
-		}
+		};
 
 		enum class device_set: ::cl_dx9_device_set_intel {
-			preferred_devices=CL_PREFERRED_DEVICES_FOR_D3D9_INTEL,
-			all_devices=CL_ALL_DEVICES_FOR_D3D9_INTEL,
-		}
+			preferred=CL_PREFERRED_DEVICES_FOR_D3D9_INTEL,
+			all=CL_ALL_DEVICES_FOR_D3D9_INTEL,
+		};
 
 		class memory_object;
+		#endif
+
+		#if defined(cl_intel_va_api_media_sharing)
+		namespace va {
+
+			using surface_type = ::VASurfaceID;
+			using device_source_type = ::cl_va_api_device_source_intel;
+			using device_set_type = ::cl_va_api_device_set_intel;
+
+			enum class device_source: device_source_type {
+				display=CL_VA_API_DISPLAY_INTEL,
+			};
+
+			enum class device_set: device_set_type {
+				preferred=CL_PREFERRED_DEVICES_FOR_VA_API_INTEL,
+				all=CL_ALL_DEVICES_FOR_VA_API_INTEL,
+			};
+
+			class memory_object;
+
+		}
 		#endif
 
 	}
@@ -389,9 +410,9 @@ namespace clx {
 		};
 
 		enum class adapter_set: ::cl_dx9_media_adapter_set_khr {
-			preferred_devices=CL_PREFERRED_DEVICES_FOR_DX9_MEDIA_ADAPTER_KHR,
-			all_devices=CL_ALL_DEVICES_FOR_DX9_MEDIA_ADAPTER_KHR,
-		}
+			preferred=CL_PREFERRED_DEVICES_FOR_DX9_MEDIA_ADAPTER_KHR,
+			all=CL_ALL_DEVICES_FOR_DX9_MEDIA_ADAPTER_KHR,
+		};
 
 		class surface_info: public ::cl_dx9_surface_info_khr;
 		class media_surface;
@@ -412,12 +433,12 @@ namespace clx {
 		enum class device_source: ::cl_d3d10_device_source_khr {
 			device=CL_D3D10_DEVICE_KHR,
 			dxgi_adapter=CL_D3D10_DXGI_ADAPTER_KHR,
-		}
+		};
 
 		enum class device_set: ::cl_d3d10_device_set_khr {
-			preferred_devices=CL_PREFERRED_DEVICES_FOR_D3D10_KHR,
-			all_devices=CL_ALL_DEVICES_FOR_D3D10_KHR,
-		}
+			preferred=CL_PREFERRED_DEVICES_FOR_D3D10_KHR,
+			all=CL_ALL_DEVICES_FOR_D3D10_KHR,
+		};
 
 		class memory_object;
 		#endif
@@ -437,12 +458,12 @@ namespace clx {
 		enum class device_source: ::cl_d3d11_device_source_khr {
 			device=CL_D3D11_DEVICE_KHR,
 			dxgi_adapter=CL_D3D11_DXGI_ADAPTER_KHR,
-		}
+		};
 
 		enum class device_set: ::cl_d3d11_device_set_khr {
-			preferred_devices=CL_PREFERRED_DEVICES_FOR_D3D11_KHR,
-			all_devices=CL_ALL_DEVICES_FOR_D3D11_KHR,
-		}
+			preferred=CL_PREFERRED_DEVICES_FOR_D3D11_KHR,
+			all=CL_ALL_DEVICES_FOR_D3D11_KHR,
+		};
 
 		class memory_object;
 		#endif

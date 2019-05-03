@@ -20,6 +20,22 @@ namespace clx {
 		};
 		#endif
 
+		namespace va {
+
+			#if defined(cl_intel_va_api_media_sharing)
+			class memory_object: public ::clx::memory_object {
+
+			public:
+				using ::clx::memory_object::memory_object;
+
+				surface_type surface() const;
+				unsigned_int_type plane() const;
+
+			};
+			#endif
+
+		}
+
 	}
 
 }
