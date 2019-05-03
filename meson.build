@@ -25,6 +25,10 @@ config = configuration_data()
 all_defines = []
 foreach pair : [
 	['CL/cl_ext_intel.h', 'cl_ext_intel'],
+	['CL/cl_dx9_media_sharing.h', 'cl_dx9_media_sharing'],
+	['CL/cl_dx9_media_sharing_intel.h', 'cl_dx9_media_sharing_intel'],
+	['CL/cl_d3d10.h', 'cl_d3d10'],
+	['CL/cl_d3d11.h', 'cl_d3d11'],
 ]
 	header = pair[0]
 	name = pair[1]

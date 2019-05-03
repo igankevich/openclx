@@ -68,6 +68,22 @@
 #include <CL/cl_ext_intel.h>
 #endif
 
+#if defined(CLX_HAVE_CL_DX9_MEDIA_SHARING)
+#include <CL/cl_dx9_media_sharing.h>
+#endif
+
+#if defined(CLX_HAVE_CL_DX9_MEDIA_SHARING_INTEL)
+#include <CL/cl_dx9_media_sharing_intel.h>
+#endif
+
+#if defined(CLX_HAVE_CL_D3D10)
+#include <CL/cl_d3d10.h>
+#endif
+
+#if defined(CLX_HAVE_CL_D3D11)
+#include <CL/cl_d3d11.h>
+#endif
+
 #include <openclx/bits/extensions>
 
 #endif // vim:filetype=cpp

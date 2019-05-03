@@ -39,6 +39,26 @@ namespace clx {
 		clRetainAcceleratorINTEL,
 		clReleaseAcceleratorINTEL,
 		clGetDeviceImageInfoQCOM,
+		clGetDeviceIDsFromDX9MediaAdapterKHR,
+		clCreateFromDX9MediaSurfaceKHR,
+		clEnqueueAcquireDX9MediaSurfacesKHR,
+		clEnqueueReleaseDX9MediaSurfacesKHR,
+		clGetDeviceIDsFromD3D10KHR,
+		clCreateFromD3D10BufferKHR,
+		clCreateFromD3D10Texture2DKHR,
+		clCreateFromD3D10Texture3DKHR,
+		clEnqueueAcquireD3D10ObjectsKHR,
+		clEnqueueReleaseD3D10ObjectsKHR,
+		clGetDeviceIDsFromD3D11KHR,
+		clCreateFromD3D11BufferKHR,
+		clCreateFromD3D11Texture2DKHR,
+		clCreateFromD3D11Texture3DKHR,
+		clEnqueueAcquireD3D11ObjectsKHR,
+		clEnqueueReleaseD3D11ObjectsKHR,
+		clGetDeviceIDsFromDX9INTEL,
+		clCreateFromDX9MediaSurfaceINTEL,
+		clEnqueueAcquireDX9ObjectsINTEL,
+		clEnqueueReleaseDX9ObjectsINTEL,
 		size
 	};
 
@@ -106,6 +126,33 @@ namespace clx {
 
 		#if CL_TARGET_VERSION >= 210
 		nanoseconds timer_resolution() const;
+		#endif
+
+		#if CL_TARGET_VERSION >= 120 && defined(cl_khr_dx9_media_sharing)
+		std::vector<device>
+		devices(
+			d3d9::adapter_set flags,
+			std::vector<std::pair<d3d9::adapter_type,void*>> adapters
+		) const;
+		#endif
+
+		#if defined(cl_khr_d3d10_sharing)
+		std::vector<device>
+		devices(d3d10::device_type* object, d3d10::device_set set) const;
+		std::vector<device>
+		devices(d3d10::dxgi_adapter_type* object, d3d10::device_set set) const;
+		#endif
+
+		#if CL_TARGET_VERSION >= 120 && defined(cl_khr_d3d11_sharing)
+		std::vector<device>
+		devices(d3d11::device_type* object, d3d11::device_set set) const;
+		std::vector<device>
+		devices(d3d11::dxgi_adapter_type* object, d3d11::device_set set) const;
+		#endif
+
+		#if defined(cl_intel_dx9_media_sharing)
+		std::vector<device>
+		devices(intel::device_source src, void* object, intel::device_set set) const;
 		#endif
 
 		platform() = default;

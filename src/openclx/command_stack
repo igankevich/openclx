@@ -36,6 +36,18 @@ namespace clx {
 		#if defined(cl_khr_egl_image)
 		typedef array_view<egl::image> egl_memory_object_array;
 		#endif
+		#if defined(cl_khr_dx9_media_sharing)
+		typedef array_view<d3d9::media_surface> dx9_media_surface_array;
+		#endif
+		#if defined(cl_khr_d3d10_sharing)
+		typedef array_view<d3d10::memory_object> d3d10_memory_object_array;
+		#endif
+		#if CL_TARGET_VERSION >= 120 && defined(cl_khr_d3d11_sharing)
+		typedef array_view<d3d11::memory_object> d3d11_memory_object_array;
+		#endif
+		#if defined(cl_intel_dx9_media_sharing)
+		typedef array_view<intel::memory_object> intel_memory_object_array;
+		#endif
 
 	private:
 
@@ -205,6 +217,26 @@ namespace clx {
 		#if defined(cl_khr_egl_image)
 		void acquire(const egl_memory_object_array& objects);
 		void release(const egl_memory_object_array& objects);
+		#endif
+
+		#if defined(cl_khr_dx9_media_sharing)
+		void acquire(const dx9_media_surface_array& objects);
+		void release(const dx9_media_surface_array& objects);
+		#endif
+
+		#if defined(cl_khr_d3d10_sharing)
+		void acquire(const d3d10_memory_object_array& objects);
+		void release(const d3d10_memory_object_array& objects);
+		#endif
+
+		#if CL_TARGET_VERSION >= 120 && defined(cl_khr_d3d11_sharing)
+		void acquire(const d3d11_memory_object_array& objects);
+		void release(const d3d11_memory_object_array& objects);
+		#endif
+
+		#if defined(cl_intel_dx9_media_sharing)
+		void acquire(const intel_memory_object_array& objects);
+		void release(const intel_memory_object_array& objects);
 		#endif
 
 		#if CL_TARGET_VERSION >= 120

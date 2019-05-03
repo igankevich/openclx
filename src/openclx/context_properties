@@ -35,6 +35,17 @@ namespace clx {
 		#if defined(cl_intel_driver_diagnostics)
 		intel::diagnostics_level _level;
 		#endif
+		#if defined(cl_khr_dx9_media_sharing) || defined(cl_intel_dx9_media_sharing)
+		void* _d3d9_adapter = nullptr;
+		void* _d3d9ex_adapter = nullptr;
+		void* _dxva_adapter = nullptr;
+		#endif
+		#if defined(cl_khr_d3d10_sharing)
+		void* _d3d10_device = nullptr;
+		#endif
+		#if defined(cl_khr_d3d11_sharing)
+		void* _d3d11_device = nullptr;
+		#endif
 
 	public:
 		inline bool_type can_be_terminated() const { return this->_terminated; }
@@ -82,6 +93,25 @@ namespace clx {
 			return this->_level;
 		}
 		inline void diagnostics(intel::diagnostics_level rhs) { this->_level = rhs; }
+		#endif
+
+		#if defined(cl_khr_dx9_media_sharing) || defined(cl_intel_dx9_media_sharing)
+		inline void d3d9_adapter(void* rhs) { this->_d3d9_adapter = rhs; }
+		inline const void* d3d9_adapter() { return this->_d3d9_adapter; }
+		inline void d3d9ex_adapter(void* rhs) { this->_d3d9ex_adapter = rhs; }
+		inline const void* d3d9ex_adapter() { return this->_d3d9ex_adapter; }
+		inline void dxva_adapter(void* rhs) { this->_dxva_adapter = rhs; }
+		inline const void* dxva_adapter() { return this->_dxva_adapter; }
+		#endif
+
+		#if defined(cl_khr_d3d10_sharing)
+		inline void d3d10_device(void* rhs) { this->_d3d10_device = rhs; }
+		inline const void* d3d10_device() { return this->_d3d10_device; }
+		#endif
+
+		#if defined(cl_khr_d3d11_sharing)
+		inline void d3d11_device(void* rhs) { this->_d3d11_device = rhs; }
+		inline const void* d3d11_device() { return this->_d3d11_device; }
 		#endif
 
 		std::vector<context_properties_type>

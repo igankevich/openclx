@@ -3,12 +3,16 @@
 #include <openclx/buffer>
 #include <openclx/command_queue_flags>
 #include <openclx/command_stack>
+#include <openclx/d3d10/memory_object>
+#include <openclx/d3d11/memory_object>
+#include <openclx/d3d9/media_surface>
 #include <openclx/device>
 #include <openclx/downcast>
 #include <openclx/egl/image>
 #include <openclx/error>
 #include <openclx/gl/buffer>
 #include <openclx/image>
+#include <openclx/intel/memory_object>
 #include <openclx/kernel>
 
 #define CLX_BODY_ENQUEUE2(queue, name, ...) \
@@ -348,6 +352,80 @@ clx::command_stack::acquire(const egl_memory_object_array& objects) {
 void
 clx::command_stack::release(const egl_memory_object_array& objects) {
 	auto func = CLX_EXTENSION(clEnqueueReleaseEGLObjectsKHR, kernel_queue().context().platform());
+	CLX_BODY_ENQUEUE(func, objects.size(), downcast(objects.data()));
+}
+#endif
+
+#if defined(cl_khr_dx9_media_sharing)
+void
+clx::command_stack::acquire(const dx9_media_surface_array& objects) {
+	auto func = CLX_EXTENSION(
+		clEnqueueAcquireDX9MediaSurfacesKHR,
+		kernel_queue().context().platform()
+	);
+	CLX_BODY_ENQUEUE(func, objects.size(), downcast(objects.data()));
+}
+
+void
+clx::command_stack::release(const dx9_media_surface_array& objects) {
+	auto func = CLX_EXTENSION(
+		clEnqueueReleaseDX9MediaSurfacesKHR,
+		kernel_queue().context().platform()
+	);
+	CLX_BODY_ENQUEUE(func, objects.size(), downcast(objects.data()));
+}
+#endif
+
+#if defined(cl_khr_d3d10_sharing)
+void clx::command_stack::acquire(const d3d10_memory_object_array& objects) {
+	auto func = CLX_EXTENSION(
+		clEnqueueAcquireD3D10ObjectsKHR,
+		kernel_queue().context().platform()
+	);
+	CLX_BODY_ENQUEUE(func, objects.size(), downcast(objects.data()));
+}
+void clx::command_stack::release(const 3d10_memory_object_array& objects) {
+	auto func = CLX_EXTENSION(
+		clEnqueueReleaseD3D10ObjectsKHR,
+		kernel_queue().context().platform()
+	);
+	CLX_BODY_ENQUEUE(func, objects.size(), downcast(objects.data()));
+}
+#endif
+
+#if CL_TARGET_VERSION >= 120 && defined(cl_khr_d3d11_sharing)
+void clx::command_stack::acquire(const d3d11_memory_object_array& objects) {
+	auto func = CLX_EXTENSION(
+		clEnqueueAcquireD3D11ObjectsKHR,
+		kernel_queue().context().platform()
+	);
+	CLX_BODY_ENQUEUE(func, objects.size(), downcast(objects.data()));
+}
+void clx::command_stack::release(const 3d11_memory_object_array& objects) {
+	auto func = CLX_EXTENSION(
+		clEnqueueReleaseD3D11ObjectsKHR,
+		kernel_queue().context().platform()
+	);
+	CLX_BODY_ENQUEUE(func, objects.size(), downcast(objects.data()));
+}
+#endif
+
+#if defined(cl_intel_dx9_media_sharing)
+void
+clx::command_stack::acquire(const intel_memory_object_array& objects) {
+	auto func = CLX_EXTENSION(
+		clEnqueueAcquireDX9ObjectsINTEL,
+		kernel_queue().context().platform()
+	);
+	CLX_BODY_ENQUEUE(func, objects.size(), downcast(objects.data()));
+}
+
+void
+clx::command_stack::release(const intel_memory_object_array& objects) {
+	auto func = CLX_EXTENSION(
+		clEnqueueReleaseDX9ObjectsINTEL,
+		kernel_queue().context().platform()
+	);
 	CLX_BODY_ENQUEUE(func, objects.size(), downcast(objects.data()));
 }
 #endif

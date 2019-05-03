@@ -30,6 +30,9 @@ openclx_src = files([
 
 subdir('gl')
 subdir('egl')
+subdir('d3d9')
+subdir('d3d10')
+subdir('d3d11')
 subdir('ext')
 subdir('intel')
 

@@ -243,7 +243,7 @@ namespace clx {
 	#endif
 
 	#if defined(cl_khr_dx9_media_sharing)
-	namespace dx9 {
+	namespace d3d9 {
 		typedef ::cl_dx9_media_adapter_type_khr media_adapter_type;
 		typedef ::cl_dx9_media_adapter_set_khr media_adapter_set;
 	}
@@ -289,6 +289,25 @@ namespace clx {
 		#if defined(cl_intel_driver_diagnostics)
 		using diagnostics_level_type = ::cl_diagnostics_verbose_level;
 		enum class diagnostics_level: diagnostics_level_type;
+		#endif
+
+		#if defined(cl_intel_dx9_media_sharing)
+		using surface_type = ::IDirect3DSurface9;
+		using handle_type = ::HANDLE;
+		using uint_type = ::UINT;
+
+		enum class device_source: ::cl_dx9_device_source_intel {
+			device=CL_D3D9_DEVICE_INTEL,
+			device_ex=CL_D3D9EX_DEVICE_INTEL,
+			dxgi_adapter=CL_D3D9_DXGI_ADAPTER_INTEL,
+		}
+
+		enum class device_set: ::cl_dx9_device_set_intel {
+			preferred_devices=CL_PREFERRED_DEVICES_FOR_D3D9_INTEL,
+			all_devices=CL_ALL_DEVICES_FOR_D3D9_INTEL,
+		}
+
+		class memory_object;
 		#endif
 
 	}
@@ -356,6 +375,76 @@ namespace clx {
 			unsigned_int_type slice_pitch;
 			unsigned_int_type slice_alignment;
 		};
+		#endif
+
+	}
+
+	namespace d3d9 {
+
+		#if defined(cl_khr_dx9_media_sharing)
+		enum class adapter_type: ::cl_dx9_media_adapter_type_khr {
+			d3d9=CL_ADAPTER_D3D9_KHR,
+			d3d9ex=CL_ADAPTER_D3D9EX_KHR,
+			dxva=CL_ADAPTER_DXVA_KHR,
+		};
+
+		enum class adapter_set: ::cl_dx9_media_adapter_set_khr {
+			preferred_devices=CL_PREFERRED_DEVICES_FOR_DX9_MEDIA_ADAPTER_KHR,
+			all_devices=CL_ALL_DEVICES_FOR_DX9_MEDIA_ADAPTER_KHR,
+		}
+
+		class surface_info: public ::cl_dx9_surface_info_khr;
+		class media_surface;
+		#endif
+
+	}
+
+	namespace d3d10 {
+
+		#if defined(cl_khr_d3d10_sharing)
+		using resource_type = ::ID3D10Resource;
+		using buffer_type = ::ID3D10Buffer;
+		using texture2d_type = ::ID3D10Texture2D;
+		using texture3d_type = ::ID3D10Texture3D;
+		using device_type = ::ID3D10Device;
+		using dxgi_adapter_type = ::IDXGIAdapter;
+
+		enum class device_source: ::cl_d3d10_device_source_khr {
+			device=CL_D3D10_DEVICE_KHR,
+			dxgi_adapter=CL_D3D10_DXGI_ADAPTER_KHR,
+		}
+
+		enum class device_set: ::cl_d3d10_device_set_khr {
+			preferred_devices=CL_PREFERRED_DEVICES_FOR_D3D10_KHR,
+			all_devices=CL_ALL_DEVICES_FOR_D3D10_KHR,
+		}
+
+		class memory_object;
+		#endif
+
+	}
+
+	namespace d3d11 {
+
+		#if CL_TARGET_VERSION >= 120 && defined(cl_khr_d3d11_sharing)
+		using resource_type = ::ID3D11Resource;
+		using buffer_type = ::ID3D11Buffer;
+		using texture2d_type = ::ID3D11Texture2D;
+		using texture3d_type = ::ID3D11Texture3D;
+		using device_type = ::ID3D11Device;
+		using dxgi_adapter_type = ::IDXGIAdapter;
+
+		enum class device_source: ::cl_d3d11_device_source_khr {
+			device=CL_D3D11_DEVICE_KHR,
+			dxgi_adapter=CL_D3D11_DXGI_ADAPTER_KHR,
+		}
+
+		enum class device_set: ::cl_d3d11_device_set_khr {
+			preferred_devices=CL_PREFERRED_DEVICES_FOR_D3D11_KHR,
+			all_devices=CL_ALL_DEVICES_FOR_D3D11_KHR,
+		}
+
+		class memory_object;
 		#endif
 
 	}

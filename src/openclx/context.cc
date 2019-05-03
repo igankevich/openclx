@@ -542,3 +542,94 @@ CLX_METHOD_SCALAR(
 )
 #endif
 
+#if defined(cl_khr_dx9_media_sharing)
+clx::d3d9::media_surface
+clx::context::media_surface(memory_flags flags, d3d9::adapter_type adapter, void* ptr) const {
+	auto func = CLX_EXTENSION(clCreateFromDX9MediaSurfaceKHR, platform());
+	int_type ret = 0;
+	auto mem = func(this->_ptr, downcast(flags), downcast(adapter), ptr, &ret);
+	CLX_CHECK(ret);
+	return d3d9::media_surface(mem);
+}
+#endif
+
+#if defined(cl_khr_d3d10_sharing)
+clx::d3d10::memory_object
+clx::context::buffer(memory_flags flags, d3d10::buffer_type* ptr) const {
+	auto func = CLX_EXTENSION(clCreateFromD3D10BufferKHR, platform());
+	int_type ret = 0;
+	auto mem = func(this->_ptr, downcast(flags), ptr, &ret);
+	CLX_CHECK(ret);
+	return d3d10::memory_object(mem);
+}
+clx::d3d10::memory_object
+clx::context::buffer(memory_flags flags, d3d10::texture2d_type* ptr) const {
+	auto func = CLX_EXTENSION(clCreateFromD3D10Texture2DKHR, platform());
+	int_type ret = 0;
+	auto mem = func(this->_ptr, downcast(flags), ptr, &ret);
+	CLX_CHECK(ret);
+	return d3d10::memory_object(mem);
+}
+clx::d3d10::memory_object
+clx::context::buffer(memory_flags flags, d3d10::texture3d_type* ptr) const {
+	auto func = CLX_EXTENSION(clCreateFromD3D10Texture3DKHR, platform());
+	int_type ret = 0;
+	auto mem = func(this->_ptr, downcast(flags), ptr, &ret);
+	CLX_CHECK(ret);
+	return d3d10::memory_object(mem);
+}
+CLX_METHOD_BOOL(
+	clx::context::d3d10_prefer_shared_resources,
+	::clGetContextInfo,
+	CL_CONTEXT_D3D10_PREFER_SHARED_RESOURCES_KHR
+);
+#endif
+
+#if CL_TARGET_VERSION >= 120 && defined(cl_khr_d3d11_sharing)
+clx::d3d11::memory_object
+clx::context::buffer(memory_flags flags, d3d11::buffer_type* ptr) const {
+	auto func = CLX_EXTENSION(clCreateFromD3D11BufferKHR, platform());
+	int_type ret = 0;
+	auto mem = func(this->_ptr, downcast(flags), ptr, &ret);
+	CLX_CHECK(ret);
+	return d3d11::memory_object(mem);
+}
+clx::d3d11::memory_object
+clx::context::buffer(memory_flags flags, d3d11::texture2d_type* ptr) const {
+	auto func = CLX_EXTENSION(clCreateFromD3D11Texture2DKHR, platform());
+	int_type ret = 0;
+	auto mem = func(this->_ptr, downcast(flags), ptr, &ret);
+	CLX_CHECK(ret);
+	return d3d11::memory_object(mem);
+}
+clx::d3d11::memory_object
+clx::context::buffer(memory_flags flags, d3d11::texture3d_type* ptr) const {
+	auto func = CLX_EXTENSION(clCreateFromD3D11Texture3DKHR, platform());
+	int_type ret = 0;
+	auto mem = func(this->_ptr, downcast(flags), ptr, &ret);
+	CLX_CHECK(ret);
+	return d3d11::memory_object(mem);
+}
+CLX_METHOD_BOOL(
+	clx::context::d3d11_prefer_shared_resources,
+	::clGetContextInfo,
+	CL_CONTEXT_D3D11_PREFER_SHARED_RESOURCES_KHR
+);
+#endif
+
+#if defined(cl_intel_dx9_media_sharing)
+clx::intel::memory_object
+clx::context::media_surface(
+	memory_flags flags,
+	intel::surface_type* ptr,
+	intel::handle_type handle,
+	intel::uint_type plane
+) const {
+	auto func = CLX_EXTENSION(clCreateFromDX9MediaSurfaceINTEL, platform());
+	int_type ret = 0;
+	auto mem = func(this->_ptr, downcast(flags), object, handle, plane, &ret);
+	CLX_CHECK(ret);
+	return intel::memory_object(mem);
+}
+#endif
+

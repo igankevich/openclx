@@ -1,0 +1,27 @@
+#ifndef OPENCLX_DX9_MEDIA_SURFACE
+#define OPENCLX_DX9_MEDIA_SURFACE
+
+#include <openclx/memory_object>
+
+namespace clx {
+
+	namespace d3d9 {
+
+		#if defined(cl_khr_dx9_media_sharing)
+		class media_surface: public memory_object {
+
+		public:
+			using memory_object::memory_object;
+
+			adapter_type adapter() const;
+			surface_info surface() const;
+			unsigned_int_type plane() const;
+
+		};
+		#endif
+
+	}
+
+}
+
+#endif // vim:filetype=cpp

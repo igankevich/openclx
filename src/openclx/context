@@ -233,6 +233,35 @@ namespace clx {
 		unsigned_int_type
 		num_references() const;
 
+		#if defined(cl_khr_dx9_media_sharing)
+		d3d9::media_surface
+		media_surface(memory_flags flags, d3d9::adapter_type adapter, void* ptr) const;
+		#endif
+
+		#if defined(cl_khr_d3d10_sharing)
+		d3d10::memory_object buffer(memory_flags flags, d3d10::buffer_type* ptr) const;
+		d3d10::memory_object buffer(memory_flags flags, d3d10::texture2d_type* ptr) const;
+		d3d10::memory_object buffer(memory_flags flags, d3d10::texture3d_type* ptr) const;
+		bool d3d10_prefer_shared_resources() const;
+		#endif
+
+		#if CL_TARGET_VERSION >= 120 && defined(cl_khr_d3d11_sharing)
+		d3d11::memory_object buffer(memory_flags flags, d3d11::buffer_type* ptr) const;
+		d3d11::memory_object buffer(memory_flags flags, d3d11::texture2d_type* ptr) const;
+		d3d11::memory_object buffer(memory_flags flags, d3d11::texture3d_type* ptr) const;
+		bool d3d11_prefer_shared_resources() const;
+		#endif
+
+		#if defined(cl_intel_dx9_media_sharing)
+		intel::memory_object
+		media_surface(
+			memory_flags flags,
+			intel::surface_type* ptr,
+			intel::handle_type handle,
+			intel::uint_type plane
+		) const;
+		#endif
+
 		inline context_type
 		get() noexcept {
 			return this->_ptr;

@@ -72,6 +72,30 @@ namespace clx {
 		#if defined(CL_COMMAND_SVM_UNMAP_ARM)
 		arm_svm_unmap=CL_COMMAND_SVM_UNMAP_ARM,
 		#endif
+		#if defined(CL_COMMAND_ACQUIRE_DX9_MEDIA_SURFACES_KHR)
+		d3d9_acquire_media_surfaces=CL_COMMAND_ACQUIRE_DX9_MEDIA_SURFACES_KHR,
+		#endif
+		#if defined(CL_COMMAND_RELEASE_DX9_MEDIA_SURFACES_KHR)
+		d3d9_release_media_surfaces=CL_COMMAND_RELEASE_DX9_MEDIA_SURFACES_KHR,
+		#endif
+		#if defined(CL_COMMAND_ACQUIRE_D3D10_OBJECTS_KHR)
+		d3d10_acquire_objects_khr=CL_COMMAND_ACQUIRE_D3D10_OBJECTS_KHR,
+		#endif
+		#if defined(CL_COMMAND_RELEASE_D3D10_OBJECTS_KHR)
+		d3d10_release_objects_khr=CL_COMMAND_RELEASE_D3D10_OBJECTS_KHR,
+		#endif
+		#if defined(CL_COMMAND_ACQUIRE_D3D11_OBJECTS_KHR)
+		d3d11_acquire_objects_khr=CL_COMMAND_ACQUIRE_D3D11_OBJECTS_KHR,
+		#endif
+		#if defined(CL_COMMAND_RELEASE_D3D11_OBJECTS_KHR)
+		d3d11_release_objects_khr=CL_COMMAND_RELEASE_D3D11_OBJECTS_KHR,
+		#endif
+		#if defined(CL_COMMAND_ACQUIRE_DX9_OBJECTS_INTEL)
+		intel_d3d9_acquire_objects=CL_COMMAND_ACQUIRE_DX9_OBJECTS_INTEL,
+		#endif
+		#if defined(CL_COMMAND_RELEASE_DX9_OBJECTS_INTEL)
+		intel_d3d9_release_objects=CL_COMMAND_RELEASE_DX9_OBJECTS_INTEL,
+		#endif
 	};
 
 	enum class execution_status: execution_status_type {

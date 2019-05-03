@@ -112,11 +112,7 @@
 
 * Extensions
 
-- [ ] ~cl_intel_dx9_media_sharing~
 - [ ] ~cl_intel_va_api_media_sharing~
-- [ ] ~cl_khr_d3d10_sharing~
-- [ ] ~cl_khr_d3d11_sharing~
-- [ ] ~cl_khr_dx9_media_sharing~
 - [X] ~cl_amd_device_attribute_query~
 - [X] ~cl_arm_get_core_id~
 - [X] ~cl_arm_import_memory~
@@ -132,6 +128,7 @@
 - [X] ~cl_intel_device_partition_by_names~
 - [X] ~cl_intel_device_side_avc_motion_estimation~
 - [X] ~cl_intel_driver_diagnostics~
+- [X] ~cl_intel_dx9_media_sharing~
 - [X] ~cl_intel_egl_image_yuv~
 - [X] ~cl_intel_motion_estimation~
 - [X] ~cl_intel_packed_yuv~
@@ -140,6 +137,9 @@
 - [X] ~cl_intel_simultaneous_sharing~
 - [X] ~cl_intel_thread_local_exec~
 - [X] ~cl_khr_create_command_queue~
+- [X] ~cl_khr_d3d10_sharing~
+- [X] ~cl_khr_d3d11_sharing~
+- [X] ~cl_khr_dx9_media_sharing~
 - [X] ~cl_khr_egl_event~
 - [X] ~cl_khr_egl_image~
 - [X] ~cl_khr_gl_event~

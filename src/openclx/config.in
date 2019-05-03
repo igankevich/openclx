@@ -2,5 +2,9 @@
 #define OPENCLX_CONFIG
 
 #mesondefine CLX_HAVE_CL_EXT_INTEL
+#mesondefine CLX_HAVE_CL_DX9_MEDIA_SHARING
+#mesondefine CLX_HAVE_CL_DX9_MEDIA_SHARING_INTEL
+#mesondefine CLX_HAVE_CL_D3D10
+#mesondefine CLX_HAVE_CL_D3D11
 
 #endif // vim:filetype=cpp

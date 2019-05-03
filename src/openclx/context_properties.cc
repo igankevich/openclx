@@ -44,6 +44,57 @@ clx::context_properties::operator()(const extensions& extensions) const {
 		prop.push_back(context_properties_type(diagnostics()));
 	}
 	#endif
+	#if defined(cl_khr_dx9_media_sharing)
+	if (extensions("cl_khr_dx9_media_sharing")) {
+		if (d3d9_adapter()) {
+			prop.push_back(CL_CONTEXT_ADAPTER_D3D9_KHR);
+			prop.push_back(context_properties_type(d3d9_adapter()));
+		}
+		if (d3d9ex_adapter()) {
+			prop.push_back(CL_CONTEXT_ADAPTER_D3D9EX_KHR);
+			prop.push_back(context_properties_type(d3d9ex_adapter()));
+		}
+		if (dxva_adapter()) {
+			prop.push_back(CL_CONTEXT_ADAPTER_DXVA_KHR);
+			prop.push_back(context_properties_type(dxva_adapter()));
+		}
+	}
+	#if defined(cl_intel_dx9_media_sharing)
+	else
+	#endif
+	#endif
+	#if defined(cl_intel_dx9_media_sharing)
+	if (extensions("cl_khr_dx9_media_sharing")) {
+		if (d3d9_adapter()) {
+			prop.push_back(CL_CONTEXT_D3D9_DEVICE_INTEL);
+			prop.push_back(context_properties_type(d3d9_adapter()));
+		}
+		if (d3d9ex_adapter()) {
+			prop.push_back(CL_CONTEXT_D3D9EX_DEVICE_INTEL);
+			prop.push_back(context_properties_type(d3d9ex_adapter()));
+		}
+		if (dxva_adapter()) {
+			prop.push_back(CL_CONTEXT_DXVA_DEVICE_INTEL);
+			prop.push_back(context_properties_type(dxva_adapter()));
+		}
+	}
+	#endif
+	#if defined(cl_khr_d3d10_sharing)
+	if (extensions("cl_khr_d3d10_sharing")) {
+		if (d3d10_device()) {
+			prop.push_back(CL_CONTEXT_D3D10_DEVICE_KHR);
+			prop.push_back(context_properties_type(d3d10_device()));
+		}
+	}
+	#endif
+	#if defined(cl_khr_d3d11_sharing)
+	if (extensions("cl_khr_d3d11_sharing")) {
+		if (d3d11_device()) {
+			prop.push_back(CL_CONTEXT_D3D10_DEVICE_KHR);
+			prop.push_back(context_properties_type(d3d11_device()));
+		}
+	}
+	#endif
 	return prop;
 }
 

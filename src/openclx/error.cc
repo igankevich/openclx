@@ -182,6 +182,44 @@ clx::to_string(errc rhs) {
 		case errc::intel_accelerator_type_not_supported:
 			return "Accelerator type not supported";
 		#endif
+		#if defined(CL_INVALID_DX9_MEDIA_ADAPTER_KHR)
+		case d3d9_invalid_media_adapter: return "Invalid media adapter (D3D9)",
+		#endif
+		#if defined(CL_INVALID_DX9_MEDIA_SURFACE_KHR)
+		case d3d9_invalid_media_surface: return "Invalid media surface (D3D9)";
+		#endif
+		#if defined(CL_DX9_MEDIA_SURFACE_ALREADY_ACQUIRED_KHR)
+		case d3d9_media_surface_already_acquired: return "Media surface already acquired";
+		#endif
+		#if defined(CL_DX9_MEDIA_SURFACE_NOT_ACQUIRED_KHR)
+		case d3d9_media_surface_not_acquired: return "Media surface not acquired";
+		#endif
+		#if defined(CL_INVALID_D3D10_DEVICE_KHR)
+		case errc::d3d10_invalid_device: return "Invalid device";
+		#endif
+		#if defined(CL_INVALID_D3D10_RESOURCE_KHR)
+		case errc::d3d10_invalid_resource: return "Invalid resource";
+		#endif
+		#if defined(CL_D3D10_RESOURCE_ALREADY_ACQUIRED_KHR)
+		case errc::d3d10_resource_already_acquired:
+			return "Resource already acquired (D3D10)";
+		#endif
+		#if defined(CL_D3D10_RESOURCE_NOT_ACQUIRED_KHR)
+		case errc::d3d10_resource_not_acquired: return "Resource not acquired (D3D10)";
+		#endif
+		#if defined(CL_INVALID_D3D11_DEVICE_KHR)
+		case errc::d3d11_invalid_device: return "Invalid device";
+		#endif
+		#if defined(CL_INVALID_D3D11_RESOURCE_KHR)
+		case errc::d3d11_invalid_resource: return "Invalid resource";
+		#endif
+		#if defined(CL_D3D11_RESOURCE_ALREADY_ACQUIRED_KHR)
+		case errc::d3d11_resource_already_acquired:
+			return "Resource already acquired (D3D11)";
+		#endif
+		#if defined(CL_D3D11_RESOURCE_NOT_ACQUIRED_KHR)
+		case errc::d3d11_resource_not_acquired: return "Resource not acquired (D3D11)";
+		#endif
 		default: return nullptr;
 	}
 }
