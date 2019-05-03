@@ -57,7 +57,7 @@ namespace clx {
 			return this->allocate(n);
 		}
 
-		inline value_type*
+		inline void
 		deallocate(pointer ptr, size_type) {
 			::clSVMFree(this->_context.get(), this->_ptr);
 		}
