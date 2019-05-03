@@ -34,6 +34,7 @@ namespace {
 		"clGetAcceleratorInfoINTEL",
 		"clRetainAcceleratorINTEL",
 		"clReleaseAcceleratorINTEL",
+		"clGetDeviceImageInfoQCOM",
 	};
 
 }

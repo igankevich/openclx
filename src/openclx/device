@@ -102,6 +102,16 @@ namespace clx {
 		std::vector<unsigned_int_type> simultaneous_graphics_combinations() const;
 		#endif
 
+		#if CL_TARGET_VERSION >= 110 && defined(cl_qcom_ext_host_ptr)
+		size_t memory_padding() const;
+		size_t page_size() const;
+		::clx::qcom::image_pitch image_pitch(
+			size_t width,
+			size_t height,
+			const image_format& format,
+		) const;
+		#endif
+
 		unsigned_int_type vendor_id() const;
 		::clx::platform platform() const;
 		::clx::context context() const;

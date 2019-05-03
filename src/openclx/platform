@@ -38,6 +38,7 @@ namespace clx {
 		clGetAcceleratorInfoINTEL,
 		clRetainAcceleratorINTEL,
 		clReleaseAcceleratorINTEL,
+		clGetDeviceImageInfoQCOM,
 		size
 	};
 

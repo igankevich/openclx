@@ -117,10 +117,6 @@
 - [ ] ~cl_khr_d3d10_sharing~
 - [ ] ~cl_khr_d3d11_sharing~
 - [ ] ~cl_khr_dx9_media_sharing~
-- [ ] ~cl_qcom_android_native_buffer_host_ptr~
-- [ ] ~cl_qcom_ext_host_ptr_iocoherent~
-- [ ] ~cl_qcom_ext_host_ptr~
-- [ ] ~cl_qcom_ion_host_ptr~
 - [X] ~cl_amd_device_attribute_query~
 - [X] ~cl_arm_get_core_id~
 - [X] ~cl_arm_import_memory~
@@ -160,3 +156,7 @@
 - [X] ~cl_khr_terminate_context~
 - [X] ~cl_khr_throttle_hints~
 - [X] ~cl_nv_device_attribute_query~
+- [X] ~cl_qcom_android_native_buffer_host_ptr~
+- [X] ~cl_qcom_ext_host_ptr_iocoherent~
+- [X] ~cl_qcom_ext_host_ptr~
+- [X] ~cl_qcom_ion_host_ptr~

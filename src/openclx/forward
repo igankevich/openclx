@@ -269,7 +269,6 @@ namespace clx {
 	}
 	#endif
 
-
 	namespace intel {
 
 		class device;
@@ -290,6 +289,73 @@ namespace clx {
 		#if defined(cl_intel_driver_diagnostics)
 		using diagnostics_level_type = ::cl_diagnostics_verbose_level;
 		enum class diagnostics_level: diagnostics_level_type;
+		#endif
+
+	}
+
+	namespace qcom {
+
+		#if defined(cl_qcom_ext_host_ptr)
+		enum class host_cache_policy: unsigned_int_type {
+			uncached=CL_MEM_HOST_UNCACHED_QCOM,
+			writeback=CL_MEM_HOST_WRITEBACK_QCOM,
+			writethrough=CL_MEM_HOST_WRITETHROUGH_QCOM,
+			write_combining=CL_MEM_HOST_WRITE_COMBINING_QCOM,
+			#if defined(CL_MEM_HOST_IOCOHERENT_QCOM)
+			io_coherent=CL_MEM_HOST_IOCOHERENT_QCOM,
+			#endif
+		};
+		#endif
+
+		#if defined(cl_qcom_ext_host_ptr)
+		enum class allocation_type: unsigned_int_type {
+			#if defined(CL_MEM_ANDROID_NATIVE_BUFFER_HOST_PTR_QCOM)
+			android_native_buffer,
+			#endif
+			#if defined(CL_MEM_ION_HOST_PTR_QCOM)
+			ion,
+			#endif
+		};
+		#endif
+
+		#if defined(cl_qcom_ext_host_ptr)
+		struct host_pointer: public ::cl_mem_ext_host_ptr {
+			inline void cache_policy(host_cache_policy rhs) {
+				this->host_cache_policy = rhs;
+			}
+			inline host_cache_policy cache_policy() const {
+				return host_cache_policy(this->host_cache_policy);
+			}
+			inline ::clx::qcom::allocation_type allocation() const {
+				return ::clx::qcom::alllocation_type(this->alllocation_type);
+			}
+		};
+		#endif
+
+		#if defined(CL_MEM_ANDROID_NATIVE_BUFFER_HOST_PTR_QCOM)
+		struct anb_pointer: public ::cl_mem_android_native_buffer_host_ptr {
+			inline anb_pointer() {
+				this->ext_host_ptr.allocation_type =
+					CL_MEM_ANDROID_NATIVE_BUFFER_HOST_PTR_QCOM;
+			}
+		};
+		#endif
+
+		#if defined(CL_MEM_ION_HOST_PTR_QCOM)
+		struct ion_pointer: public ::cl_mem_ion_host_ptr {
+			inline ion_pointer() {
+				this->ext_host_ptr.allocation_type = CL_MEM_ION_HOST_PTR_QCOM;
+			}
+		};
+		#endif
+
+		#if defined(cl_qcom_ext_host_ptr)
+		struct image_pitch {
+			unsigned_int_type row_pitch;
+			unsigned_int_type row_alignment;
+			unsigned_int_type slice_pitch;
+			unsigned_int_type slice_alignment;
+		};
 		#endif
 
 	}
