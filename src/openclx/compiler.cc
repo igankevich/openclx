@@ -50,7 +50,7 @@ clx::compiler::binary_path(
 	name << this->cache_directory();
 	name << file_separator;
 	name << filename << '-';
-	name << std::setfill('0') << std::setw(sizeof(number)) << std::hex << number;
+	name << std::setfill('0') << std::setw(2*sizeof(number)) << std::hex << number;
 	return name.str();
 }
 
@@ -59,9 +59,7 @@ clx::compiler::compile(const std::string& filename) {
 	auto& programs = this->_programs;
 	program_map::iterator it; bool success;
 	std::tie(it, success) = programs.insert({filename,{}});
-	if (!success) {
-		return it->second;
-	}
+	if (!success) { return it->second; }
 	auto& prg = it->second;
 	this->compile(prg, filename, file_to_string(filename));
 	return prg;
@@ -72,9 +70,7 @@ clx::compiler::compile(const std::string& filename, const std::string& src) {
 	auto& programs = this->_programs;
 	program_map::iterator it; bool success;
 	std::tie(it, success) = programs.insert({filename,{}});
-	if (!success) {
-		return it->second;
-	}
+	if (!success) { return it->second; }
 	auto& prg = it->second;
 	this->compile(prg, filename, src);
 	return prg;

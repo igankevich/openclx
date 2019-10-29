@@ -24,18 +24,19 @@ endforeach
 config = configuration_data()
 all_defines = []
 foreach pair : [
-	['CL/cl_ext_intel.h', 'cl_ext_intel'],
-	['CL/cl_dx9_media_sharing.h', 'cl_dx9_media_sharing'],
-	['CL/cl_dx9_media_sharing_intel.h', 'cl_dx9_media_sharing_intel'],
-	['CL/cl_d3d10.h', 'cl_d3d10'],
-	['CL/cl_d3d11.h', 'cl_d3d11'],
-	['CL/cl_va_api_media_sharing_intel.h', 'cl_va_api_media_sharing_intel'],
-	['va/va.h', 'va'],
+	['CL/cl_ext_intel.h', 'cl_ext_intel', ''],
+	['CL/cl_dx9_media_sharing.h', 'cl_dx9_media_sharing', 'windows'],
+	['CL/cl_dx9_media_sharing_intel.h', 'cl_dx9_media_sharing_intel', 'windows'],
+	['CL/cl_d3d10.h', 'cl_d3d10', 'windows'],
+	['CL/cl_d3d11.h', 'cl_d3d11', 'windows'],
+	['CL/cl_va_api_media_sharing_intel.h', 'cl_va_api_media_sharing_intel', ''],
+	['va/va.h', 'va', ''],
 ]
 	header = pair[0]
 	name = pair[1]
+    system = pair[2]
 	all_defines += 'CLX_HAVE_' + name.to_upper()
-	if cpp.has_header(header)
+	if cpp.has_header(header) and (system == '' or host_machine.system() == system)
 		config.set(all_defines[-1], true)
 	endif
 endforeach
