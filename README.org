@@ -1,0 +1,6 @@
+OpenCLX is a C++ library that offers object-oriented interface to OpenCL and its
+extensions and builds some higher order abstractions on the top of it including
+- caching programme binaries,
+- basic load-balancing,
+- standalone compiler for CI integration.
+Documentation is a work-in-progress.
