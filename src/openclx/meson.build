@@ -1,7 +1,12 @@
 configure_file(
 	input: 'config.in',
 	output: 'config',
-	configuration: config
+	configuration: config,
+    install_dir: join_paths(
+        get_option('prefix'),
+        get_option('includedir'),
+        'openclx'
+    )
 )
 
 openclx_src = files([
@@ -27,6 +32,61 @@ openclx_src = files([
 	'sampler_properties.cc',
 	'svm_block.cc',
 ])
+
+install_headers(
+    'array_view',
+    'binary',
+    'binary_types',
+    'buffer',
+    'build_status',
+    'cl',
+    'color',
+    'command',
+    'command_queue',
+    'command_queue_flags',
+    'command_stack',
+    'compiler',
+    'context',
+    'context_properties',
+    'device',
+    'device_affinity_domain',
+    'device_flags',
+    'device_local_memory',
+    'device_memory_cache',
+    'device_partition',
+    'downcast',
+    'error',
+    'event',
+    'execution_flags',
+    'extensions',
+    'floating_point_flags',
+    'forward',
+    'image',
+    'image_descriptor',
+    'image_format',
+    'kernel',
+    'kernel_argument',
+    'limits',
+    'map_flags',
+    'memory_flags',
+    'memory_object',
+    'memory_objects',
+    'migration_flags',
+    'native_kernel',
+    'pattern',
+    'pipe',
+    'platform',
+    'program',
+    'range',
+    'sampler',
+    'sampler_properties',
+    'slice',
+    'svm_allocator',
+    'svm_block',
+    'svm_flags',
+    'vector',
+	subdir: join_paths('openclx')
+)
 
 subdir('gl')
 subdir('egl')
