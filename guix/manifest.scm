@@ -1,38 +1,32 @@
 (use-package-modules
-  base
-  build-tools
-  check
-  cmake
-  commencement
-  gcc
-  gl
-  maths
-  ninja
-  opencl
-  pkg-config)
+  base build-tools check
+  cmake commencement gcc
+  ninja opencl pkg-config)
 
 (use-modules
-  (stables packages opencascade)
-  (stables packages nvidia)
-  (stables packages mesa))
+  (guix packages)
+  (guix git-download))
 
-(define (has-nvidia-gpu?) (file-exists? "/dev/nvidia0"))
-(define (has-dri-gpu?) (file-exists? "/dev/dri/card0"))
-
-(define (has-nvidia-driver version)
-  (use-modules (rnrs io ports)
-	       (ice-9 rdelim))
-  (string-contains (read-line (open-input-file "/proc/driver/nvidia/version")) version))
+(define-public pocl-1.3
+  (package
+    (inherit pocl)
+    (name "pocl")
+    (version "1.3")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/pocl/pocl.git")
+             (commit (string-append "v" version))))
+       (sha256
+        (base32 "176qcnc4jp1xq6s6mv4aa0r84pldka54bl042xgz433s029a04hw"))
+       (file-name (git-file-name name version))))))
 
 (packages->manifest
   (append
-    (cond
-      ((has-nvidia-gpu?) (list nvidia-driver))
-      ((has-dri-gpu?) (list mesa-opencl-icd-absolute))
-      (#t (list pocl-1.3)))
     (list
+      pocl-1.3 ;; for unit tests
       opencl-headers
-      opencl-clhpp
       ocl-icd
       (list gcc-9 "lib")
       gcc-toolchain-9
