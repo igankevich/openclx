@@ -128,8 +128,8 @@ namespace clx {
 		void
 		compile_from_source(program& prg, const std::string& src);
 
-		std::string
-		file_to_string(const std::string& filename) const;
+		std::string file_to_string(const std::string& filename) const;
+        std::string inline_sources(std::string src) const;
 
 		std::string binary_path(
 			const std::string& filename,

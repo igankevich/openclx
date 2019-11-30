@@ -178,6 +178,7 @@ public:
 		out.exceptions(std::ios::failbit | std::ios::badbit);
 		out.open(output);
 		out << prg.binaries().front();
+        out.close();
 	}
 
 };

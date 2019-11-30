@@ -72,26 +72,29 @@ clx::program::options(const device& dev) const {
 
 std::string
 clx::program::build_log(const device& dev) const {
-	std::string value(4096, ' ');
-	int_type ret;
-	bool success = false;
-	size_t actual_size = 0;
-	while (!success) {
-		ret = ::clGetProgramBuildInfo(
-			this->_ptr,
-			dev.get(),
-			CL_PROGRAM_BUILD_LOG,
-			sizeof(value),
-			&value,
-			nullptr
-		);
-		value.resize(actual_size);
-		if (errc(ret) != errc::invalid_value && actual_size <= value.size()) {
-			CLX_CHECK(ret);
-			success = true;
-		}
-	}
-	return value;
+    std::string value(4096, ' ');
+    int_type ret;
+    size_t actual_size = 0;
+    ret = ::clGetProgramBuildInfo(
+        this->_ptr,
+        dev.get(),
+        CL_PROGRAM_BUILD_LOG,
+        0,
+        nullptr,
+        &actual_size
+    );
+    CLX_CHECK(ret);
+    value.resize(actual_size);
+    ret = ::clGetProgramBuildInfo(
+        this->_ptr,
+        dev.get(),
+        CL_PROGRAM_BUILD_LOG,
+        value.size(),
+        &value[0],
+        nullptr
+    );
+    CLX_CHECK(ret);
+    return value;
 }
 
 std::vector<clx::binary>
