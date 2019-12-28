@@ -6,24 +6,24 @@
 
 namespace clx {
 
-	namespace gl {
+    namespace gl {
 
-		class texture: public ::clx::buffer {
+        class texture: public ::clx::buffer {
 
-		public:
+        public:
 
-			inline explicit
-			texture(memory_object_type ptr): ::clx::buffer(ptr) {}
+            inline explicit
+            texture(memory_object_type ptr): ::clx::buffer(ptr) {}
 
-			enum_type target() const;
-			int_type mipmap_level() const;
-			#if CL_TARGET_VERSION >= 120
-			int_type num_samples() const;
-			#endif
+            enum_type target() const;
+            int_type mipmap_level() const;
+            #if CL_TARGET_VERSION >= 120
+            int_type num_samples() const;
+            #endif
 
-		};
+        };
 
-	}
+    }
 
 }
 

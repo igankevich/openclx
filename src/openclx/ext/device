@@ -6,42 +6,42 @@
 
 namespace clx {
 
-	namespace ext {
+    namespace ext {
 
-		#if defined(cl_ext_device_fission)
-		class device: public ::clx::device {
+        #if defined(cl_ext_device_fission)
+        class device: public ::clx::device {
 
-		public:
+        public:
 
-			device parent() const;
-			unsigned_int_type num_references() const;
-			std::vector<device_partition> supported_partitions() const;
-			std::vector<ext::affinity_domain> supported_affinity_domains() const;
-			std::vector<partition_property_type> partitions() const;
+            device parent() const;
+            unsigned_int_type num_references() const;
+            std::vector<device_partition> supported_partitions() const;
+            std::vector<ext::affinity_domain> supported_affinity_domains() const;
+            std::vector<partition_property_type> partitions() const;
 
-			device() = default;
-			inline ~device() { this->release(); }
-			inline device(const device& rhs): ::clx::device(rhs._ptr) { this->retain(); }
+            device() = default;
+            inline ~device() { this->release(); }
+            inline device(const device& rhs): ::clx::device(rhs._ptr) { this->retain(); }
 
-			inline device&
-			operator=(const device& rhs) {
-				device tmp(rhs);
-				this->swap(tmp);
-				return *this;
-			}
+            inline device&
+            operator=(const device& rhs) {
+                device tmp(rhs);
+                this->swap(tmp);
+                return *this;
+            }
 
-			void release();
-			void retain();
+            void release();
+            void retain();
 
-		private:
+        private:
 
-			std::vector<device_partition> supported_partitions_priv() const;
-			std::vector<ext::affinity_domain> supported_affinity_domains_priv() const;
+            std::vector<device_partition> supported_partitions_priv() const;
+            std::vector<ext::affinity_domain> supported_affinity_domains_priv() const;
 
-		};
-		#endif
+        };
+        #endif
 
-	}
+    }
 
 }
 

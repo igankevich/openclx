@@ -20,368 +20,368 @@
 
 namespace clx {
 
-	class device {
-
-	public:
-		typedef std::chrono::nanoseconds nanoseconds;
-
-	protected:
-		device_type _ptr = nullptr;
-
-	public:
-
-		inline explicit
-		device(device_type ptr): _ptr(ptr) {}
-
-		#if CL_TARGET_VERSION >= 120
-		device parent() const;
-
-		unsigned_int_type max_subordinate_devices() const;
-		device_affinity_domain affinity_domain() const;
-
-		std::vector<device>
-		partition(unsigned int num_compute_units) const;
-
-		std::vector<device>
-		partition(const std::vector<unsigned int>& num_compute_units) const;
-
-		std::vector<device_partition>
-		supported_partitions() const;
-
-		std::vector<device_partition>
-		partitions() const;
-		#endif
-
-		#if CL_TARGET_VERSION >= 110 && defined(cl_ext_device_fission)
-		std::vector<ext::device>
-		partition(const ext::partition_properties& prop) const;
-		#endif
-
-		#if CL_TARGET_VERSION >= 210
-		nanoseconds host_time() const;
-		std::pair<nanoseconds,nanoseconds> device_and_host_time() const;
-		std::string intermediate_languages() const;
-		#endif
-
-		nanoseconds timer_resolution() const;
-		nanoseconds timer_offset() const;
-
-		std::string name() const;
-		std::string profile() const;
-		std::string vendor() const;
-		std::string version() const;
-		std::string driver_version() const;
-		::clx::extensions extensions() const;
-		#if defined(CL_DEVICE_SPIR_VERSIONS)
-		std::string spir_versions() const;
-		#endif
-		#if CL_TARGET_VERSION >= 110
-		std::string c_version() const;
-		#endif
-		#if CL_TARGET_VERSION >= 120
-		std::string builtin_kernels() const;
-		#endif
-
-		#if CL_TARGET_VERSION >= 120 && defined(cl_intel_device_side_avc_motion_estimation)
-		unsigned_int_type video_motion_estimation_version() const;
-		bool supports_texture_sampler() const;
-		bool supports_preemption() const;
-		#endif
-
-		#if CL_TARGET_VERSION >= 120 && defined(cl_intel_planar_yuv)
-		size_t planar_yuv_image_max_width() const;
-		size_t planar_yuv_image_max_height() const;
-		#endif
-
-		#if CL_TARGET_VERSION >= 120 && defined(cl_intel_required_subgroup_size)
-		std::vector<size_t> supported_sub_group_sizes() const;
-		#endif
-
-		#if CL_TARGET_VERSION >= 120 && defined(cl_intel_simultaneous_sharing)
-		unsigned_int_type num_simultaneous_graphics() const;
-		std::vector<unsigned_int_type> simultaneous_graphics_combinations() const;
-		#endif
-
-		#if CL_TARGET_VERSION >= 110 && defined(cl_qcom_ext_host_ptr)
-		size_t memory_padding() const;
-		size_t page_size() const;
-		::clx::qcom::image_pitch image_pitch(
-			size_t width,
-			size_t height,
-			const image_format& format,
-		) const;
-		#endif
-
-		unsigned_int_type vendor_id() const;
-		::clx::platform platform() const;
-		::clx::context context() const;
-		unsigned_int_type num_references() const;
-
-		inline ::clx::command_queue
-		queue(command_queue_flags flags) const {
-			command_queue_properties prop;
-			prop.flags(flags);
-			#if CL_TARGET_VERSION >= 200
-			return this->queue_200(this->context().get(), prop);
-			#else
-			return this->queue_100(this->context().get(), prop);
-			#endif
-		}
-
-		inline ::clx::command_queue
-		queue(command_queue_flags flags, unsigned_int_type size) const {
-			command_queue_properties prop;
-			prop.flags(flags);
-			prop.size(size);
-			#if CL_TARGET_VERSION >= 200
-			return this->queue_200(this->context().get(), prop);
-			#else
-			return this->queue_100(this->context().get(), prop);
-			#endif
-		}
-
-		inline ::clx::command_queue
-		queue(command_queue_properties properties) const {
-			#if CL_TARGET_VERSION >= 200
-			return this->queue_200(this->context().get(), properties);
-			#else
-			return this->queue_100(this->context().get(), properties);
-			#endif
-		}
-
-		bool available() const;
-		bool compiler_available() const;
-		bool linker_available() const;
-		bool little_endian() const;
-		bool supports_error_correction() const;
-		bool supports_images() const;
-		#if CL_TARGET_VERSION >= 120
-		bool prefers_user_sync() const;
-		#endif
-
-		#if CL_TARGET_VERSION >= 120
-		size_t printf_buffer_size() const;
-		#endif
-
-		size_t image2d_max_width() const;
-		size_t image2d_max_height() const;
-		#if CL_TARGET_VERSION >= 120
-		unsigned_int_type image2d_pitch_alignment() const;
-		unsigned_int_type image2d_base_address_alignment() const;
-		#endif
-
-		size_t image3d_max_width() const;
-		size_t image3d_max_height() const;
-		size_t image3d_max_depth() const;
-
-		size_t image_max_buffer_size() const;
-		size_t image_max_array_size() const;
-
-		unsigned_long_type global_memory_size() const;
-		unsigned_long_type global_memory_cache_size() const;
-		unsigned_int_type global_memory_cacheline_size() const;
-		device_memory_cache global_memory_cache_type() const;
-		unsigned_long_type local_memory_size() const;
-		device_local_memory local_memory_type() const;
-
-		unsigned_int_type address_bits() const;
-		unsigned_int_type base_address_alignment() const;
-		unsigned_int_type min_data_alignment() const;
-
-		execution_flags execution_capabilities() const;
-
-		template <class T>
-		floating_point_flags
-		floating_point_capabilities() const;
-
-		template <class T> unsigned_int_type preferred_vector_width() const;
-		#if CL_TARGET_VERSION >= 110
-		template <class T> unsigned_int_type native_vector_width() const;
-		#endif
-
-		unsigned_int_type max_clock_frequency() const;
-		unsigned_int_type max_compute_units() const;
-
-		unsigned_int_type max_constant_arguments() const;
-		unsigned_int_type max_read_image_arguments() const;
-		unsigned_int_type max_write_image_arguments() const;
-		#if CL_TARGET_VERSION >= 200
-		unsigned_int_type max_read_write_image_arguments() const;
-		unsigned_int_type max_pipe_arguments() const;
-		#endif
-		unsigned_int_type max_samplers() const;
-		size_t max_parameter_size() const;
-
-		unsigned_long_type max_constant_buffer_size() const;
-		unsigned_long_type max_memory_allocation_size() const;
-		#if CL_TARGET_VERSION >= 200
-		size_t max_global_variable_size() const;
-		size_t preferred_global_variable_size() const;
-		#endif
-
-		size_t max_work_group_size() const;
-		size_t preferred_work_group_size() const;
-		unsigned_int_type max_work_item_dimensions() const;
-		std::vector<size_t> max_work_item_sizes() const;
-		#if CL_TARGET_VERSION >= 210
-		unsigned_int_type max_sub_groups() const;
-		bool sub_groups_have_independent_progress() const;
-		#endif
-
-		#if CL_TARGET_VERSION >= 200
-		unsigned_int_type pipe_max_reservations() const;
-		unsigned_int_type pipe_max_packet_size() const;
-		#endif
-
-		command_queue_flags host_queue_supported_flags() const;
-		#if CL_TARGET_VERSION >= 200
-		command_queue_flags device_queue_supported_flags() const;
-		unsigned_int_type device_queue_max_size() const;
-		unsigned_int_type device_queue_preferred_size() const;
-		unsigned_int_type device_queue_max_events() const;
-		unsigned_int_type max_device_queues() const;
-		#endif
-
-		#if CL_TARGET_VERSION >= 200
-		unsigned_int_type preferred_platform_atomic_alignment() const;
-		unsigned_int_type preferred_global_atomic_alignment() const;
-		unsigned_int_type preferred_local_atomic_alignment() const;
-		#endif
-
-		#if CL_TARGET_VERSION >= 200 || \
-			(CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory))
-		inline svm_flags supported_svm_flags() const {
-			#if CL_TARGET_VERSION >= 200
-			return this->supported_svm_flags_200();
-			#elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
-			return this->supported_svm_flags_arm();
-			#endif
-		}
-		#endif
-
-		device_flags type() const;
-
-		unsigned_int_type compute_capability_major() const;
-		unsigned_int_type compute_capability_minor() const;
-		unsigned_int_type max_registers() const;
-		unsigned_int_type warp_size() const;
-		bool overlap() const;
-		bool kernel_execution_timeout() const;
-		bool integrated_memory() const;
-
-		std::string board_name() const;
-		unsigned_int_type wavefront_width() const;
-		unsigned_int_type simd_per_compute_unit() const;
-		unsigned_int_type simd_width() const;
-		unsigned_int_type simd_instruction_width() const;
-		unsigned_int_type num_global_memory_channels() const;
-		unsigned_int_type num_global_memory_channel_banks() const;
-		unsigned_int_type num_global_memory_channel_bank_width() const;
-		unsigned_int_type local_memory_size_per_compute_unit() const;
-		unsigned_int_type num_local_memory_banks() const;
-		bool supports_thread_trace() const;
-		unsigned_int_type gfxip_major() const;
-		unsigned_int_type gfxip_minor() const;
-		unsigned_int_type num_asynchronous_queues() const;
-		unsigned_long_type preferred_constant_buffer_size() const;
-		unsigned_int_type pcie_id() const;
-		std::vector<size_t> global_free_memory() const;
-
-		unsigned_int_type max_named_barriers() const;
-
-		#if defined(cl_arm_core_id) && CL_TARGET_VERSION >= 120
-		unsigned_long_type compute_units_mask() const;
-		#endif
-
-		#if CL_TARGET_VERSION >= 110
-		bool has_unified_memory() const;
-		#endif
-
-		#if defined(CL_DEVICE_CORE_TEMPERATURE_ALTERA)
-		int_type core_temperature() const;
-		#endif
-
-		#if defined(CL_DEVICE_MAX_ATOMIC_COUNTERS_EXT)
-		unsigned_int_type max_atomic_counters() const;
-		#endif
-
-		inline device_type
-		get() noexcept {
-			return this->_ptr;
-		}
-
-		inline const device_type
-		get() const noexcept {
-			return this->_ptr;
-		}
-
-		device() = default;
-		inline ~device() { this->release(); }
-		inline device(const device& rhs): _ptr(rhs._ptr) { this->retain(); }
-
-		inline device&
-		operator=(const device& rhs) {
-			device tmp(rhs);
-			this->swap(tmp);
-			return *this;
-		}
-
-		inline device(device&& rhs): _ptr(rhs._ptr) { rhs._ptr = nullptr; }
-		inline device& operator=(device&& rhs) { this->swap(rhs); return *this; }
-
-		inline void
-		release() {
-			if (this->_ptr) {
-				CLX_CHECK(::clReleaseDevice(this->_ptr));
-				this->_ptr = nullptr;
-			}
-		}
-
-		inline void
-		retain() {
-			if (this->_ptr) {
-				CLX_CHECK(::clRetainDevice(this->_ptr));
-			}
-		}
-
-		inline void
-		swap(device& rhs) {
-			std::swap(this->_ptr, rhs._ptr);
-		}
-
-	private:
-
-		#if CL_TARGET_VERSION >= 200
-		svm_flags supported_svm_flags_200() const;
-		#elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
-		svm_flags supported_svm_flags_arm() const;
-		#endif
-
-		#if CL_TARGET_VERSION >= 120
-		std::vector<device_partition>
-		supported_partitions_priv() const;
-		#endif
-
-		#if CL_TARGET_VERSION >= 200
-		::clx::command_queue
-		queue_200(context_type ctx, const command_queue_properties& prop) const;
-		#endif
-
-		#if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
-		::clx::command_queue
-		queue_100(context_type ctx, const command_queue_properties& prop) const;
-		#endif
-
-		friend class context;
-
-	};
-
-	static_assert(sizeof(device) == sizeof(device_type), "bad size");
-
-	inline void
-	swap(device& lhs, device& rhs) {
-		lhs.swap(rhs);
-	}
+    class device {
+
+    public:
+        typedef std::chrono::nanoseconds nanoseconds;
+
+    protected:
+        device_type _ptr = nullptr;
+
+    public:
+
+        inline explicit
+        device(device_type ptr): _ptr(ptr) {}
+
+        #if CL_TARGET_VERSION >= 120
+        device parent() const;
+
+        unsigned_int_type max_subordinate_devices() const;
+        device_affinity_domain affinity_domain() const;
+
+        std::vector<device>
+        partition(unsigned int num_compute_units) const;
+
+        std::vector<device>
+        partition(const std::vector<unsigned int>& num_compute_units) const;
+
+        std::vector<device_partition>
+        supported_partitions() const;
+
+        std::vector<device_partition>
+        partitions() const;
+        #endif
+
+        #if CL_TARGET_VERSION >= 110 && defined(cl_ext_device_fission)
+        std::vector<ext::device>
+        partition(const ext::partition_properties& prop) const;
+        #endif
+
+        #if CL_TARGET_VERSION >= 210
+        nanoseconds host_time() const;
+        std::pair<nanoseconds,nanoseconds> device_and_host_time() const;
+        std::string intermediate_languages() const;
+        #endif
+
+        nanoseconds timer_resolution() const;
+        nanoseconds timer_offset() const;
+
+        std::string name() const;
+        std::string profile() const;
+        std::string vendor() const;
+        std::string version() const;
+        std::string driver_version() const;
+        ::clx::extensions extensions() const;
+        #if defined(CL_DEVICE_SPIR_VERSIONS)
+        std::string spir_versions() const;
+        #endif
+        #if CL_TARGET_VERSION >= 110
+        std::string c_version() const;
+        #endif
+        #if CL_TARGET_VERSION >= 120
+        std::string builtin_kernels() const;
+        #endif
+
+        #if CL_TARGET_VERSION >= 120 && defined(cl_intel_device_side_avc_motion_estimation)
+        unsigned_int_type video_motion_estimation_version() const;
+        bool supports_texture_sampler() const;
+        bool supports_preemption() const;
+        #endif
+
+        #if CL_TARGET_VERSION >= 120 && defined(cl_intel_planar_yuv)
+        size_t planar_yuv_image_max_width() const;
+        size_t planar_yuv_image_max_height() const;
+        #endif
+
+        #if CL_TARGET_VERSION >= 120 && defined(cl_intel_required_subgroup_size)
+        std::vector<size_t> supported_sub_group_sizes() const;
+        #endif
+
+        #if CL_TARGET_VERSION >= 120 && defined(cl_intel_simultaneous_sharing)
+        unsigned_int_type num_simultaneous_graphics() const;
+        std::vector<unsigned_int_type> simultaneous_graphics_combinations() const;
+        #endif
+
+        #if CL_TARGET_VERSION >= 110 && defined(cl_qcom_ext_host_ptr)
+        size_t memory_padding() const;
+        size_t page_size() const;
+        ::clx::qcom::image_pitch image_pitch(
+            size_t width,
+            size_t height,
+            const image_format& format,
+        ) const;
+        #endif
+
+        unsigned_int_type vendor_id() const;
+        ::clx::platform platform() const;
+        ::clx::context context() const;
+        unsigned_int_type num_references() const;
+
+        inline ::clx::command_queue
+        queue(command_queue_flags flags) const {
+            command_queue_properties prop;
+            prop.flags(flags);
+            #if CL_TARGET_VERSION >= 200
+            return this->queue_200(this->context().get(), prop);
+            #else
+            return this->queue_100(this->context().get(), prop);
+            #endif
+        }
+
+        inline ::clx::command_queue
+        queue(command_queue_flags flags, unsigned_int_type size) const {
+            command_queue_properties prop;
+            prop.flags(flags);
+            prop.size(size);
+            #if CL_TARGET_VERSION >= 200
+            return this->queue_200(this->context().get(), prop);
+            #else
+            return this->queue_100(this->context().get(), prop);
+            #endif
+        }
+
+        inline ::clx::command_queue
+        queue(command_queue_properties properties) const {
+            #if CL_TARGET_VERSION >= 200
+            return this->queue_200(this->context().get(), properties);
+            #else
+            return this->queue_100(this->context().get(), properties);
+            #endif
+        }
+
+        bool available() const;
+        bool compiler_available() const;
+        bool linker_available() const;
+        bool little_endian() const;
+        bool supports_error_correction() const;
+        bool supports_images() const;
+        #if CL_TARGET_VERSION >= 120
+        bool prefers_user_sync() const;
+        #endif
+
+        #if CL_TARGET_VERSION >= 120
+        size_t printf_buffer_size() const;
+        #endif
+
+        size_t image2d_max_width() const;
+        size_t image2d_max_height() const;
+        #if CL_TARGET_VERSION >= 120
+        unsigned_int_type image2d_pitch_alignment() const;
+        unsigned_int_type image2d_base_address_alignment() const;
+        #endif
+
+        size_t image3d_max_width() const;
+        size_t image3d_max_height() const;
+        size_t image3d_max_depth() const;
+
+        size_t image_max_buffer_size() const;
+        size_t image_max_array_size() const;
+
+        unsigned_long_type global_memory_size() const;
+        unsigned_long_type global_memory_cache_size() const;
+        unsigned_int_type global_memory_cacheline_size() const;
+        device_memory_cache global_memory_cache_type() const;
+        unsigned_long_type local_memory_size() const;
+        device_local_memory local_memory_type() const;
+
+        unsigned_int_type address_bits() const;
+        unsigned_int_type base_address_alignment() const;
+        unsigned_int_type min_data_alignment() const;
+
+        execution_flags execution_capabilities() const;
+
+        template <class T>
+        floating_point_flags
+        floating_point_capabilities() const;
+
+        template <class T> unsigned_int_type preferred_vector_width() const;
+        #if CL_TARGET_VERSION >= 110
+        template <class T> unsigned_int_type native_vector_width() const;
+        #endif
+
+        unsigned_int_type max_clock_frequency() const;
+        unsigned_int_type max_compute_units() const;
+
+        unsigned_int_type max_constant_arguments() const;
+        unsigned_int_type max_read_image_arguments() const;
+        unsigned_int_type max_write_image_arguments() const;
+        #if CL_TARGET_VERSION >= 200
+        unsigned_int_type max_read_write_image_arguments() const;
+        unsigned_int_type max_pipe_arguments() const;
+        #endif
+        unsigned_int_type max_samplers() const;
+        size_t max_parameter_size() const;
+
+        unsigned_long_type max_constant_buffer_size() const;
+        unsigned_long_type max_memory_allocation_size() const;
+        #if CL_TARGET_VERSION >= 200
+        size_t max_global_variable_size() const;
+        size_t preferred_global_variable_size() const;
+        #endif
+
+        size_t max_work_group_size() const;
+        size_t preferred_work_group_size() const;
+        unsigned_int_type max_work_item_dimensions() const;
+        std::vector<size_t> max_work_item_sizes() const;
+        #if CL_TARGET_VERSION >= 210
+        unsigned_int_type max_sub_groups() const;
+        bool sub_groups_have_independent_progress() const;
+        #endif
+
+        #if CL_TARGET_VERSION >= 200
+        unsigned_int_type pipe_max_reservations() const;
+        unsigned_int_type pipe_max_packet_size() const;
+        #endif
+
+        command_queue_flags host_queue_supported_flags() const;
+        #if CL_TARGET_VERSION >= 200
+        command_queue_flags device_queue_supported_flags() const;
+        unsigned_int_type device_queue_max_size() const;
+        unsigned_int_type device_queue_preferred_size() const;
+        unsigned_int_type device_queue_max_events() const;
+        unsigned_int_type max_device_queues() const;
+        #endif
+
+        #if CL_TARGET_VERSION >= 200
+        unsigned_int_type preferred_platform_atomic_alignment() const;
+        unsigned_int_type preferred_global_atomic_alignment() const;
+        unsigned_int_type preferred_local_atomic_alignment() const;
+        #endif
+
+        #if CL_TARGET_VERSION >= 200 || \
+            (CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory))
+        inline svm_flags supported_svm_flags() const {
+            #if CL_TARGET_VERSION >= 200
+            return this->supported_svm_flags_200();
+            #elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+            return this->supported_svm_flags_arm();
+            #endif
+        }
+        #endif
+
+        device_flags type() const;
+
+        unsigned_int_type compute_capability_major() const;
+        unsigned_int_type compute_capability_minor() const;
+        unsigned_int_type max_registers() const;
+        unsigned_int_type warp_size() const;
+        bool overlap() const;
+        bool kernel_execution_timeout() const;
+        bool integrated_memory() const;
+
+        std::string board_name() const;
+        unsigned_int_type wavefront_width() const;
+        unsigned_int_type simd_per_compute_unit() const;
+        unsigned_int_type simd_width() const;
+        unsigned_int_type simd_instruction_width() const;
+        unsigned_int_type num_global_memory_channels() const;
+        unsigned_int_type num_global_memory_channel_banks() const;
+        unsigned_int_type num_global_memory_channel_bank_width() const;
+        unsigned_int_type local_memory_size_per_compute_unit() const;
+        unsigned_int_type num_local_memory_banks() const;
+        bool supports_thread_trace() const;
+        unsigned_int_type gfxip_major() const;
+        unsigned_int_type gfxip_minor() const;
+        unsigned_int_type num_asynchronous_queues() const;
+        unsigned_long_type preferred_constant_buffer_size() const;
+        unsigned_int_type pcie_id() const;
+        std::vector<size_t> global_free_memory() const;
+
+        unsigned_int_type max_named_barriers() const;
+
+        #if defined(cl_arm_core_id) && CL_TARGET_VERSION >= 120
+        unsigned_long_type compute_units_mask() const;
+        #endif
+
+        #if CL_TARGET_VERSION >= 110
+        bool has_unified_memory() const;
+        #endif
+
+        #if defined(CL_DEVICE_CORE_TEMPERATURE_ALTERA)
+        int_type core_temperature() const;
+        #endif
+
+        #if defined(CL_DEVICE_MAX_ATOMIC_COUNTERS_EXT)
+        unsigned_int_type max_atomic_counters() const;
+        #endif
+
+        inline device_type
+        get() noexcept {
+            return this->_ptr;
+        }
+
+        inline const device_type
+        get() const noexcept {
+            return this->_ptr;
+        }
+
+        device() = default;
+        inline ~device() { this->release(); }
+        inline device(const device& rhs): _ptr(rhs._ptr) { this->retain(); }
+
+        inline device&
+        operator=(const device& rhs) {
+            device tmp(rhs);
+            this->swap(tmp);
+            return *this;
+        }
+
+        inline device(device&& rhs): _ptr(rhs._ptr) { rhs._ptr = nullptr; }
+        inline device& operator=(device&& rhs) { this->swap(rhs); return *this; }
+
+        inline void
+        release() {
+            if (this->_ptr) {
+                CLX_CHECK(::clReleaseDevice(this->_ptr));
+                this->_ptr = nullptr;
+            }
+        }
+
+        inline void
+        retain() {
+            if (this->_ptr) {
+                CLX_CHECK(::clRetainDevice(this->_ptr));
+            }
+        }
+
+        inline void
+        swap(device& rhs) {
+            std::swap(this->_ptr, rhs._ptr);
+        }
+
+    private:
+
+        #if CL_TARGET_VERSION >= 200
+        svm_flags supported_svm_flags_200() const;
+        #elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+        svm_flags supported_svm_flags_arm() const;
+        #endif
+
+        #if CL_TARGET_VERSION >= 120
+        std::vector<device_partition>
+        supported_partitions_priv() const;
+        #endif
+
+        #if CL_TARGET_VERSION >= 200
+        ::clx::command_queue
+        queue_200(context_type ctx, const command_queue_properties& prop) const;
+        #endif
+
+        #if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
+        ::clx::command_queue
+        queue_100(context_type ctx, const command_queue_properties& prop) const;
+        #endif
+
+        friend class context;
+
+    };
+
+    static_assert(sizeof(device) == sizeof(device_type), "bad size");
+
+    inline void
+    swap(device& lhs, device& rhs) {
+        lhs.swap(rhs);
+    }
 
 }
 

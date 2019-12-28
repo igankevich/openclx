@@ -6,18 +6,18 @@
 
 namespace clx {
 
-	enum class device_flags: device_flags_type {
-		unknown=CL_DEVICE_TYPE_DEFAULT,
-		cpu=CL_DEVICE_TYPE_CPU,
-		gpu=CL_DEVICE_TYPE_GPU,
-		accelerator=CL_DEVICE_TYPE_ACCELERATOR,
-		#if CL_TARGET_VERSION >= 120
-		custom=CL_DEVICE_TYPE_CUSTOM,
-		#endif
-		all=CL_DEVICE_TYPE_ALL,
-	};
+    enum class device_flags: device_flags_type {
+        unknown=CL_DEVICE_TYPE_DEFAULT,
+        cpu=CL_DEVICE_TYPE_CPU,
+        gpu=CL_DEVICE_TYPE_GPU,
+        accelerator=CL_DEVICE_TYPE_ACCELERATOR,
+        #if CL_TARGET_VERSION >= 120
+        custom=CL_DEVICE_TYPE_CUSTOM,
+        #endif
+        all=CL_DEVICE_TYPE_ALL,
+    };
 
-	CLX_FLAGS(device_flags, device_flags_type)
+    CLX_FLAGS(device_flags, device_flags_type)
 
 }
 

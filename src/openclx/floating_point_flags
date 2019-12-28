@@ -6,22 +6,22 @@
 
 namespace clx {
 
-	enum class floating_point_flags: floating_point_flags_type {
-		denorm=CL_FP_DENORM,
-		inf_nan=CL_FP_INF_NAN,
-		round_to_nearest=CL_FP_ROUND_TO_NEAREST,
-		round_to_zero=CL_FP_ROUND_TO_ZERO,
-		round_to_inf=CL_FP_ROUND_TO_INF,
-		fma=CL_FP_FMA,
-		#if CL_TARGET_VERSION >= 110
-		soft_float=CL_FP_SOFT_FLOAT,
-		#endif
-		#if CL_TARGET_VERSION >= 110
-		correctly_rounded_divide_sqrt=CL_FP_CORRECTLY_ROUNDED_DIVIDE_SQRT,
-		#endif
-	};
+    enum class floating_point_flags: floating_point_flags_type {
+        denorm=CL_FP_DENORM,
+        inf_nan=CL_FP_INF_NAN,
+        round_to_nearest=CL_FP_ROUND_TO_NEAREST,
+        round_to_zero=CL_FP_ROUND_TO_ZERO,
+        round_to_inf=CL_FP_ROUND_TO_INF,
+        fma=CL_FP_FMA,
+        #if CL_TARGET_VERSION >= 110
+        soft_float=CL_FP_SOFT_FLOAT,
+        #endif
+        #if CL_TARGET_VERSION >= 110
+        correctly_rounded_divide_sqrt=CL_FP_CORRECTLY_ROUNDED_DIVIDE_SQRT,
+        #endif
+    };
 
-	CLX_FLAGS(floating_point_flags, floating_point_flags_type)
+    CLX_FLAGS(floating_point_flags, floating_point_flags_type)
 
 }
 

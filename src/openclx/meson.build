@@ -1,7 +1,7 @@
 configure_file(
-	input: 'config.in',
-	output: 'config',
-	configuration: config,
+    input: 'config.in',
+    output: 'config',
+    configuration: config,
     install_dir: join_paths(
         get_option('prefix'),
         get_option('includedir'),
@@ -10,27 +10,27 @@ configure_file(
 )
 
 openclx_src = files([
-	'binary.cc',
-	'buffer.cc',
-	'command_queue.cc',
-	'command_queue_flags.cc',
-	'compiler.cc',
-	'context.cc',
-	'context_properties.cc',
-	'device.cc',
-	'error.cc',
-	'event.cc',
-	'command_stack.cc',
-	'image.cc',
-	'kernel.cc',
-	'kernel_argument.cc',
-	'memory_object.cc',
-	'pipe.cc',
-	'platform.cc',
-	'program.cc',
-	'sampler.cc',
-	'sampler_properties.cc',
-	'svm_block.cc',
+    'binary.cc',
+    'buffer.cc',
+    'command_queue.cc',
+    'command_queue_flags.cc',
+    'compiler.cc',
+    'context.cc',
+    'context_properties.cc',
+    'device.cc',
+    'error.cc',
+    'event.cc',
+    'command_stack.cc',
+    'image.cc',
+    'kernel.cc',
+    'kernel_argument.cc',
+    'memory_object.cc',
+    'pipe.cc',
+    'platform.cc',
+    'program.cc',
+    'sampler.cc',
+    'sampler_properties.cc',
+    'svm_block.cc',
 ])
 
 install_headers(
@@ -85,7 +85,7 @@ install_headers(
     'svm_block',
     'svm_flags',
     'vector',
-	subdir: join_paths('openclx')
+    subdir: join_paths('openclx')
 )
 
 subdir('arm')
@@ -102,47 +102,47 @@ opencl = dependency('OpenCL')
 openclx_deps = [opencl]
 
 libopenclx = library(
-	'openclx',
-	sources: openclx_src,
-	include_directories: src,
-	dependencies: openclx_deps,
-	implicit_include_directories: false,
-	install: true,
-	version: meson.project_version(),
+    'openclx',
+    sources: openclx_src,
+    include_directories: src,
+    dependencies: openclx_deps,
+    implicit_include_directories: false,
+    install: true,
+    version: meson.project_version(),
 )
 
 pkgconfig = import('pkgconfig')
 pkgconfig.generate(
     libopenclx,
-	libraries: libopenclx,
+    libraries: libopenclx,
     requires: openclx_deps,
-	version: meson.project_version(),
-	name: meson.project_name(),
-	filebase: meson.project_name(),
-	description: 'C++ wrapper for OpenCL',
+    version: meson.project_version(),
+    name: meson.project_name(),
+    filebase: meson.project_name(),
+    description: 'C++ wrapper for OpenCL',
 )
 
 executable(
-	'clx',
-	sources: 'main.cc',
-	include_directories: src,
-	dependencies: openclx_deps,
-	link_with: libopenclx,
-	implicit_include_directories: false,
-	install: true,
+    'clx',
+    sources: 'main.cc',
+    include_directories: src,
+    dependencies: openclx_deps,
+    link_with: libopenclx,
+    implicit_include_directories: false,
+    install: true,
 )
 
 if with_tests
-	gtest = dependency('gtest', main: true)
-	test(
-		'device-test',
-		executable(
-			'device-test',
-			sources: 'device_test.cc',
-			include_directories: src,
-			dependencies: [openclx_deps,gtest],
-			link_with: libopenclx,
-			implicit_include_directories: false,
-		)
-	)
+    gtest = dependency('gtest', main: true)
+    test(
+        'device-test',
+        executable(
+            'device-test',
+            sources: 'device_test.cc',
+            include_directories: src,
+            dependencies: [openclx_deps,gtest],
+            link_with: libopenclx,
+            implicit_include_directories: false,
+        )
+    )
 endif

@@ -8,98 +8,98 @@
 
 namespace clx {
 
-	class command_queue {
+    class command_queue {
 
-	private:
-		command_queue_type _ptr = nullptr;
+    private:
+        command_queue_type _ptr = nullptr;
 
-	public:
+    public:
 
-		inline explicit
-		command_queue(command_queue_type ptr): _ptr(ptr) {}
+        inline explicit
+        command_queue(command_queue_type ptr): _ptr(ptr) {}
 
-		inline void
-		flush() {
-			CLX_CHECK(::clFlush(this->_ptr));
-		}
+        inline void
+        flush() {
+            CLX_CHECK(::clFlush(this->_ptr));
+        }
 
-		inline void
-		finish() {
-			CLX_CHECK(::clFinish(this->_ptr));
-		}
+        inline void
+        finish() {
+            CLX_CHECK(::clFinish(this->_ptr));
+        }
 
-		#if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
-		inline void
-		barrier() {
-			CLX_CHECK(::clEnqueueBarrier(this->_ptr));
-		}
-		#endif
+        #if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
+        inline void
+        barrier() {
+            CLX_CHECK(::clEnqueueBarrier(this->_ptr));
+        }
+        #endif
 
-		#if CL_TARGET_VERSION >= 210
-		void
-		make_default();
-		#endif
+        #if CL_TARGET_VERSION >= 210
+        void
+        make_default();
+        #endif
 
-		::clx::device device() const;
-		::clx::context context() const;
-		std::vector<command_queue_flags_type> properties() const;
-		unsigned_int_type num_references() const;
+        ::clx::device device() const;
+        ::clx::context context() const;
+        std::vector<command_queue_flags_type> properties() const;
+        unsigned_int_type num_references() const;
 
-		inline command_queue_type
-		get() noexcept {
-			return this->_ptr;
-		}
+        inline command_queue_type
+        get() noexcept {
+            return this->_ptr;
+        }
 
-		inline const command_queue_type
-		get() const noexcept {
-			return this->_ptr;
-		}
+        inline const command_queue_type
+        get() const noexcept {
+            return this->_ptr;
+        }
 
-		command_queue() = default;
-		inline ~command_queue() { this->release(); }
+        command_queue() = default;
+        inline ~command_queue() { this->release(); }
 
-		inline
-		command_queue(const command_queue& rhs): _ptr(rhs._ptr) { this->retain(); }
+        inline
+        command_queue(const command_queue& rhs): _ptr(rhs._ptr) { this->retain(); }
 
-		inline command_queue&
-		operator=(const command_queue& rhs) {
-			command_queue tmp(rhs);
-			this->swap(tmp);
-			return *this;
-		}
+        inline command_queue&
+        operator=(const command_queue& rhs) {
+            command_queue tmp(rhs);
+            this->swap(tmp);
+            return *this;
+        }
 
-		inline
-		command_queue(command_queue&& rhs): _ptr(rhs._ptr) { rhs._ptr = nullptr; }
+        inline
+        command_queue(command_queue&& rhs): _ptr(rhs._ptr) { rhs._ptr = nullptr; }
 
-		inline command_queue&
-		operator=(command_queue&& rhs) { this->swap(rhs); return *this; }
+        inline command_queue&
+        operator=(command_queue&& rhs) { this->swap(rhs); return *this; }
 
-		inline void
-		release() {
-			if (this->_ptr) {
-				CLX_CHECK(::clReleaseCommandQueue(this->_ptr));
-				this->_ptr = nullptr;
-			}
-		}
+        inline void
+        release() {
+            if (this->_ptr) {
+                CLX_CHECK(::clReleaseCommandQueue(this->_ptr));
+                this->_ptr = nullptr;
+            }
+        }
 
-		inline void
-		retain() {
-			if (this->_ptr) {
-				CLX_CHECK(::clRetainCommandQueue(this->_ptr));
-			}
-		}
+        inline void
+        retain() {
+            if (this->_ptr) {
+                CLX_CHECK(::clRetainCommandQueue(this->_ptr));
+            }
+        }
 
-		inline void
-		swap(command_queue& rhs) {
-			std::swap(this->_ptr, rhs._ptr);
-		}
+        inline void
+        swap(command_queue& rhs) {
+            std::swap(this->_ptr, rhs._ptr);
+        }
 
-	};
+    };
 
-	inline void
-	swap(command_queue& lhs, command_queue& rhs) {
-		lhs.swap(rhs);
-	}
+    inline void
+    swap(command_queue& lhs, command_queue& rhs) {
+        lhs.swap(rhs);
+    }
 
 }
 

@@ -3,45 +3,45 @@
 
 namespace clx {
 
-	class range {
+    class range {
 
-	private:
-		size_t _data[3]{};
-		size_t _dim = 0;
+    private:
+        size_t _data[3]{};
+        size_t _dim = 0;
 
-	public:
+    public:
 
-		inline
-		range() {}
+        inline
+        range() {}
 
-		inline
-		range(size_t s0):
-		_data{s0,1,1}, _dim{1} {}
+        inline
+        range(size_t s0):
+        _data{s0,1,1}, _dim{1} {}
 
-		inline
-		range(size_t s0, size_t s1):
-		_data{s0,s1,1}, _dim{2} {}
+        inline
+        range(size_t s0, size_t s1):
+        _data{s0,s1,1}, _dim{2} {}
 
-		inline
-		range(size_t s0, size_t s1, size_t s2):
-		_data{s0,s1,s2}, _dim{3} {}
+        inline
+        range(size_t s0, size_t s1, size_t s2):
+        _data{s0,s1,s2}, _dim{3} {}
 
-		inline bool
-		empty() const {
-			return this->_dim == 0;
-		}
+        inline bool
+        empty() const {
+            return this->_dim == 0;
+        }
 
-		inline const size_t*
-		data() const {
-			return this->empty() ? nullptr : this->_data;
-		}
+        inline const size_t*
+        data() const {
+            return this->empty() ? nullptr : this->_data;
+        }
 
-		inline size_t
-		dimensions() const {
-			return this->_dim;
-		}
+        inline size_t
+        dimensions() const {
+            return this->_dim;
+        }
 
-	};
+    };
 
 }
 

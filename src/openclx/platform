@@ -11,219 +11,219 @@
 
 namespace clx {
 
-	enum class extension_function {
-		clCreateCommandQueueWithPropertiesKHR,
-		clTerminateContextKHR,
-		clEnqueueMigrateMemObjectEXT,
-		clGetKernelSubGroupInfoKHR,
-		clGetGLContextInfoKHR,
-		clCreateEventFromEGLSyncKHR,
-		clCreateFromEGLImageKHR,
-		clEnqueueAcquireEGLObjectsKHR,
-		clEnqueueReleaseEGLObjectsKHR,
-		clImportMemoryARM,
-		clReleaseDeviceEXT,
-		clRetainDeviceEXT,
-		clCreateSubDevicesEXT,
-		clSVMAllocARM,
-		clSVMFreeARM,
-		clEnqueueSVMFreeARM,
-		clEnqueueSVMMemcpyARM,
-		clEnqueueSVMMemFillARM,
-		clEnqueueSVMMapARM,
-		clEnqueueSVMUnmapARM,
-		clSetKernelArgSVMPointerARM,
-		clSetKernelExecInfoARM,
-		clCreateAcceleratorINTEL,
-		clGetAcceleratorInfoINTEL,
-		clRetainAcceleratorINTEL,
-		clReleaseAcceleratorINTEL,
-		clGetDeviceImageInfoQCOM,
-		clGetDeviceIDsFromDX9MediaAdapterKHR,
-		clCreateFromDX9MediaSurfaceKHR,
-		clEnqueueAcquireDX9MediaSurfacesKHR,
-		clEnqueueReleaseDX9MediaSurfacesKHR,
-		clGetDeviceIDsFromD3D10KHR,
-		clCreateFromD3D10BufferKHR,
-		clCreateFromD3D10Texture2DKHR,
-		clCreateFromD3D10Texture3DKHR,
-		clEnqueueAcquireD3D10ObjectsKHR,
-		clEnqueueReleaseD3D10ObjectsKHR,
-		clGetDeviceIDsFromD3D11KHR,
-		clCreateFromD3D11BufferKHR,
-		clCreateFromD3D11Texture2DKHR,
-		clCreateFromD3D11Texture3DKHR,
-		clEnqueueAcquireD3D11ObjectsKHR,
-		clEnqueueReleaseD3D11ObjectsKHR,
-		clGetDeviceIDsFromDX9INTEL,
-		clCreateFromDX9MediaSurfaceINTEL,
-		clEnqueueAcquireDX9ObjectsINTEL,
-		clEnqueueReleaseDX9ObjectsINTEL,
-		clGetDeviceIDsFromVA_APIMediaAdapterINTEL,
-		clCreateFromVA_APIMediaSurfaceINTEL,
-		clEnqueueAcquireVA_APIMediaSurfacesINTEL,
-		clEnqueueReleaseVA_APIMediaSurfacesINTEL,
-		size
-	};
+    enum class extension_function {
+        clCreateCommandQueueWithPropertiesKHR,
+        clTerminateContextKHR,
+        clEnqueueMigrateMemObjectEXT,
+        clGetKernelSubGroupInfoKHR,
+        clGetGLContextInfoKHR,
+        clCreateEventFromEGLSyncKHR,
+        clCreateFromEGLImageKHR,
+        clEnqueueAcquireEGLObjectsKHR,
+        clEnqueueReleaseEGLObjectsKHR,
+        clImportMemoryARM,
+        clReleaseDeviceEXT,
+        clRetainDeviceEXT,
+        clCreateSubDevicesEXT,
+        clSVMAllocARM,
+        clSVMFreeARM,
+        clEnqueueSVMFreeARM,
+        clEnqueueSVMMemcpyARM,
+        clEnqueueSVMMemFillARM,
+        clEnqueueSVMMapARM,
+        clEnqueueSVMUnmapARM,
+        clSetKernelArgSVMPointerARM,
+        clSetKernelExecInfoARM,
+        clCreateAcceleratorINTEL,
+        clGetAcceleratorInfoINTEL,
+        clRetainAcceleratorINTEL,
+        clReleaseAcceleratorINTEL,
+        clGetDeviceImageInfoQCOM,
+        clGetDeviceIDsFromDX9MediaAdapterKHR,
+        clCreateFromDX9MediaSurfaceKHR,
+        clEnqueueAcquireDX9MediaSurfacesKHR,
+        clEnqueueReleaseDX9MediaSurfacesKHR,
+        clGetDeviceIDsFromD3D10KHR,
+        clCreateFromD3D10BufferKHR,
+        clCreateFromD3D10Texture2DKHR,
+        clCreateFromD3D10Texture3DKHR,
+        clEnqueueAcquireD3D10ObjectsKHR,
+        clEnqueueReleaseD3D10ObjectsKHR,
+        clGetDeviceIDsFromD3D11KHR,
+        clCreateFromD3D11BufferKHR,
+        clCreateFromD3D11Texture2DKHR,
+        clCreateFromD3D11Texture3DKHR,
+        clEnqueueAcquireD3D11ObjectsKHR,
+        clEnqueueReleaseD3D11ObjectsKHR,
+        clGetDeviceIDsFromDX9INTEL,
+        clCreateFromDX9MediaSurfaceINTEL,
+        clEnqueueAcquireDX9ObjectsINTEL,
+        clEnqueueReleaseDX9ObjectsINTEL,
+        clGetDeviceIDsFromVA_APIMediaAdapterINTEL,
+        clCreateFromVA_APIMediaSurfaceINTEL,
+        clEnqueueAcquireVA_APIMediaSurfacesINTEL,
+        clEnqueueReleaseVA_APIMediaSurfacesINTEL,
+        size
+    };
 
-	class platform {
+    class platform {
 
-	public:
-		typedef std::chrono::nanoseconds nanoseconds;
-		typedef void* function_address;
+    public:
+        typedef std::chrono::nanoseconds nanoseconds;
+        typedef void* function_address;
 
-	private:
-		platform_type _ptr = nullptr;
-		mutable std::vector<function_address> _functions;
+    private:
+        platform_type _ptr = nullptr;
+        mutable std::vector<function_address> _functions;
 
-	public:
+    public:
 
-		inline explicit
-		platform(platform_type ptr): _ptr(ptr) {}
+        inline explicit
+        platform(platform_type ptr): _ptr(ptr) {}
 
-		std::string profile() const;
-		std::string version() const;
-		std::string name() const;
-		std::string vendor() const;
-		::clx::extensions extensions() const;
-		#if defined(CL_PLATFORM_ICD_SUFFIX_KHR)
-		std::string suffix() const;
-		#endif
+        std::string profile() const;
+        std::string version() const;
+        std::string name() const;
+        std::string vendor() const;
+        ::clx::extensions extensions() const;
+        #if defined(CL_PLATFORM_ICD_SUFFIX_KHR)
+        std::string suffix() const;
+        #endif
 
-		std::vector<device>
-		devices(device_flags types) const;
+        std::vector<device>
+        devices(device_flags types) const;
 
-		::clx::context context(const array_view<device>& devices) const;
-		::clx::context context(const context_properties&,const array_view<device>&) const;
-		::clx::context context(device_flags types=device_flags::all) const;
-		::clx::context context(const context_properties&,device_flags=device_flags::all) const;
+        ::clx::context context(const array_view<device>& devices) const;
+        ::clx::context context(const context_properties&,const array_view<device>&) const;
+        ::clx::context context(device_flags types=device_flags::all) const;
+        ::clx::context context(const context_properties&,device_flags=device_flags::all) const;
 
-		inline void
-		unload_compiler() {
-			#if CL_TARGET_VERSION >= 120
-			CLX_CHECK(::clUnloadPlatformCompiler(this->_ptr));
-			#else
-			CLX_CHECK(::clUnloadCompiler());
-			#endif
-		}
+        inline void
+        unload_compiler() {
+            #if CL_TARGET_VERSION >= 120
+            CLX_CHECK(::clUnloadPlatformCompiler(this->_ptr));
+            #else
+            CLX_CHECK(::clUnloadCompiler());
+            #endif
+        }
 
-		inline void*
-		extension_function_address(const char* name) const {
-			#if CL_TARGET_VERSION >= 120
-			return ::clGetExtensionFunctionAddressForPlatform(this->_ptr, name);
-			#else
-			return ::clGetExtensionFunctionAddress(name);
-			#endif
-		}
+        inline void*
+        extension_function_address(const char* name) const {
+            #if CL_TARGET_VERSION >= 120
+            return ::clGetExtensionFunctionAddressForPlatform(this->_ptr, name);
+            #else
+            return ::clGetExtensionFunctionAddress(name);
+            #endif
+        }
 
-		template <class Function>
-		inline Function
-		extension(const char* name) const {
-			return reinterpret_cast<Function>(extension_function_address(name));
-		}
+        template <class Function>
+        inline Function
+        extension(const char* name) const {
+            return reinterpret_cast<Function>(extension_function_address(name));
+        }
 
-		template <class Function>
-		inline Function
-		function(extension_function func) const {
-			return reinterpret_cast<Function>(this->do_function(func));
-		}
+        template <class Function>
+        inline Function
+        function(extension_function func) const {
+            return reinterpret_cast<Function>(this->do_function(func));
+        }
 
-		#if CL_TARGET_VERSION >= 210
-		nanoseconds timer_resolution() const;
-		#endif
+        #if CL_TARGET_VERSION >= 210
+        nanoseconds timer_resolution() const;
+        #endif
 
-		#if CL_TARGET_VERSION >= 120 && defined(cl_khr_dx9_media_sharing)
-		std::vector<device>
-		devices(
-			d3d9::adapter_set flags,
-			std::vector<std::pair<d3d9::adapter_type,void*>> adapters
-		) const;
-		#endif
+        #if CL_TARGET_VERSION >= 120 && defined(cl_khr_dx9_media_sharing)
+        std::vector<device>
+        devices(
+            d3d9::adapter_set flags,
+            std::vector<std::pair<d3d9::adapter_type,void*>> adapters
+        ) const;
+        #endif
 
-		#if defined(cl_khr_d3d10_sharing)
-		std::vector<device>
-		devices(d3d10::device_type* object, d3d10::device_set set) const;
-		std::vector<device>
-		devices(d3d10::dxgi_adapter_type* object, d3d10::device_set set) const;
-		#endif
+        #if defined(cl_khr_d3d10_sharing)
+        std::vector<device>
+        devices(d3d10::device_type* object, d3d10::device_set set) const;
+        std::vector<device>
+        devices(d3d10::dxgi_adapter_type* object, d3d10::device_set set) const;
+        #endif
 
-		#if CL_TARGET_VERSION >= 120 && defined(cl_khr_d3d11_sharing)
-		std::vector<device>
-		devices(d3d11::device_type* object, d3d11::device_set set) const;
-		std::vector<device>
-		devices(d3d11::dxgi_adapter_type* object, d3d11::device_set set) const;
-		#endif
+        #if CL_TARGET_VERSION >= 120 && defined(cl_khr_d3d11_sharing)
+        std::vector<device>
+        devices(d3d11::device_type* object, d3d11::device_set set) const;
+        std::vector<device>
+        devices(d3d11::dxgi_adapter_type* object, d3d11::device_set set) const;
+        #endif
 
-		#if defined(cl_intel_dx9_media_sharing)
-		std::vector<device>
-		devices(intel::device_source src, void* object, intel::device_set set) const;
-		#endif
+        #if defined(cl_intel_dx9_media_sharing)
+        std::vector<device>
+        devices(intel::device_source src, void* object, intel::device_set set) const;
+        #endif
 
-		#if defined(cl_intel_va_api_media_sharing)
-		std::vector<device>
-		devices(intel::va::device_source src, void* object, intel::va::device_set set) const;
-		#endif
+        #if defined(cl_intel_va_api_media_sharing)
+        std::vector<device>
+        devices(intel::va::device_source src, void* object, intel::va::device_set set) const;
+        #endif
 
-		platform() = default;
-		~platform() = default;
-		platform(const platform&) = default;
-		platform& operator=(const platform&) = default;
+        platform() = default;
+        ~platform() = default;
+        platform(const platform&) = default;
+        platform& operator=(const platform&) = default;
 
-		inline
-		platform(platform&& rhs): _ptr(rhs._ptr) { rhs._ptr = nullptr; }
+        inline
+        platform(platform&& rhs): _ptr(rhs._ptr) { rhs._ptr = nullptr; }
 
-		inline platform&
-		operator=(platform&& rhs) {
-			this->_ptr = rhs._ptr;
-			rhs._ptr = nullptr;
-			this->_functions = std::move(rhs._functions);
-			return *this;
-		}
+        inline platform&
+        operator=(platform&& rhs) {
+            this->_ptr = rhs._ptr;
+            rhs._ptr = nullptr;
+            this->_functions = std::move(rhs._functions);
+            return *this;
+        }
 
-		inline void
-		swap(platform& rhs) {
-			std::swap(this->_ptr, rhs._ptr);
-			std::swap(this->_functions, rhs._functions);
-		}
+        inline void
+        swap(platform& rhs) {
+            std::swap(this->_ptr, rhs._ptr);
+            std::swap(this->_functions, rhs._functions);
+        }
 
-		inline platform_type
-		get() noexcept {
-			return this->_ptr;
-		}
+        inline platform_type
+        get() noexcept {
+            return this->_ptr;
+        }
 
-		inline const platform_type
-		get() const noexcept {
-			return this->_ptr;
-		}
+        inline const platform_type
+        get() const noexcept {
+            return this->_ptr;
+        }
 
-	private:
+    private:
 
-		function_address
-		do_function(extension_function func) const;
+        function_address
+        do_function(extension_function func) const;
 
-	};
+    };
 
-	inline void
-	swap(platform& lhs, platform& rhs) {
-		lhs.swap(rhs);
-	}
+    inline void
+    swap(platform& lhs, platform& rhs) {
+        lhs.swap(rhs);
+    }
 
-	std::vector<platform>
-	platforms();
+    std::vector<platform>
+    platforms();
 
-	#if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
-	inline void
-	unload_compiler() {
-		CLX_CHECK(::clUnloadCompiler());
-	}
-	#endif
+    #if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
+    inline void
+    unload_compiler() {
+        CLX_CHECK(::clUnloadCompiler());
+    }
+    #endif
 
-	#if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
-	inline void*
-	extension_function_address(const char* name) {
-		return ::clGetExtensionFunctionAddress(name);
-	}
-	#endif
+    #if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
+    inline void*
+    extension_function_address(const char* name) {
+        return ::clGetExtensionFunctionAddress(name);
+    }
+    #endif
 
 }
 

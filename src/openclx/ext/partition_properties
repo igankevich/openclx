@@ -6,60 +6,60 @@
 
 namespace clx {
 
-	namespace ext {
+    namespace ext {
 
-		class partition_properties {
+        class partition_properties {
 
-		private:
-			std::vector<partition_property_type> prop;
+        private:
+            std::vector<partition_property_type> prop;
 
-		public:
+        public:
 
-			inline void
-			equally(unsigned_int_type ndevices) {
-				prop.reserve(3);
-				prop.emplace_back(CL_DEVICE_PARTITION_EQUALLY_EXT);
-				prop.emplace_back(partition_property_type(ndevices));
-				prop.emplace_back(CL_PROPERTIES_LIST_END_EXT);
-			}
+            inline void
+            equally(unsigned_int_type ndevices) {
+                prop.reserve(3);
+                prop.emplace_back(CL_DEVICE_PARTITION_EQUALLY_EXT);
+                prop.emplace_back(partition_property_type(ndevices));
+                prop.emplace_back(CL_PROPERTIES_LIST_END_EXT);
+            }
 
-			inline void
-			by_affinity(affinity_domain domain) {
-				prop.reserve(3);
-				prop.emplace_back(CL_DEVICE_PARTITION_BY_AFFINITY_DOMAIN_EXT);
-				prop.emplace_back(partition_property_type(domain));
-				prop.emplace_back(CL_PROPERTIES_LIST_END_EXT);
-			}
+            inline void
+            by_affinity(affinity_domain domain) {
+                prop.reserve(3);
+                prop.emplace_back(CL_DEVICE_PARTITION_BY_AFFINITY_DOMAIN_EXT);
+                prop.emplace_back(partition_property_type(domain));
+                prop.emplace_back(CL_PROPERTIES_LIST_END_EXT);
+            }
 
-			inline void
-			by_counts(std::vector<unsigned_int_type> counts) {
-				prop.reserve(3 + counts.size());
-				prop.emplace_back(CL_DEVICE_PARTITION_BY_COUNTS_EXT);
-				for (auto c : counts) {
-					prop.emplace_back(partition_property_type(c));
-				}
-				prop.emplace_back(CL_PARTITION_BY_COUNTS_LIST_END_EXT);
-				prop.emplace_back(CL_PROPERTIES_LIST_END_EXT);
-			}
+            inline void
+            by_counts(std::vector<unsigned_int_type> counts) {
+                prop.reserve(3 + counts.size());
+                prop.emplace_back(CL_DEVICE_PARTITION_BY_COUNTS_EXT);
+                for (auto c : counts) {
+                    prop.emplace_back(partition_property_type(c));
+                }
+                prop.emplace_back(CL_PARTITION_BY_COUNTS_LIST_END_EXT);
+                prop.emplace_back(CL_PROPERTIES_LIST_END_EXT);
+            }
 
-			#if defined(cl_ext_device_fission)
-			inline void
-			by_names(std::vector<unsigned_int_type> names) {
-				prop.reserve(3 + names.size());
-				prop.emplace_back(CL_DEVICE_PARTITION_BY_NAMES_EXT);
-				for (auto n : names) {
-					prop.emplace_back(partition_property_type(n));
-				}
-				prop.emplace_back(CL_PARTITION_BY_NAMES_LIST_END_EXT);
-				prop.emplace_back(CL_PROPERTIES_LIST_END_EXT);
-			}
-			#endif
+            #if defined(cl_ext_device_fission)
+            inline void
+            by_names(std::vector<unsigned_int_type> names) {
+                prop.reserve(3 + names.size());
+                prop.emplace_back(CL_DEVICE_PARTITION_BY_NAMES_EXT);
+                for (auto n : names) {
+                    prop.emplace_back(partition_property_type(n));
+                }
+                prop.emplace_back(CL_PARTITION_BY_NAMES_LIST_END_EXT);
+                prop.emplace_back(CL_PROPERTIES_LIST_END_EXT);
+            }
+            #endif
 
-			inline const partition_property_type* data() const { return prop.data(); }
+            inline const partition_property_type* data() const { return prop.data(); }
 
-		};
+        };
 
-	}
+    }
 
 }
 

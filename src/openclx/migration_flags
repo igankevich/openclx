@@ -6,14 +6,14 @@
 
 namespace clx {
 
-	#if CL_TARGET_VERSION >= 120
-	enum class migration_flags: migration_flags_type {
-		host=CL_MIGRATE_MEM_OBJECT_HOST,
-		content_undefined=CL_MIGRATE_MEM_OBJECT_CONTENT_UNDEFINED,
-	};
+    #if CL_TARGET_VERSION >= 120
+    enum class migration_flags: migration_flags_type {
+        host=CL_MIGRATE_MEM_OBJECT_HOST,
+        content_undefined=CL_MIGRATE_MEM_OBJECT_CONTENT_UNDEFINED,
+    };
 
-	CLX_FLAGS(migration_flags, migration_flags_type)
-	#endif
+    CLX_FLAGS(migration_flags, migration_flags_type)
+    #endif
 
 }
 

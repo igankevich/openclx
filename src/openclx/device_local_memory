@@ -5,10 +5,10 @@
 
 namespace clx {
 
-	enum class device_local_memory: device_local_memory_type {
-		local=CL_LOCAL,
-		global=CL_GLOBAL,
-	};
+    enum class device_local_memory: device_local_memory_type {
+        local=CL_LOCAL,
+        global=CL_GLOBAL,
+    };
 
 }
 

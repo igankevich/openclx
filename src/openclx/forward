@@ -10,465 +10,470 @@
 
 namespace clx {
 
-	typedef ::cl_char char_type;
-	typedef ::cl_uchar unsigned_char_type;
-	typedef ::cl_short short_type;
-	typedef ::cl_ushort unsigned_short_type;
-	typedef ::cl_int int_type;
-	typedef ::cl_uint unsigned_int_type;
-	typedef ::cl_long long_type;
-	typedef ::cl_ulong unsigned_long_type;
-	typedef ::cl_half half_type;
-	typedef ::cl_float float_type;
-	typedef ::cl_double double_type;
-
-	typedef ::cl_GLuint opengl_unsigned_int_type;
-	typedef ::cl_GLint opengl_int_type;
-	typedef ::cl_GLenum opengl_enum_type;
-
-	typedef ::cl_platform_id platform_type;
-	typedef ::cl_device_id device_type;
-	typedef ::cl_context context_type;
-	typedef ::cl_command_queue command_queue_type;
-	typedef ::cl_mem memory_type;
-	typedef ::cl_program program_type;
-	typedef ::cl_kernel kernel_type;
-	typedef ::cl_event event_type;
-	typedef ::cl_sampler sampler_type;
-
-	typedef ::cl_bool bool_type;
-	typedef ::cl_bitfield bitfield_type;
-	typedef ::cl_device_mem_cache_type device_memory_cache_type;
-	typedef ::cl_device_local_mem_type device_local_memory_type;
-	typedef ::cl_device_exec_capabilities execution_flags_type;
-	typedef ::cl_device_fp_config floating_point_flags_type;
-	typedef ::cl_command_queue_properties command_queue_flags_type;
-	typedef ::cl_device_type device_flags_type;
-	typedef ::cl_context_properties context_properties_type;
-	typedef ::cl_channel_order channel_order_type;
-	typedef ::cl_channel_type channel_data_type;
-	typedef ::cl_image_format image_format_type;
-	typedef ::cl_build_status build_status_type;
-	typedef ::cl_command_type command_type;
-	typedef ::cl_int execution_status_type;
-	typedef ::cl_mem_object_type memory_objects_type;
-	typedef ::cl_mem memory_object_type;
-	typedef ::cl_mem_flags memory_flags_type;
-	typedef ::cl_map_flags map_flags_type;
-	typedef ::cl_addressing_mode addressing_mode_type;
-	typedef ::cl_filter_mode filter_mode_type;
-
-	#if CL_TARGET_VERSION >= 110
-	typedef ::cl_buffer_region buffer_region_type;
-	#endif
-
-	#if CL_TARGET_VERSION >= 120
-	typedef ::cl_mem_migration_flags migration_flags_type;
-	typedef ::cl_device_partition_property partition_property_type;
-	typedef ::cl_device_affinity_domain affinity_domain_type;
-	typedef ::cl_kernel_arg_type_qualifier argument_type_qualifiers_type;
-	typedef ::cl_kernel_arg_access_qualifier access_qualifiers_type;
-	typedef ::cl_kernel_arg_address_qualifier address_qualifiers_type;
-	typedef ::cl_image_desc image_descriptor_type;
-	typedef ::cl_program_binary_type program_binary_type;
-
-	enum class migration_flags: migration_flags_type;
-	enum class device_partition: partition_property_type;
-	enum class device_affinity_domain: affinity_domain_type;
-	enum class argument_type_qualifiers: argument_type_qualifiers_type;
-	enum class binary_types: program_binary_type;
-	#endif
-
-	#if CL_TARGET_VERSION < 120 && defined(cl_ext_migrate_memobject)
-	typedef ::cl_mem_migration_flags_ext migration_flags_type;
-	#endif
-
-	#if CL_TARGET_VERSION < 200 && defined(cl_khr_create_command_queue)
-	typedef ::cl_queue_properties_khr queue_properties_type;
-	#endif
-
-	#if CL_TARGET_VERSION >= 200
-	typedef ::cl_kernel_exec_info kernel_execution_info_type;
-	typedef ::cl_device_svm_capabilities svm_flags_type;
-	#elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
-	typedef ::cl_kernel_exec_info_arm kernel_execution_info_type;
-	typedef ::cl_device_svm_capabilities_arm svm_flags_type;
-	#endif
-
-	#if CL_TARGET_VERSION >= 200
-	typedef ::cl_sampler_properties sampler_properties_type;
-	typedef ::cl_queue_properties queue_properties_type;
-	typedef ::cl_pipe_properties pipe_properties_type;
-
-	enum class svm_flags: svm_flags_type;
-	class svm_block;
-	template <class T, svm_flags F> class svm_allocator;
-	class pipe;
-	#endif
-
-	class binary;
-	class buffer;
-	class buffer_slice;
-	class color;
-	class command_queue;
-	class compiler;
-	class context;
-	class context_properties;
-	class device;
-	class error_category;
-	class event;
-	class command_stack;
-	class extensions;
-	class header;
-	class image;
-	class image_format;
-	class intermediate_language;
-	class kernel;
-	class kernel_argument;
-	class memory_object;
-	class pattern;
-	class platform;
-	class program;
-	class range;
-	class sampler;
-	class sampler_properties;
-
-	enum class addressing_mode: addressing_mode_type;
-	enum class build_status: build_status_type;
-	enum class channel_data: channel_data_type;
-	enum class channel_order: channel_order_type;
-	enum class command: command_type;
-	enum class command_queue_flags: command_queue_flags_type;
-	enum class device_flags: device_flags_type;
-	enum class device_local_memory: device_local_memory_type;
-	enum class device_memory_cache: device_memory_cache_type;
-	enum class errc: int_type;
-	enum class execution_flags: execution_flags_type;
-	enum class execution_status: execution_status_type;
-	enum class filter_mode: filter_mode_type;
-	enum class floating_point_flags: floating_point_flags_type;
-	enum class map_flags: map_flags_type;
-	enum class memory_flags: memory_flags_type;
-	enum class memory_objects: memory_objects_type;
-
-	typedef void* host_pointer;
-	typedef const void* const_host_pointer;
-
-	template <class T> class downcast_type;
-	template <class T> class array_view;
-	template <class T> class slice_3d;
-	template <class T> struct local;
-	template <class T, int N> union Vector;
-	template <class T> struct numeric_limits;
-	struct numeric_limits_half;
-	struct work_group;
-	class range;
-	typedef void (*native_kernel_type)(void *);
-	struct image_descriptor;
-
-	const char* to_string(errc rhs);
-	std::ostream& operator<<(std::ostream& out, const errc& rhs);
-	std::error_condition make_error_condition(errc e) noexcept;
-	std::ostream& operator<<(std::ostream& out, const binary& rhs);
-	std::istream& operator>>(std::istream& in, binary& rhs);
-	template <class T, int N> Vector<T,N> make_vector(const array_view<T>& rhs);
-	template <class T> const typename downcast_type<T>::type* downcast(const T* x);
-	template <class T> typename downcast_type<T>::type* downcast(T* x);
-	template <class T> typename downcast_type<T>::type downcast(T x);
-	template <class ... Args> class argument;
-	template <class ... Args> argument<Args...> make_arguments(const Args& ... args);
-
-	void swap(context& lhs, context& rhs);
-	void swap(platform& lhs, platform& rhs);
-	void swap(device& lhs, device& rhs);
-	void swap(program& lhs, program& rhs);
-	void swap(kernel& lhs, kernel& rhs);
-	void swap(event& lhs, event& rhs);
-	void swap(memory_object& lhs, memory_object& rhs);
-	void swap(sampler& lhs, sampler& rhs);
-	void swap(command_queue& lhs, command_queue& rhs);
-	#if CL_TARGET_VERSION >= 200
-	void swap(svm_block& lhs, svm_block& rhs);
-	#endif
-
-	std::vector<platform> platforms();
-
-	#if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
-	void unload_compiler();
-	void* extension_function_address(const char* name);
-	#endif
-
-	#if CL_TARGET_VERSION >= 120
-	program
-	link(
-		const array_view<program>& programs,
-		const std::string& options,
-		const array_view<device>& devices
-	);
-	program
-	link(const array_view<program>& programs, const std::string& options);
-	#endif
-
-	void
-	wait(const array_view<event>& events);
-
-	#if defined(cl_khr_gl_sharing)
-	namespace gl {
-
-		typedef ::cl_GLuint unsigned_int_type;
-		typedef ::cl_GLint int_type;
-		typedef ::cl_GLenum enum_type;
-		typedef ::cl_GLsync sync_type;
-
-		typedef ::cl_gl_object_type memory_objects_type;
-		enum class memory_objects: memory_objects_type;
-
-		class buffer;
-		class texture;
-
-	}
-	#endif
-
-	#if defined(cl_khr_egl_event) || defined(cl_khr_egl_image)
-	namespace egl {
-		typedef ::CLeglDisplayKHR display_type;
-		typedef ::CLeglSyncKHR sync_type;
-		#if defined(cl_khr_egl_image)
-		typedef ::CLeglImageKHR image_type;
-		typedef ::cl_egl_image_properties_khr image_properties_type;
-		class image_properties;
-		class image;
-		#endif
-	}
-	#endif
-
-	#if defined(cl_khr_dx9_media_sharing)
-	namespace d3d9 {
-		typedef ::cl_dx9_media_adapter_type_khr media_adapter_type;
-		typedef ::cl_dx9_media_adapter_set_khr media_adapter_set;
-	}
-	#endif
-
-	#if defined(cl_arm_import_memory)
-	namespace arm {
-		typedef ::cl_import_properties_arm import_properties_type;
-		enum class memory_type: unsigned_int_type;
-		class import_properties;
-	}
-	#endif
-
-	#if defined(cl_ext_device_fission)
-	namespace ext {
-		typedef ::cl_device_partition_property_ext partition_property_type;
-		typedef partition_property_type partition_property_type;
-		typedef partition_property_type affinity_domain_type;
-		enum class device_partition: partition_property_type;
-		enum class affinity_domain: affinity_domain_type;
-		class device;
-		class partition_properties;
-	}
-	#endif
-
-	namespace intel {
-
-		class device;
-
-		#if defined(cl_intel_accelerator)
-		using accelerator_type = ::cl_accelerator_intel;
-		using accelerators_type = ::cl_accelerator_type_intel;
-		enum class accelerators: accelerators_type;
-		class accelerator;
-		#endif
-
-		#if defined(cl_intel_motion_estimation)
-		using me_descriptor_type = ::cl_motion_estimation_desc_intel;
-		class me_accelerator;
-		class me_descriptor;
-		#endif
-
-		#if defined(cl_intel_driver_diagnostics)
-		using diagnostics_level_type = ::cl_diagnostics_verbose_level;
-		enum class diagnostics_level: diagnostics_level_type;
-		#endif
-
-		#if defined(cl_intel_dx9_media_sharing)
-		using surface_type = ::IDirect3DSurface9;
-		using handle_type = ::HANDLE;
-		using uint_type = ::UINT;
-
-		enum class device_source: ::cl_dx9_device_source_intel {
-			device=CL_D3D9_DEVICE_INTEL,
-			device_ex=CL_D3D9EX_DEVICE_INTEL,
-			dxgi_adapter=CL_D3D9_DXGI_ADAPTER_INTEL,
-		};
-
-		enum class device_set: ::cl_dx9_device_set_intel {
-			preferred=CL_PREFERRED_DEVICES_FOR_D3D9_INTEL,
-			all=CL_ALL_DEVICES_FOR_D3D9_INTEL,
-		};
-
-		class memory_object;
-		#endif
-
-		#if defined(cl_intel_va_api_media_sharing)
-		namespace va {
-
-			using surface_type = ::VASurfaceID;
-			using device_source_type = ::cl_va_api_device_source_intel;
-			using device_set_type = ::cl_va_api_device_set_intel;
-
-			enum class device_source: device_source_type {
-				display=CL_VA_API_DISPLAY_INTEL,
-			};
-
-			enum class device_set: device_set_type {
-				preferred=CL_PREFERRED_DEVICES_FOR_VA_API_INTEL,
-				all=CL_ALL_DEVICES_FOR_VA_API_INTEL,
-			};
-
-			class memory_object;
-
-		}
-		#endif
-
-	}
-
-	namespace qcom {
-
-		#if defined(cl_qcom_ext_host_ptr)
-		enum class host_cache_policy: unsigned_int_type {
-			uncached=CL_MEM_HOST_UNCACHED_QCOM,
-			writeback=CL_MEM_HOST_WRITEBACK_QCOM,
-			writethrough=CL_MEM_HOST_WRITETHROUGH_QCOM,
-			write_combining=CL_MEM_HOST_WRITE_COMBINING_QCOM,
-			#if defined(CL_MEM_HOST_IOCOHERENT_QCOM)
-			io_coherent=CL_MEM_HOST_IOCOHERENT_QCOM,
-			#endif
-		};
-		#endif
-
-		#if defined(cl_qcom_ext_host_ptr)
-		enum class allocation_type: unsigned_int_type {
-			#if defined(CL_MEM_ANDROID_NATIVE_BUFFER_HOST_PTR_QCOM)
-			android_native_buffer,
-			#endif
-			#if defined(CL_MEM_ION_HOST_PTR_QCOM)
-			ion,
-			#endif
-		};
-		#endif
-
-		#if defined(cl_qcom_ext_host_ptr)
-		struct host_pointer: public ::cl_mem_ext_host_ptr {
-			inline void cache_policy(host_cache_policy rhs) {
-				this->host_cache_policy = rhs;
-			}
-			inline host_cache_policy cache_policy() const {
-				return host_cache_policy(this->host_cache_policy);
-			}
-			inline ::clx::qcom::allocation_type allocation() const {
-				return ::clx::qcom::alllocation_type(this->alllocation_type);
-			}
-		};
-		#endif
-
-		#if defined(CL_MEM_ANDROID_NATIVE_BUFFER_HOST_PTR_QCOM)
-		struct anb_pointer: public ::cl_mem_android_native_buffer_host_ptr {
-			inline anb_pointer() {
-				this->ext_host_ptr.allocation_type =
-					CL_MEM_ANDROID_NATIVE_BUFFER_HOST_PTR_QCOM;
-			}
-		};
-		#endif
-
-		#if defined(CL_MEM_ION_HOST_PTR_QCOM)
-		struct ion_pointer: public ::cl_mem_ion_host_ptr {
-			inline ion_pointer() {
-				this->ext_host_ptr.allocation_type = CL_MEM_ION_HOST_PTR_QCOM;
-			}
-		};
-		#endif
-
-		#if defined(cl_qcom_ext_host_ptr)
-		struct image_pitch {
-			unsigned_int_type row_pitch;
-			unsigned_int_type row_alignment;
-			unsigned_int_type slice_pitch;
-			unsigned_int_type slice_alignment;
-		};
-		#endif
-
-	}
-
-	namespace d3d9 {
-
-		#if defined(cl_khr_dx9_media_sharing)
-		enum class adapter_type: ::cl_dx9_media_adapter_type_khr {
-			d3d9=CL_ADAPTER_D3D9_KHR,
-			d3d9ex=CL_ADAPTER_D3D9EX_KHR,
-			dxva=CL_ADAPTER_DXVA_KHR,
-		};
-
-		enum class adapter_set: ::cl_dx9_media_adapter_set_khr {
-			preferred=CL_PREFERRED_DEVICES_FOR_DX9_MEDIA_ADAPTER_KHR,
-			all=CL_ALL_DEVICES_FOR_DX9_MEDIA_ADAPTER_KHR,
-		};
-
-		class surface_info: public ::cl_dx9_surface_info_khr;
-		class media_surface;
-		#endif
-
-	}
-
-	namespace d3d10 {
-
-		#if defined(cl_khr_d3d10_sharing)
-		using resource_type = ::ID3D10Resource;
-		using buffer_type = ::ID3D10Buffer;
-		using texture2d_type = ::ID3D10Texture2D;
-		using texture3d_type = ::ID3D10Texture3D;
-		using device_type = ::ID3D10Device;
-		using dxgi_adapter_type = ::IDXGIAdapter;
-
-		enum class device_source: ::cl_d3d10_device_source_khr {
-			device=CL_D3D10_DEVICE_KHR,
-			dxgi_adapter=CL_D3D10_DXGI_ADAPTER_KHR,
-		};
-
-		enum class device_set: ::cl_d3d10_device_set_khr {
-			preferred=CL_PREFERRED_DEVICES_FOR_D3D10_KHR,
-			all=CL_ALL_DEVICES_FOR_D3D10_KHR,
-		};
-
-		class memory_object;
-		#endif
-
-	}
-
-	namespace d3d11 {
-
-		#if CL_TARGET_VERSION >= 120 && defined(cl_khr_d3d11_sharing)
-		using resource_type = ::ID3D11Resource;
-		using buffer_type = ::ID3D11Buffer;
-		using texture2d_type = ::ID3D11Texture2D;
-		using texture3d_type = ::ID3D11Texture3D;
-		using device_type = ::ID3D11Device;
-		using dxgi_adapter_type = ::IDXGIAdapter;
-
-		enum class device_source: ::cl_d3d11_device_source_khr {
-			device=CL_D3D11_DEVICE_KHR,
-			dxgi_adapter=CL_D3D11_DXGI_ADAPTER_KHR,
-		};
-
-		enum class device_set: ::cl_d3d11_device_set_khr {
-			preferred=CL_PREFERRED_DEVICES_FOR_D3D11_KHR,
-			all=CL_ALL_DEVICES_FOR_D3D11_KHR,
-		};
-
-		class memory_object;
-		#endif
-
-	}
+    typedef ::cl_char char_type;
+    typedef ::cl_uchar unsigned_char_type;
+    typedef ::cl_short short_type;
+    typedef ::cl_ushort unsigned_short_type;
+    typedef ::cl_int int_type;
+    typedef ::cl_uint unsigned_int_type;
+    typedef ::cl_long long_type;
+    typedef ::cl_ulong unsigned_long_type;
+    typedef ::cl_half half_type;
+    typedef ::cl_float float_type;
+    typedef ::cl_double double_type;
+
+    typedef ::cl_GLuint opengl_unsigned_int_type;
+    typedef ::cl_GLint opengl_int_type;
+    typedef ::cl_GLenum opengl_enum_type;
+
+    typedef ::cl_platform_id platform_type;
+    typedef ::cl_device_id device_type;
+    typedef ::cl_context context_type;
+    typedef ::cl_command_queue command_queue_type;
+    typedef ::cl_mem memory_type;
+    typedef ::cl_program program_type;
+    typedef ::cl_kernel kernel_type;
+    typedef ::cl_event event_type;
+    typedef ::cl_sampler sampler_type;
+
+    typedef ::cl_bool bool_type;
+    typedef ::cl_bitfield bitfield_type;
+    typedef ::cl_device_mem_cache_type device_memory_cache_type;
+    typedef ::cl_device_local_mem_type device_local_memory_type;
+    typedef ::cl_device_exec_capabilities execution_flags_type;
+    typedef ::cl_device_fp_config floating_point_flags_type;
+    typedef ::cl_command_queue_properties command_queue_flags_type;
+    typedef ::cl_device_type device_flags_type;
+    typedef ::cl_context_properties context_properties_type;
+    typedef ::cl_channel_order channel_order_type;
+    typedef ::cl_channel_type channel_data_type;
+    typedef ::cl_image_format image_format_type;
+    typedef ::cl_build_status build_status_type;
+    typedef ::cl_command_type command_type;
+    typedef ::cl_int execution_status_type;
+    typedef ::cl_mem_object_type memory_objects_type;
+    typedef ::cl_mem memory_object_type;
+    typedef ::cl_mem_flags memory_flags_type;
+    typedef ::cl_map_flags map_flags_type;
+    typedef ::cl_addressing_mode addressing_mode_type;
+    typedef ::cl_filter_mode filter_mode_type;
+
+    #if CL_TARGET_VERSION >= 110
+    typedef ::cl_buffer_region buffer_region_type;
+    #endif
+
+    #if CL_TARGET_VERSION >= 120
+    typedef ::cl_mem_migration_flags migration_flags_type;
+    typedef ::cl_device_partition_property partition_property_type;
+    typedef ::cl_device_affinity_domain affinity_domain_type;
+    typedef ::cl_kernel_arg_type_qualifier argument_type_qualifiers_type;
+    typedef ::cl_kernel_arg_access_qualifier access_qualifiers_type;
+    typedef ::cl_kernel_arg_address_qualifier address_qualifiers_type;
+    typedef ::cl_image_desc image_descriptor_type;
+    typedef ::cl_program_binary_type program_binary_type;
+
+    enum class migration_flags: migration_flags_type;
+    enum class device_partition: partition_property_type;
+    enum class device_affinity_domain: affinity_domain_type;
+    enum class argument_type_qualifiers: argument_type_qualifiers_type;
+    enum class binary_types: program_binary_type;
+    #endif
+
+    #if CL_TARGET_VERSION < 120 && defined(cl_ext_migrate_memobject)
+    typedef ::cl_mem_migration_flags_ext migration_flags_type;
+    #endif
+
+    #if CL_TARGET_VERSION < 200 && defined(cl_khr_create_command_queue)
+    typedef ::cl_queue_properties_khr queue_properties_type;
+    #endif
+
+    #if CL_TARGET_VERSION >= 200
+    typedef ::cl_kernel_exec_info kernel_execution_info_type;
+    typedef ::cl_device_svm_capabilities svm_flags_type;
+    #elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+    typedef ::cl_kernel_exec_info_arm kernel_execution_info_type;
+    typedef ::cl_device_svm_capabilities_arm svm_flags_type;
+    #endif
+
+    #if CL_TARGET_VERSION >= 200
+    typedef ::cl_sampler_properties sampler_properties_type;
+    typedef ::cl_queue_properties queue_properties_type;
+    typedef ::cl_pipe_properties pipe_properties_type;
+
+    class pipe;
+    #endif
+
+    #if CL_TARGET_VERSION >= 200 || \
+        (CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory))
+    enum class svm_flags: svm_flags_type;
+    class svm_block;
+    template <class T, svm_flags F> class svm_allocator;
+    #endif
+
+    class binary;
+    class buffer;
+    class buffer_slice;
+    class color;
+    class command_queue;
+    class command_queue_properties;
+    class command_stack;
+    class compiler;
+    class context;
+    class context_properties;
+    class device;
+    class error_category;
+    class event;
+    class extensions;
+    class header;
+    class image;
+    class image_format;
+    class intermediate_language;
+    class kernel;
+    class kernel_argument;
+    class memory_object;
+    class pattern;
+    class platform;
+    class program;
+    class range;
+    class sampler;
+    class sampler_properties;
+
+    enum class addressing_mode: addressing_mode_type;
+    enum class build_status: build_status_type;
+    enum class channel_data: channel_data_type;
+    enum class channel_order: channel_order_type;
+    enum class command: command_type;
+    enum class command_queue_flags: command_queue_flags_type;
+    enum class device_flags: device_flags_type;
+    enum class device_local_memory: device_local_memory_type;
+    enum class device_memory_cache: device_memory_cache_type;
+    enum class errc: int_type;
+    enum class execution_flags: execution_flags_type;
+    enum class execution_status: execution_status_type;
+    enum class filter_mode: filter_mode_type;
+    enum class floating_point_flags: floating_point_flags_type;
+    enum class map_flags: map_flags_type;
+    enum class memory_flags: memory_flags_type;
+    enum class memory_objects: memory_objects_type;
+
+    typedef void* host_pointer;
+    typedef const void* const_host_pointer;
+
+    template <class T> class downcast_type;
+    template <class T> class array_view;
+    template <class T> class slice_3d;
+    template <class T> struct local;
+    template <class T, int N> union Vector;
+    template <class T> struct numeric_limits;
+    struct numeric_limits_half;
+    struct work_group;
+    class range;
+    typedef void (*native_kernel_type)(void *);
+    struct image_descriptor;
+
+    const char* to_string(errc rhs);
+    std::ostream& operator<<(std::ostream& out, const errc& rhs);
+    std::error_condition make_error_condition(errc e) noexcept;
+    std::ostream& operator<<(std::ostream& out, const binary& rhs);
+    std::istream& operator>>(std::istream& in, binary& rhs);
+    template <class T, int N> Vector<T,N> make_vector(const array_view<T>& rhs);
+    template <class T> const typename downcast_type<T>::type* downcast(const T* x);
+    template <class T> typename downcast_type<T>::type* downcast(T* x);
+    template <class T> typename downcast_type<T>::type downcast(T x);
+    template <class ... Args> class argument;
+    template <class ... Args> argument<Args...> make_arguments(const Args& ... args);
+
+    void swap(context& lhs, context& rhs);
+    void swap(platform& lhs, platform& rhs);
+    void swap(device& lhs, device& rhs);
+    void swap(program& lhs, program& rhs);
+    void swap(kernel& lhs, kernel& rhs);
+    void swap(event& lhs, event& rhs);
+    void swap(memory_object& lhs, memory_object& rhs);
+    void swap(sampler& lhs, sampler& rhs);
+    void swap(command_queue& lhs, command_queue& rhs);
+    #if CL_TARGET_VERSION >= 200
+    void swap(svm_block& lhs, svm_block& rhs);
+    #endif
+
+    std::vector<platform> platforms();
+
+    #if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
+    void unload_compiler();
+    void* extension_function_address(const char* name);
+    #endif
+
+    #if CL_TARGET_VERSION >= 120
+    program
+    link(
+        const array_view<program>& programs,
+        const std::string& options,
+        const array_view<device>& devices
+    );
+    program
+    link(const array_view<program>& programs, const std::string& options);
+    #endif
+
+    void
+    wait(const array_view<event>& events);
+
+    #if defined(cl_khr_gl_sharing)
+    namespace gl {
+
+        typedef ::cl_GLuint unsigned_int_type;
+        typedef ::cl_GLint int_type;
+        typedef ::cl_GLenum enum_type;
+        typedef ::cl_GLsync sync_type;
+
+        typedef ::cl_gl_object_type memory_objects_type;
+        enum class memory_objects: memory_objects_type;
+
+        class buffer;
+        class texture;
+
+    }
+    #endif
+
+    #if defined(cl_khr_egl_event) || defined(cl_khr_egl_image)
+    namespace egl {
+        typedef ::CLeglDisplayKHR display_type;
+        typedef ::CLeglSyncKHR sync_type;
+        #if defined(cl_khr_egl_image)
+        typedef ::CLeglImageKHR image_type;
+        typedef ::cl_egl_image_properties_khr image_properties_type;
+        class image_properties;
+        class image;
+        #endif
+    }
+    #endif
+
+    #if defined(cl_khr_dx9_media_sharing)
+    namespace d3d9 {
+        typedef ::cl_dx9_media_adapter_type_khr media_adapter_type;
+        typedef ::cl_dx9_media_adapter_set_khr media_adapter_set;
+    }
+    #endif
+
+    #if defined(cl_arm_import_memory)
+    namespace arm {
+        typedef ::cl_import_properties_arm import_properties_type;
+        enum class memory_type: unsigned_int_type;
+        class import_properties;
+    }
+    #endif
+
+    #if defined(cl_ext_device_fission)
+    namespace ext {
+        typedef ::cl_device_partition_property_ext partition_property_type;
+        typedef partition_property_type partition_property_type;
+        typedef partition_property_type affinity_domain_type;
+        enum class device_partition: partition_property_type;
+        enum class affinity_domain: affinity_domain_type;
+        class device;
+        class partition_properties;
+    }
+    #endif
+
+    namespace intel {
+
+        class device;
+
+        #if defined(cl_intel_accelerator)
+        using accelerator_type = ::cl_accelerator_intel;
+        using accelerators_type = ::cl_accelerator_type_intel;
+        enum class accelerators: accelerators_type;
+        class accelerator;
+        #endif
+
+        #if defined(cl_intel_motion_estimation)
+        using me_descriptor_type = ::cl_motion_estimation_desc_intel;
+        class me_accelerator;
+        class me_descriptor;
+        #endif
+
+        #if defined(cl_intel_driver_diagnostics)
+        using diagnostics_level_type = ::cl_diagnostics_verbose_level;
+        enum class diagnostics_level: diagnostics_level_type;
+        #endif
+
+        #if defined(cl_intel_dx9_media_sharing)
+        using surface_type = ::IDirect3DSurface9;
+        using handle_type = ::HANDLE;
+        using uint_type = ::UINT;
+
+        enum class device_source: ::cl_dx9_device_source_intel {
+            device=CL_D3D9_DEVICE_INTEL,
+            device_ex=CL_D3D9EX_DEVICE_INTEL,
+            dxgi_adapter=CL_D3D9_DXGI_ADAPTER_INTEL,
+        };
+
+        enum class device_set: ::cl_dx9_device_set_intel {
+            preferred=CL_PREFERRED_DEVICES_FOR_D3D9_INTEL,
+            all=CL_ALL_DEVICES_FOR_D3D9_INTEL,
+        };
+
+        class memory_object;
+        #endif
+
+        #if defined(cl_intel_va_api_media_sharing)
+        namespace va {
+
+            using surface_type = ::VASurfaceID;
+            using device_source_type = ::cl_va_api_device_source_intel;
+            using device_set_type = ::cl_va_api_device_set_intel;
+
+            enum class device_source: device_source_type {
+                display=CL_VA_API_DISPLAY_INTEL,
+            };
+
+            enum class device_set: device_set_type {
+                preferred=CL_PREFERRED_DEVICES_FOR_VA_API_INTEL,
+                all=CL_ALL_DEVICES_FOR_VA_API_INTEL,
+            };
+
+            class memory_object;
+
+        }
+        #endif
+
+    }
+
+    namespace qcom {
+
+        #if defined(cl_qcom_ext_host_ptr)
+        enum class host_cache_policy: unsigned_int_type {
+            uncached=CL_MEM_HOST_UNCACHED_QCOM,
+            writeback=CL_MEM_HOST_WRITEBACK_QCOM,
+            writethrough=CL_MEM_HOST_WRITETHROUGH_QCOM,
+            write_combining=CL_MEM_HOST_WRITE_COMBINING_QCOM,
+            #if defined(CL_MEM_HOST_IOCOHERENT_QCOM)
+            io_coherent=CL_MEM_HOST_IOCOHERENT_QCOM,
+            #endif
+        };
+        #endif
+
+        #if defined(cl_qcom_ext_host_ptr)
+        enum class allocation_type: unsigned_int_type {
+            #if defined(CL_MEM_ANDROID_NATIVE_BUFFER_HOST_PTR_QCOM)
+            android_native_buffer,
+            #endif
+            #if defined(CL_MEM_ION_HOST_PTR_QCOM)
+            ion,
+            #endif
+        };
+        #endif
+
+        #if defined(cl_qcom_ext_host_ptr)
+        struct host_pointer: public ::cl_mem_ext_host_ptr {
+            inline void cache_policy(host_cache_policy rhs) {
+                this->host_cache_policy = rhs;
+            }
+            inline host_cache_policy cache_policy() const {
+                return host_cache_policy(this->host_cache_policy);
+            }
+            inline ::clx::qcom::allocation_type allocation() const {
+                return ::clx::qcom::alllocation_type(this->alllocation_type);
+            }
+        };
+        #endif
+
+        #if defined(CL_MEM_ANDROID_NATIVE_BUFFER_HOST_PTR_QCOM)
+        struct anb_pointer: public ::cl_mem_android_native_buffer_host_ptr {
+            inline anb_pointer() {
+                this->ext_host_ptr.allocation_type =
+                    CL_MEM_ANDROID_NATIVE_BUFFER_HOST_PTR_QCOM;
+            }
+        };
+        #endif
+
+        #if defined(CL_MEM_ION_HOST_PTR_QCOM)
+        struct ion_pointer: public ::cl_mem_ion_host_ptr {
+            inline ion_pointer() {
+                this->ext_host_ptr.allocation_type = CL_MEM_ION_HOST_PTR_QCOM;
+            }
+        };
+        #endif
+
+        #if defined(cl_qcom_ext_host_ptr)
+        struct image_pitch {
+            unsigned_int_type row_pitch;
+            unsigned_int_type row_alignment;
+            unsigned_int_type slice_pitch;
+            unsigned_int_type slice_alignment;
+        };
+        #endif
+
+    }
+
+    namespace d3d9 {
+
+        #if defined(cl_khr_dx9_media_sharing)
+        enum class adapter_type: ::cl_dx9_media_adapter_type_khr {
+            d3d9=CL_ADAPTER_D3D9_KHR,
+            d3d9ex=CL_ADAPTER_D3D9EX_KHR,
+            dxva=CL_ADAPTER_DXVA_KHR,
+        };
+
+        enum class adapter_set: ::cl_dx9_media_adapter_set_khr {
+            preferred=CL_PREFERRED_DEVICES_FOR_DX9_MEDIA_ADAPTER_KHR,
+            all=CL_ALL_DEVICES_FOR_DX9_MEDIA_ADAPTER_KHR,
+        };
+
+        class surface_info: public ::cl_dx9_surface_info_khr;
+        class media_surface;
+        #endif
+
+    }
+
+    namespace d3d10 {
+
+        #if defined(cl_khr_d3d10_sharing)
+        using resource_type = ::ID3D10Resource;
+        using buffer_type = ::ID3D10Buffer;
+        using texture2d_type = ::ID3D10Texture2D;
+        using texture3d_type = ::ID3D10Texture3D;
+        using device_type = ::ID3D10Device;
+        using dxgi_adapter_type = ::IDXGIAdapter;
+
+        enum class device_source: ::cl_d3d10_device_source_khr {
+            device=CL_D3D10_DEVICE_KHR,
+            dxgi_adapter=CL_D3D10_DXGI_ADAPTER_KHR,
+        };
+
+        enum class device_set: ::cl_d3d10_device_set_khr {
+            preferred=CL_PREFERRED_DEVICES_FOR_D3D10_KHR,
+            all=CL_ALL_DEVICES_FOR_D3D10_KHR,
+        };
+
+        class memory_object;
+        #endif
+
+    }
+
+    namespace d3d11 {
+
+        #if CL_TARGET_VERSION >= 120 && defined(cl_khr_d3d11_sharing)
+        using resource_type = ::ID3D11Resource;
+        using buffer_type = ::ID3D11Buffer;
+        using texture2d_type = ::ID3D11Texture2D;
+        using texture3d_type = ::ID3D11Texture3D;
+        using device_type = ::ID3D11Device;
+        using dxgi_adapter_type = ::IDXGIAdapter;
+
+        enum class device_source: ::cl_d3d11_device_source_khr {
+            device=CL_D3D11_DEVICE_KHR,
+            dxgi_adapter=CL_D3D11_DXGI_ADAPTER_KHR,
+        };
+
+        enum class device_set: ::cl_d3d11_device_set_khr {
+            preferred=CL_PREFERRED_DEVICES_FOR_D3D11_KHR,
+            all=CL_ALL_DEVICES_FOR_D3D11_KHR,
+        };
+
+        class memory_object;
+        #endif
+
+    }
 
 }
 

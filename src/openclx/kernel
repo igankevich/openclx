@@ -8,198 +8,198 @@
 
 namespace clx {
 
-	template <class T>
-	struct local {
-		typedef T value_type;
-		size_t size = 0;
-	};
+    template <class T>
+    struct local {
+        typedef T value_type;
+        size_t size = 0;
+    };
 
-	struct work_group {
-		size_t size = 0;
-		size_t size_hint[3]{};
-		size_t size_multiple = 0;
-		#if CL_TARGET_VERSION >= 110
-		unsigned_long_type local_memory_size = 0;
-		unsigned_long_type private_memory_size = 0;
-		#endif
-		#if CL_TARGET_VERSION >= 120 && defined(cl_intel_required_subgroup_size)
-		unsigned_long_type spill_memory_size = 0;
-		#endif
-	};
+    struct work_group {
+        size_t size = 0;
+        size_t size_hint[3]{};
+        size_t size_multiple = 0;
+        #if CL_TARGET_VERSION >= 110
+        unsigned_long_type local_memory_size = 0;
+        unsigned_long_type private_memory_size = 0;
+        #endif
+        #if CL_TARGET_VERSION >= 120 && defined(cl_intel_required_subgroup_size)
+        unsigned_long_type spill_memory_size = 0;
+        #endif
+    };
 
-	class kernel {
+    class kernel {
 
-	private:
-		kernel_type _ptr = nullptr;
+    private:
+        kernel_type _ptr = nullptr;
 
-	public:
+    public:
 
-		inline explicit
-		kernel(kernel_type ptr): _ptr(ptr) {}
+        inline explicit
+        kernel(kernel_type ptr): _ptr(ptr) {}
 
-		kernel
-		copy() const;
+        kernel
+        copy() const;
 
-		template <class T>
-		inline void
-		argument(unsigned_int_type i, const T& value) {
-			CLX_CHECK(::clSetKernelArg(this->_ptr, i, sizeof(T), &value));
-		}
+        template <class T>
+        inline void
+        argument(unsigned_int_type i, const T& value) {
+            CLX_CHECK(::clSetKernelArg(this->_ptr, i, sizeof(T), &value));
+        }
 
-		template <class T>
-		inline void
-		argument(unsigned_int_type i, const local<T>& value) {
-			CLX_CHECK(::clSetKernelArg(this->_ptr, i, value.size*sizeof(T), nullptr));
-		}
+        template <class T>
+        inline void
+        argument(unsigned_int_type i, const local<T>& value) {
+            CLX_CHECK(::clSetKernelArg(this->_ptr, i, value.size*sizeof(T), nullptr));
+        }
 
-		#if CL_TARGET_VERSION >= 120
-		kernel_argument
-		argument(unsigned_int_type i) const;
-		#endif
+        #if CL_TARGET_VERSION >= 120
+        kernel_argument
+        argument(unsigned_int_type i) const;
+        #endif
 
-		#if CL_TARGET_VERSION >= 200
-		template <class T>
-		inline void
-		argument(unsigned_int_type i, const T* ptr) {
-			CLX_CHECK(::clSetKernelArgSVMPointer(this->_ptr, i, ptr));
-		}
-		#endif
+        #if CL_TARGET_VERSION >= 200
+        template <class T>
+        inline void
+        argument(unsigned_int_type i, const T* ptr) {
+            CLX_CHECK(::clSetKernelArgSVMPointer(this->_ptr, i, ptr));
+        }
+        #endif
 
-		#if CL_TARGET_VERSION >= 200 || \
-			(CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory))
-		inline void svm_pointers(const array_view<void*>& pointers) {
-			#if CL_TARGET_VERSION >= 200
-			return this->svm_pointers_200(pointers);
-			#elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
-			return this->svm_pointers_arm(pointers);
-			#endif
-		}
-		template <class ... Args> inline void
-		svm_pointers(const Args& ... args) {
-			void* pointers[] {args...};
-			this->svm_pointers({pointers, sizeof...(args)});
-		}
-		inline void fine_grain_system_svm_pointers(bool b) {
-			#if CL_TARGET_VERSION >= 200
-			return this->fine_grain_system_svm_pointers_200(b);
-			#elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
-			return this->fine_grain_system_svm_pointers_arm(b);
-			#endif
-		}
-		#endif
+        #if CL_TARGET_VERSION >= 200 || \
+            (CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory))
+        inline void svm_pointers(const array_view<void*>& pointers) {
+            #if CL_TARGET_VERSION >= 200
+            return this->svm_pointers_200(pointers);
+            #elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+            return this->svm_pointers_arm(pointers);
+            #endif
+        }
+        template <class ... Args> inline void
+        svm_pointers(const Args& ... args) {
+            void* pointers[] {args...};
+            this->svm_pointers({pointers, sizeof...(args)});
+        }
+        inline void fine_grain_system_svm_pointers(bool b) {
+            #if CL_TARGET_VERSION >= 200
+            return this->fine_grain_system_svm_pointers_200(b);
+            #elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+            return this->fine_grain_system_svm_pointers_arm(b);
+            #endif
+        }
+        #endif
 
-		#if CL_TARGET_VERSION >= 210
-		size_t max_sub_groups(const device& device) const;
-		size_t num_sub_groups(const device& device) const;
-		range local_size(const device& device, size_t nsubgroups) const;
-		#endif
+        #if CL_TARGET_VERSION >= 210
+        size_t max_sub_groups(const device& device) const;
+        size_t num_sub_groups(const device& device) const;
+        range local_size(const device& device, size_t nsubgroups) const;
+        #endif
 
-		#if CL_TARGET_VERSION >= 210 || \
-			(CL_TARGET_VERSION >= 200 && defined(cl_khr_subgroups))
-		inline size_t
-		max_sub_group_size(const device& device, const range& range) const {
-			#if CL_TARGET_VERSION >= 210
-			return this->max_sub_group_size_210(device, range);
-			#else
-			return this->max_sub_group_size_khr(device, range);
-			#endif
-		}
+        #if CL_TARGET_VERSION >= 210 || \
+            (CL_TARGET_VERSION >= 200 && defined(cl_khr_subgroups))
+        inline size_t
+        max_sub_group_size(const device& device, const range& range) const {
+            #if CL_TARGET_VERSION >= 210
+            return this->max_sub_group_size_210(device, range);
+            #else
+            return this->max_sub_group_size_khr(device, range);
+            #endif
+        }
 
-		inline size_t
-		num_sub_groups(const device& device, const range& range) const {
-			#if CL_TARGET_VERSION >= 210
-			return this->num_sub_groups_210(device, range);
-			#else
-			return this->num_sub_groups_khr(device, range);
-			#endif
-		}
-		#endif
+        inline size_t
+        num_sub_groups(const device& device, const range& range) const {
+            #if CL_TARGET_VERSION >= 210
+            return this->num_sub_groups_210(device, range);
+            #else
+            return this->num_sub_groups_khr(device, range);
+            #endif
+        }
+        #endif
 
-		#if CL_TARGET_VERSION >= 120 && defined(cl_intel_required_subgroup_size)
-		size_t sub_groups_size(const device& device) const;
-		#endif
+        #if CL_TARGET_VERSION >= 120 && defined(cl_intel_required_subgroup_size)
+        size_t sub_groups_size(const device& device) const;
+        #endif
 
-		std::string name() const;
-		unsigned_int_type num_arguments() const;
-		unsigned_int_type num_references() const;
-		::clx::context context() const;
-		::clx::program program() const;
-		::clx::work_group work_group(const device& dev) const;
+        std::string name() const;
+        unsigned_int_type num_arguments() const;
+        unsigned_int_type num_references() const;
+        ::clx::context context() const;
+        ::clx::program program() const;
+        ::clx::work_group work_group(const device& dev) const;
 
-		inline kernel_type
-		get() noexcept {
-			return this->_ptr;
-		}
+        inline kernel_type
+        get() noexcept {
+            return this->_ptr;
+        }
 
-		inline const kernel_type
-		get() const noexcept {
-			return this->_ptr;
-		}
+        inline const kernel_type
+        get() const noexcept {
+            return this->_ptr;
+        }
 
-		kernel() = default;
-		inline ~kernel() { this->release(); }
-		inline kernel(const kernel& rhs): _ptr(rhs._ptr) { this->retain(); }
+        kernel() = default;
+        inline ~kernel() { this->release(); }
+        inline kernel(const kernel& rhs): _ptr(rhs._ptr) { this->retain(); }
 
-		inline kernel&
-		operator=(const kernel& rhs) {
-			kernel tmp(rhs);
-			this->swap(tmp);
-			return *this;
-		}
+        inline kernel&
+        operator=(const kernel& rhs) {
+            kernel tmp(rhs);
+            this->swap(tmp);
+            return *this;
+        }
 
-		inline kernel(kernel&& rhs): _ptr(rhs._ptr) { rhs._ptr = nullptr; }
-		inline kernel& operator=(kernel&& rhs) { this->swap(rhs); return *this; }
+        inline kernel(kernel&& rhs): _ptr(rhs._ptr) { rhs._ptr = nullptr; }
+        inline kernel& operator=(kernel&& rhs) { this->swap(rhs); return *this; }
 
-		inline void
-		release() {
-			if (this->_ptr) {
-				CLX_CHECK(::clReleaseKernel(this->_ptr));
-				this->_ptr = nullptr;
-			}
-		}
+        inline void
+        release() {
+            if (this->_ptr) {
+                CLX_CHECK(::clReleaseKernel(this->_ptr));
+                this->_ptr = nullptr;
+            }
+        }
 
-		inline void
-		retain() {
-			if (this->_ptr) {
-				CLX_CHECK(::clRetainKernel(this->_ptr));
-			}
-		}
+        inline void
+        retain() {
+            if (this->_ptr) {
+                CLX_CHECK(::clRetainKernel(this->_ptr));
+            }
+        }
 
-		inline void
-		swap(kernel& rhs) {
-			std::swap(this->_ptr, rhs._ptr);
-		}
+        inline void
+        swap(kernel& rhs) {
+            std::swap(this->_ptr, rhs._ptr);
+        }
 
-	private:
+    private:
 
-		#if CL_TARGET_VERSION >= 200
-		void svm_pointers_200(const array_view<void*>& pointers);
-		void fine_grain_system_svm_pointers_200(bool b);
-		#endif
+        #if CL_TARGET_VERSION >= 200
+        void svm_pointers_200(const array_view<void*>& pointers);
+        void fine_grain_system_svm_pointers_200(bool b);
+        #endif
 
-		#if CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
-		void svm_pointers_arm(const array_view<void*>& pointers);
-		void fine_grain_system_svm_pointers_arm(bool b);
-		#endif
+        #if CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+        void svm_pointers_arm(const array_view<void*>& pointers);
+        void fine_grain_system_svm_pointers_arm(bool b);
+        #endif
 
-		#if CL_TARGET_VERSION >= 210
-		size_t max_sub_group_size_210(const device& device, const range& range) const;
-		size_t num_sub_groups_210(const device& device, const range& range) const;
-		#endif
+        #if CL_TARGET_VERSION >= 210
+        size_t max_sub_group_size_210(const device& device, const range& range) const;
+        size_t num_sub_groups_210(const device& device, const range& range) const;
+        #endif
 
-		#if CL_TARGET_VERSION >= 200 && defined(cl_khr_subgroups)
-		size_t max_sub_group_size_khr(const device& device, const range& range) const;
-		size_t num_sub_groups_khr(const device& device, const range& range) const;
-		#endif
+        #if CL_TARGET_VERSION >= 200 && defined(cl_khr_subgroups)
+        size_t max_sub_group_size_khr(const device& device, const range& range) const;
+        size_t num_sub_groups_khr(const device& device, const range& range) const;
+        #endif
 
-	};
+    };
 
-	static_assert(sizeof(kernel) == sizeof(kernel_type), "bad size");
+    static_assert(sizeof(kernel) == sizeof(kernel_type), "bad size");
 
-	inline void
-	swap(kernel& lhs, kernel& rhs) {
-		lhs.swap(rhs);
-	}
+    inline void
+    swap(kernel& lhs, kernel& rhs) {
+        lhs.swap(rhs);
+    }
 
 }
 

@@ -5,38 +5,38 @@
 
 namespace clx {
 
-	namespace intel {
+    namespace intel {
 
-		#if defined(cl_intel_dx9_media_sharing)
-		class memory_object: public ::clx::memory_object {
+        #if defined(cl_intel_dx9_media_sharing)
+        class memory_object: public ::clx::memory_object {
 
-		public:
-			using ::clx::memory_object::memory_object;
+        public:
+            using ::clx::memory_object::memory_object;
 
-			surface_type resource() const;
-			handle_type shared_handler() const;
-			uint_type plane() const;
+            surface_type resource() const;
+            handle_type shared_handler() const;
+            uint_type plane() const;
 
-		};
-		#endif
+        };
+        #endif
 
-		namespace va {
+        namespace va {
 
-			#if defined(cl_intel_va_api_media_sharing)
-			class memory_object: public ::clx::memory_object {
+            #if defined(cl_intel_va_api_media_sharing)
+            class memory_object: public ::clx::memory_object {
 
-			public:
-				using ::clx::memory_object::memory_object;
+            public:
+                using ::clx::memory_object::memory_object;
 
-				surface_type surface() const;
-				unsigned_int_type plane() const;
+                surface_type surface() const;
+                unsigned_int_type plane() const;
 
-			};
-			#endif
+            };
+            #endif
 
-		}
+        }
 
-	}
+    }
 
 }
 

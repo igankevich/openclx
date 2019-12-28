@@ -5,21 +5,21 @@
 
 namespace clx {
 
-	namespace d3d10 {
+    namespace d3d10 {
 
-		#if defined(cl_khr_d3d10_sharing)
-		class memory_object: public ::clx::memory_object {
+        #if defined(cl_khr_d3d10_sharing)
+        class memory_object: public ::clx::memory_object {
 
-		public:
-			using ::clx::memory_object::memory_object;
+        public:
+            using ::clx::memory_object::memory_object;
 
-			resource_type resource() const;
-			resource_type subresource() const;
+            resource_type resource() const;
+            resource_type subresource() const;
 
-		};
-		#endif
+        };
+        #endif
 
-	}
+    }
 
 }
 

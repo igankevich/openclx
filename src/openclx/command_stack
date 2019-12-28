@@ -1,8 +1,9 @@
-#ifndef OPENCLX_EVENT_STACK
-#define OPENCLX_EVENT_STACK
+#ifndef OPENCLX_COMMAND_STACK
+#define OPENCLX_COMMAND_STACK
 
 #include <vector>
 
+#include <openclx/array_view>
 #include <openclx/color>
 #include <openclx/command_queue>
 #include <openclx/downcast>
@@ -17,413 +18,413 @@
 
 namespace clx {
 
-	class command_stack {
+    class command_stack {
 
-	public:
-		typedef std::vector<event> event_array;
-		typedef std::vector<event_array> frame_array;
-		typedef std::vector<device> device_array;
-		typedef slice_3d<const buffer&> buffer_slice_3d;
-		typedef slice_3d<const image&> image_slice_3d;
-		typedef slice_3d<host_pointer> host_slice_3d;
-		typedef slice_3d<const_host_pointer> const_host_slice_3d;
-		typedef array_view<memory_object> memory_object_array;
-		typedef void* svm_pointer;
-		typedef array_view<void> svm_array;
-		#if defined(cl_khr_gl_sharing)
-		typedef array_view<gl::buffer> gl_memory_object_array;
-		#endif
-		#if defined(cl_khr_egl_image)
-		typedef array_view<egl::image> egl_memory_object_array;
-		#endif
-		#if defined(cl_khr_dx9_media_sharing)
-		typedef array_view<d3d9::media_surface> dx9_media_surface_array;
-		#endif
-		#if defined(cl_khr_d3d10_sharing)
-		typedef array_view<d3d10::memory_object> d3d10_memory_object_array;
-		#endif
-		#if CL_TARGET_VERSION >= 120 && defined(cl_khr_d3d11_sharing)
-		typedef array_view<d3d11::memory_object> d3d11_memory_object_array;
-		#endif
-		#if defined(cl_intel_dx9_media_sharing)
-		typedef array_view<intel::memory_object> intel_memory_object_array;
-		#endif
-		#if defined(cl_intel_va_api_media_sharing)
-		typedef array_view<intel::va::memory_object> intel_va_memory_object_array;
-		#endif
+    public:
+        typedef std::vector<event> event_array;
+        typedef std::vector<event_array> frame_array;
+        typedef std::vector<device> device_array;
+        typedef slice_3d<const buffer&> buffer_slice_3d;
+        typedef slice_3d<const image&> image_slice_3d;
+        typedef slice_3d<host_pointer> host_slice_3d;
+        typedef slice_3d<const_host_pointer> const_host_slice_3d;
+        typedef array_view<memory_object> memory_object_array;
+        typedef void* svm_pointer;
+        typedef array_view<void> svm_array;
+        #if defined(cl_khr_gl_sharing)
+        typedef array_view<gl::buffer> gl_memory_object_array;
+        #endif
+        #if defined(cl_khr_egl_image)
+        typedef array_view<egl::image> egl_memory_object_array;
+        #endif
+        #if defined(cl_khr_dx9_media_sharing)
+        typedef array_view<d3d9::media_surface> dx9_media_surface_array;
+        #endif
+        #if defined(cl_khr_d3d10_sharing)
+        typedef array_view<d3d10::memory_object> d3d10_memory_object_array;
+        #endif
+        #if CL_TARGET_VERSION >= 120 && defined(cl_khr_d3d11_sharing)
+        typedef array_view<d3d11::memory_object> d3d11_memory_object_array;
+        #endif
+        #if defined(cl_intel_dx9_media_sharing)
+        typedef array_view<intel::memory_object> intel_memory_object_array;
+        #endif
+        #if defined(cl_intel_va_api_media_sharing)
+        typedef array_view<intel::va::memory_object> intel_va_memory_object_array;
+        #endif
 
-	private:
+    private:
 
-		struct step_guard {
+        struct step_guard {
 
-			typedef const event_type* const_pointer;
+            typedef const event_type* const_pointer;
 
-			command_stack& stack;
-			unsigned_int_type nevents = 0;
-			const_pointer events = nullptr;
+            command_stack& stack;
+            unsigned_int_type nevents = 0;
+            const_pointer events = nullptr;
 
-			inline explicit
-			step_guard(command_stack& stack): stack(stack) {
-				unsigned_int_type n = stack.frame_size();
-				if (stack._sync && n > 0) {
-					events = stack.frame();
-					nevents = n;
-				}
-			}
+            inline explicit
+            step_guard(command_stack& stack): stack(stack) {
+                unsigned_int_type n = stack.frame_size();
+                if (stack._sync && n > 0) {
+                    events = stack.frame();
+                    nevents = n;
+                }
+            }
 
-			inline
-			~step_guard() {
-				if (stack._sync) {
-					stack._offset = stack._events.size();
-					stack._sync = false;
-				}
-			}
+            inline
+            ~step_guard() {
+                if (stack._sync) {
+                    stack._offset = stack._events.size();
+                    stack._sync = false;
+                }
+            }
 
-		};
+        };
 
-		struct queue_pair {
-			command_queue kernel_queue, data_queue;
-			inline queue_pair(command_queue q1, command_queue q2):
-			kernel_queue(q1), data_queue(q2) {}
-		};
-		typedef std::vector<queue_pair> queue_array;
+        struct queue_pair {
+            command_queue kernel_queue, data_queue;
+            inline queue_pair(command_queue q1, command_queue q2):
+            kernel_queue(q1), data_queue(q2) {}
+        };
+        typedef std::vector<queue_pair> queue_array;
 
-	private:
-		queue_array _devices;
-		unsigned_int_type _device_index = 0;
-		event_array _events;
-		unsigned_int_type _offset = 0;
-		bool _sync = false;
+    private:
+        queue_array _devices;
+        unsigned_int_type _device_index = 0;
+        event_array _events;
+        unsigned_int_type _offset = 0;
+        bool _sync = false;
 
-	public:
+    public:
 
-		inline explicit
-		command_stack(command_queue queue): _devices{{queue,queue}} {
-			this->_events.reserve(4096 / sizeof(event_type));
-		}
+        inline explicit
+        command_stack(command_queue queue): _devices{{queue,queue}} {
+            this->_events.reserve(4096 / sizeof(event_type));
+        }
 
-		inline explicit
-		command_stack(command_queue kernel_queue, command_queue data_queue):
-		_devices{{kernel_queue,data_queue}} {
-			this->_events.reserve(4096 / sizeof(event_type));
-		}
+        inline explicit
+        command_stack(command_queue kernel_queue, command_queue data_queue):
+        _devices{{kernel_queue,data_queue}} {
+            this->_events.reserve(4096 / sizeof(event_type));
+        }
 
-		explicit
-		command_stack(const device_array& devices, const command_queue_properties& properties);
+        explicit
+        command_stack(const device_array& devices, const command_queue_properties& properties);
 
-		command_stack(const command_stack&) = default;
-		command_stack& operator=(const command_stack&) = default;
-		command_stack(command_stack&&) = default;
-		command_stack& operator=(command_stack&&) = default;
+        command_stack(const command_stack&) = default;
+        command_stack& operator=(const command_stack&) = default;
+        command_stack(command_stack&&) = default;
+        command_stack& operator=(command_stack&&) = default;
 
-		void
-		wait();
+        void
+        wait();
 
-		inline void
-		barrier() {
-			#if CL_TARGET_VERSION >= 120
-			this->barrier_120();
-			#else
-			this->barrier_100();
-			#endif
-		}
+        inline void
+        barrier() {
+            #if CL_TARGET_VERSION >= 120
+            this->barrier_120();
+            #else
+            this->barrier_100();
+            #endif
+        }
 
-		inline void
-		marker() {
-			#if CL_TARGET_VERSION >= 120
-			this->marker_120();
-			#else
-			this->marker_100();
-			#endif
-		}
+        inline void
+        marker() {
+            #if CL_TARGET_VERSION >= 120
+            this->marker_120();
+            #else
+            this->marker_100();
+            #endif
+        }
 
-		void
-		kernel(const ::clx::kernel& k);
+        void
+        kernel(const ::clx::kernel& k);
 
-		inline void
-		kernel(const ::clx::kernel& k, const range& global) {
-			this->kernel(k, {}, global, {});
-		}
+        inline void
+        kernel(const ::clx::kernel& k, const range& global) {
+            this->kernel(k, {}, global, {});
+        }
 
-		inline void
-		kernel(const ::clx::kernel& k, const range& global, const range& local) {
-			this->kernel(k, {}, global, local);
-		}
+        inline void
+        kernel(const ::clx::kernel& k, const range& global, const range& local) {
+            this->kernel(k, {}, global, local);
+        }
 
-		void
-		kernel(
-			const ::clx::kernel& k,
-			const range& offset,
-			const range& global,
-			const range& local
-		);
+        void
+        kernel(
+            const ::clx::kernel& k,
+            const range& offset,
+            const range& global,
+            const range& local
+        );
 
-		template <class ... Args>
-		inline void
-		kernel(native_kernel_type k, const Args& ... args_in) {
-			const auto& args = make_arguments(args_in...);
-			event_type ret;
-			{
-				step_guard g(*this);
-				unsigned_int_type nobjects = 0;
-				std::vector<memory_object_type> objects;
-				std::vector<void*> locations;
-				args.memory_objects(nobjects, objects, locations);
-				CLX_CHECK(::clEnqueueNativeKernel(
-					kernel_queue().get(), k, &args, sizeof(args),
-					nobjects, objects.data(), locations.data(),
-					g.nevents, g.events, &ret
-				));
-			}
-			events().emplace_back(std::move(ret));
-		}
+        template <class ... Args>
+        inline void
+        kernel(native_kernel_type k, const Args& ... args_in) {
+            const auto& args = make_arguments(args_in...);
+            event_type ret;
+            {
+                step_guard g(*this);
+                unsigned_int_type nobjects = 0;
+                std::vector<memory_object_type> objects;
+                std::vector<void*> locations;
+                args.memory_objects(nobjects, objects, locations);
+                CLX_CHECK(::clEnqueueNativeKernel(
+                    kernel_queue().get(), k, &args, sizeof(args),
+                    nobjects, objects.data(), locations.data(),
+                    g.nevents, g.events, &ret
+                ));
+            }
+            events().emplace_back(std::move(ret));
+        }
 
-		void copy(const buffer_slice& src, host_pointer dst);
-		void copy(const image_slice_3d& src, host_pointer dst);
-		void copy(const image& src, host_pointer dst);
-		void copy(const_host_pointer src, const buffer_slice& dst);
-		void copy(const_host_pointer src, const image_slice_3d& dst);
-		void copy(const_host_pointer src, const image& dst);
-		void copy(const buffer_slice& src, const buffer_slice& dst);
-		void copy(const buffer& src, const buffer& dst);
-		void copy(const image_slice_3d& src, const image_slice_3d& dst);
-		void copy(const image& src, const image& dst);
-		void copy(const image_slice_3d& src, const buffer_slice& dst);
-		void copy(const image_slice_3d& src, const buffer& dst);
-		void copy(const image& src, const buffer& dst);
-		void copy(const buffer_slice& src, const image_slice_3d& dst);
-		void copy(const buffer_slice& src, const image& dst);
-		void copy(const buffer& src, const image& dst);
-		#if CL_TARGET_VERSION >= 110
-		void copy(const buffer_slice_3d& src, const buffer_slice_3d& dst);
-		void copy(const const_host_slice_3d& src, const buffer_slice_3d& dst);
-		void copy(const buffer_slice_3d& src, const host_slice_3d& dst);
-		#endif
+        void copy(const buffer_slice& src, host_pointer dst);
+        void copy(const image_slice_3d& src, host_pointer dst);
+        void copy(const image& src, host_pointer dst);
+        void copy(const_host_pointer src, const buffer_slice& dst);
+        void copy(const_host_pointer src, const image_slice_3d& dst);
+        void copy(const_host_pointer src, const image& dst);
+        void copy(const buffer_slice& src, const buffer_slice& dst);
+        void copy(const buffer& src, const buffer& dst);
+        void copy(const image_slice_3d& src, const image_slice_3d& dst);
+        void copy(const image& src, const image& dst);
+        void copy(const image_slice_3d& src, const buffer_slice& dst);
+        void copy(const image_slice_3d& src, const buffer& dst);
+        void copy(const image& src, const buffer& dst);
+        void copy(const buffer_slice& src, const image_slice_3d& dst);
+        void copy(const buffer_slice& src, const image& dst);
+        void copy(const buffer& src, const image& dst);
+        #if CL_TARGET_VERSION >= 110
+        void copy(const buffer_slice_3d& src, const buffer_slice_3d& dst);
+        void copy(const const_host_slice_3d& src, const buffer_slice_3d& dst);
+        void copy(const buffer_slice_3d& src, const host_slice_3d& dst);
+        #endif
 
-		#if (CL_TARGET_VERSION < 120 && defined(cl_ext_migrate_memobject)) || \
-			CL_TARGET_VERSION >= 120
-		inline void
-		migrate(migration_flags flags, const memory_object_array& objects) {
-			#if CL_TARGET_VERSION >= 120
-			this->migrate_120(flags, objects);
-			#else
-			this->migrate_ext(flags, objects);
-			#endif
-		}
-		#endif
+        #if (CL_TARGET_VERSION < 120 && defined(cl_ext_migrate_memobject)) || \
+            CL_TARGET_VERSION >= 120
+        inline void
+        migrate(migration_flags flags, const memory_object_array& objects) {
+            #if CL_TARGET_VERSION >= 120
+            this->migrate_120(flags, objects);
+            #else
+            this->migrate_ext(flags, objects);
+            #endif
+        }
+        #endif
 
-		#if defined(cl_khr_gl_sharing)
-		void acquire(const gl_memory_object_array& objects);
-		void release(const gl_memory_object_array& objects);
-		#endif
+        #if defined(cl_khr_gl_sharing)
+        void acquire(const gl_memory_object_array& objects);
+        void release(const gl_memory_object_array& objects);
+        #endif
 
-		#if defined(cl_khr_egl_image)
-		void acquire(const egl_memory_object_array& objects);
-		void release(const egl_memory_object_array& objects);
-		#endif
+        #if defined(cl_khr_egl_image)
+        void acquire(const egl_memory_object_array& objects);
+        void release(const egl_memory_object_array& objects);
+        #endif
 
-		#if defined(cl_khr_dx9_media_sharing)
-		void acquire(const dx9_media_surface_array& objects);
-		void release(const dx9_media_surface_array& objects);
-		#endif
+        #if defined(cl_khr_dx9_media_sharing)
+        void acquire(const dx9_media_surface_array& objects);
+        void release(const dx9_media_surface_array& objects);
+        #endif
 
-		#if defined(cl_khr_d3d10_sharing)
-		void acquire(const d3d10_memory_object_array& objects);
-		void release(const d3d10_memory_object_array& objects);
-		#endif
+        #if defined(cl_khr_d3d10_sharing)
+        void acquire(const d3d10_memory_object_array& objects);
+        void release(const d3d10_memory_object_array& objects);
+        #endif
 
-		#if CL_TARGET_VERSION >= 120 && defined(cl_khr_d3d11_sharing)
-		void acquire(const d3d11_memory_object_array& objects);
-		void release(const d3d11_memory_object_array& objects);
-		#endif
+        #if CL_TARGET_VERSION >= 120 && defined(cl_khr_d3d11_sharing)
+        void acquire(const d3d11_memory_object_array& objects);
+        void release(const d3d11_memory_object_array& objects);
+        #endif
 
-		#if defined(cl_intel_dx9_media_sharing)
-		void acquire(const intel_memory_object_array& objects);
-		void release(const intel_memory_object_array& objects);
-		#endif
+        #if defined(cl_intel_dx9_media_sharing)
+        void acquire(const intel_memory_object_array& objects);
+        void release(const intel_memory_object_array& objects);
+        #endif
 
-		#if defined(cl_intel_va_api_media_sharing)
-		void acquire(const intel_va_memory_object_array& objects);
-		void release(const intel_va_memory_object_array& objects);
-		#endif
+        #if defined(cl_intel_va_api_media_sharing)
+        void acquire(const intel_va_memory_object_array& objects);
+        void release(const intel_va_memory_object_array& objects);
+        #endif
 
-		#if CL_TARGET_VERSION >= 120
-		void fill(const buffer_slice& dst, const pattern& pattern);
-		void fill(const buffer& dst, const pattern& pattern);
-		void fill(const image_slice_3d& dst, const color& col);
-		void fill(const image& dst, const color& col);
-		template <class ... Args> inline void
-		migrate(migration_flags flags, const Args& ... objects) {
-			memory_object arr[] {objects...};
-			this->migrate(flags, {arr, sizeof...(objects)});
-		}
-		#if defined(cl_img_use_gralloc_ptr)
-		void acquire_gralloc(const memory_object_array& objects);
-		void release_gralloc(const memory_object_array& objects);
-		#endif
-		#endif
+        #if CL_TARGET_VERSION >= 120
+        void fill(const buffer_slice& dst, const pattern& pattern);
+        void fill(const buffer& dst, const pattern& pattern);
+        void fill(const image_slice_3d& dst, const color& col);
+        void fill(const image& dst, const color& col);
+        template <class ... Args> inline void
+        migrate(migration_flags flags, const Args& ... objects) {
+            memory_object arr[] {objects...};
+            this->migrate(flags, {arr, sizeof...(objects)});
+        }
+        #if defined(cl_img_use_gralloc_ptr)
+        void acquire_gralloc(const memory_object_array& objects);
+        void release_gralloc(const memory_object_array& objects);
+        #endif
+        #endif
 
-		#if CL_TARGET_VERSION >= 200 || \
-			(CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory))
-		inline void free(const array_view<svm_pointer>& pointers) {
-			#if CL_TARGET_VERSION >= 200
-			this->free_200(pointers);
-			#elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
-			this->free_arm(pointers);
-			#endif
-		}
-		inline void fill(svm_array ptr, const pattern& pattern) {
-			#if CL_TARGET_VERSION >= 200
-			this->fill_200(ptr, pattern);
-			#elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
-			this->fill_arm(ptr, pattern);
-			#endif
-		}
-		inline void copy(const svm_array& src, const svm_array& dst) {
-			#if CL_TARGET_VERSION >= 200
-			this->copy_200(src, dst);
-			#elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
-			this->copy_arm(src, dst);
-			#endif
-		}
-		inline void map(const svm_array& src, map_flags flags) {
-			#if CL_TARGET_VERSION >= 200
-			this->map_200(src, flags);
-			#elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
-			this->map_arm(src, flags);
-			#endif
-		}
-		inline void unmap(svm_pointer ptr) {
-			#if CL_TARGET_VERSION >= 200
-			this->unmap_200(ptr);
-			#elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
-			this->unmap_arm(ptr);
-			#endif
-		}
-		#endif
+        #if CL_TARGET_VERSION >= 200 || \
+            (CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory))
+        inline void free(const array_view<svm_pointer>& pointers) {
+            #if CL_TARGET_VERSION >= 200
+            this->free_200(pointers);
+            #elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+            this->free_arm(pointers);
+            #endif
+        }
+        inline void fill(svm_array ptr, const pattern& pattern) {
+            #if CL_TARGET_VERSION >= 200
+            this->fill_200(ptr, pattern);
+            #elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+            this->fill_arm(ptr, pattern);
+            #endif
+        }
+        inline void copy(const svm_array& src, const svm_array& dst) {
+            #if CL_TARGET_VERSION >= 200
+            this->copy_200(src, dst);
+            #elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+            this->copy_arm(src, dst);
+            #endif
+        }
+        inline void map(const svm_array& src, map_flags flags) {
+            #if CL_TARGET_VERSION >= 200
+            this->map_200(src, flags);
+            #elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+            this->map_arm(src, flags);
+            #endif
+        }
+        inline void unmap(svm_pointer ptr) {
+            #if CL_TARGET_VERSION >= 200
+            this->unmap_200(ptr);
+            #elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+            this->unmap_arm(ptr);
+            #endif
+        }
+        #endif
 
-		#if CL_TARGET_VERSION >= 210
-		void migrate(
-			migration_flags flags,
-			const array_view<array_view<svm_pointer>>& pointers
-		);
-		#endif
+        #if CL_TARGET_VERSION >= 210
+        void migrate(
+            migration_flags flags,
+            const array_view<array_view<svm_pointer>>& pointers
+        );
+        #endif
 
-		host_pointer
-		map(const buffer_slice& b, map_flags flags);
+        host_pointer
+        map(const buffer_slice& b, map_flags flags);
 
-		host_pointer
-		map(const buffer& b, map_flags flags);
+        host_pointer
+        map(const buffer& b, map_flags flags);
 
-		host_pointer
-		map(
-			const image_slice_3d& src, map_flags flags,
-			size_t& row_pitch, size_t& slice_pitch
-		);
+        host_pointer
+        map(
+            const image_slice_3d& src, map_flags flags,
+            size_t& row_pitch, size_t& slice_pitch
+        );
 
-		host_pointer
-		map(
-			const image& src, map_flags flags,
-			size_t& row_pitch, size_t& slice_pitch
-		);
+        host_pointer
+        map(
+            const image& src, map_flags flags,
+            size_t& row_pitch, size_t& slice_pitch
+        );
 
-		void unmap(const memory_object& obj, host_pointer ptr);
+        void unmap(const memory_object& obj, host_pointer ptr);
 
-		inline void step() { this->_sync = true; }
-		inline void insert(event&& ev) { events().emplace_back(std::forward<event>(ev)); }
+        inline void step() { this->_sync = true; }
+        inline void insert(event&& ev) { events().emplace_back(std::forward<event>(ev)); }
 
-		inline const command_queue& kernel_queue() const { return current_device().kernel_queue; }
-		inline command_queue& kernel_queue() { return current_device().kernel_queue; }
-		inline const command_queue& data_queue() const { return current_device().data_queue; }
-		inline command_queue& data_queue() { return current_device().data_queue; }
+        inline const command_queue& kernel_queue() const { return current_device().kernel_queue; }
+        inline command_queue& kernel_queue() { return current_device().kernel_queue; }
+        inline const command_queue& data_queue() const { return current_device().data_queue; }
+        inline command_queue& data_queue() { return current_device().data_queue; }
 
-		inline void next_device() {
-			auto& i = this->_device_index;
-			if (i == this->_devices.size()) { i = 0; }
-			else { ++i; }
-		}
+        inline void next_device() {
+            auto& i = this->_device_index;
+            if (i == this->_devices.size()) { i = 0; }
+            else { ++i; }
+        }
 
-		inline void set_device(unsigned_int_type rhs) { this->_device_index = rhs; }
-		inline unsigned_int_type num_devices() const { return this->_devices.size(); }
+        inline void set_device(unsigned_int_type rhs) { this->_device_index = rhs; }
+        inline unsigned_int_type num_devices() const { return this->_devices.size(); }
 
-	private:
+    private:
 
-		inline const queue_pair& current_device() const {
-			return this->_devices[this->_device_index];
-		}
+        inline const queue_pair& current_device() const {
+            return this->_devices[this->_device_index];
+        }
 
-		inline queue_pair& current_device() {
-			return this->_devices[this->_device_index];
-		}
+        inline queue_pair& current_device() {
+            return this->_devices[this->_device_index];
+        }
 
-		inline const event_type*
-		frame() const {
-			return downcast(this->_events.data() + this->_offset);
-		}
+        inline const event_type*
+        frame() const {
+            return downcast(this->_events.data() + this->_offset);
+        }
 
-		inline event_type*
-		frame() {
-			return downcast(this->_events.data() + this->_offset);
-		}
+        inline event_type*
+        frame() {
+            return downcast(this->_events.data() + this->_offset);
+        }
 
-		inline event_array& events() { return this->_events; }
+        inline event_array& events() { return this->_events; }
 
-		inline unsigned_int_type
-		frame_size() const {
-			return this->_events.size() - this->_offset;
-		}
+        inline unsigned_int_type
+        frame_size() const {
+            return this->_events.size() - this->_offset;
+        }
 
-		#if CL_TARGET_VERSION >= 200
-		void free_200(const array_view<svm_pointer>& pointers);
-		void fill_200(svm_array ptr, const pattern& pattern);
-		void copy_200(const svm_array& src, const svm_array& dst);
-		void map_200(const svm_array& src, map_flags flags);
-		void unmap_200(svm_pointer ptr);
-		#endif
+        #if CL_TARGET_VERSION >= 200
+        void free_200(const array_view<svm_pointer>& pointers);
+        void fill_200(svm_array ptr, const pattern& pattern);
+        void copy_200(const svm_array& src, const svm_array& dst);
+        void map_200(const svm_array& src, map_flags flags);
+        void unmap_200(svm_pointer ptr);
+        #endif
 
-		#if CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
-		void free_arm(const array_view<svm_pointer>& pointers);
-		void fill_arm(svm_array ptr, const pattern& pattern);
-		void copy_arm(const svm_array& src, const svm_array& dst);
-		void map_arm(const svm_array& src, map_flags flags);
-		void unmap_arm(svm_pointer ptr);
-		#endif
+        #if CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+        void free_arm(const array_view<svm_pointer>& pointers);
+        void fill_arm(svm_array ptr, const pattern& pattern);
+        void copy_arm(const svm_array& src, const svm_array& dst);
+        void map_arm(const svm_array& src, map_flags flags);
+        void unmap_arm(svm_pointer ptr);
+        #endif
 
-		#if CL_TARGET_VERSION >= 120
-		void
-		barrier_120();
-		#endif
+        #if CL_TARGET_VERSION >= 120
+        void
+        barrier_120();
+        #endif
 
-		#if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
-		void
-		barrier_100();
-		#endif
+        #if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
+        void
+        barrier_100();
+        #endif
 
-		#if CL_TARGET_VERSION >= 120
-		void
-		marker_120();
-		#endif
+        #if CL_TARGET_VERSION >= 120
+        void
+        marker_120();
+        #endif
 
-		#if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
-		void
-		marker_100();
-		#endif
+        #if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
+        void
+        marker_100();
+        #endif
 
-		#if CL_TARGET_VERSION >= 120
-		void
-		migrate_120(migration_flags flags, const memory_object_array& objects);
-		#endif
+        #if CL_TARGET_VERSION >= 120
+        void
+        migrate_120(migration_flags flags, const memory_object_array& objects);
+        #endif
 
-		#if defined(cl_ext_migrate_memobject)
-		void
-		migrate_ext(migration_flags flags, const memory_object_array& objects);
-		#endif
+        #if defined(cl_ext_migrate_memobject)
+        void
+        migrate_ext(migration_flags flags, const memory_object_array& objects);
+        #endif
 
-		#if CL_TARGET_VERSION >= 120
-		friend class pattern;
-		#endif
+        #if CL_TARGET_VERSION >= 120
+        friend class pattern;
+        #endif
 
-	};
+    };
 
 }
 

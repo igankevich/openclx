@@ -6,7 +6,7 @@ using clImportMemoryARM_fn = decltype(&clImportMemoryARM);
 #endif
 
 #if !defined(cl_arm_shared_virtual_memory) && \
-	defined(CL_DEVICE_SVM_CAPABILITIES_ARM)
+    defined(CL_DEVICE_SVM_CAPABILITIES_ARM)
 #define cl_arm_shared_virtual_memory 1
 #endif
 

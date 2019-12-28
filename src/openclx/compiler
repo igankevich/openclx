@@ -11,134 +11,134 @@
 
 namespace clx {
 
-	class compiler {
+    class compiler {
 
-	public:
-		typedef std::vector<device> device_array;
-		typedef std::unordered_map<std::string,program> program_map;
+    public:
+        typedef std::vector<device> device_array;
+        typedef std::unordered_map<std::string,program> program_map;
 
-	private:
-		typedef std::hash<std::string> hash_type;
+    private:
+        typedef std::hash<std::string> hash_type;
 
-	private:
-		context _context;
-		program_map _programs;
-		device_array _devices;
-		std::string _options;
-		std::string _source_directory{'.'};
-		std::string _cache_directory{'.'};
-		std::string _suffix;
-		bool _cache = false;
+    private:
+        context _context;
+        program_map _programs;
+        device_array _devices;
+        std::string _options;
+        std::string _source_directory{'.'};
+        std::string _cache_directory{'.'};
+        std::string _suffix;
+        bool _cache = false;
 
-	public:
+    public:
 
-		inline explicit
-		compiler(context ctx): _context(ctx) {}
+        inline explicit
+        compiler(context ctx): _context(ctx) {}
 
-		program
-		compile(const std::string& filename);
+        program
+        compile(const std::string& filename);
 
-		program
-		compile(const std::string& filename, const std::string& src);
+        program
+        compile(const std::string& filename, const std::string& src);
 
-		std::string
-		errors(const program& prg) const;
+        std::string
+        errors(const program& prg) const;
 
-		void compile();
-		void unload();
-		void clear_cache();
+        void compile();
+        void unload();
+        void clear_cache();
 
-		::clx::kernel kernel(
-			const std::string& filename,
-			const char* name
-		);
+        ::clx::kernel kernel(
+            const std::string& filename,
+            const char* name
+        );
 
-		void devices(const device_array& rhs);
-		void devices(device_array&& rhs);
+        void devices(const device_array& rhs);
+        void devices(device_array&& rhs);
 
-		inline const device_array&
-		devices() const {
-			return this->_devices;
-		}
+        inline const device_array&
+        devices() const {
+            return this->_devices;
+        }
 
-		inline void
-		options(const std::string& rhs) {
-			this->_options = rhs;
-		}
+        inline void
+        options(const std::string& rhs) {
+            this->_options = rhs;
+        }
 
-		inline const std::string&
-		options() const {
-			return this->_options;
-		}
+        inline const std::string&
+        options() const {
+            return this->_options;
+        }
 
-		inline void
-		source_directory(const std::string& rhs) {
-			this->_source_directory = rhs;
-		}
+        inline void
+        source_directory(const std::string& rhs) {
+            this->_source_directory = rhs;
+        }
 
-		inline const std::string&
-		source_directory() const {
-			return this->_source_directory;
-		}
+        inline const std::string&
+        source_directory() const {
+            return this->_source_directory;
+        }
 
-		inline void
-		cache_directory(const std::string& rhs) {
-			this->_cache_directory = rhs;
-		}
+        inline void
+        cache_directory(const std::string& rhs) {
+            this->_cache_directory = rhs;
+        }
 
-		inline const std::string&
-		cache_directory() const {
-			return this->_cache_directory;
-		}
+        inline const std::string&
+        cache_directory() const {
+            return this->_cache_directory;
+        }
 
-		inline void
-		suffix(const std::string& rhs) {
-			this->_suffix = rhs;
-		}
+        inline void
+        suffix(const std::string& rhs) {
+            this->_suffix = rhs;
+        }
 
-		inline const std::string&
-		suffix() const {
-			return this->_suffix;
-		}
+        inline const std::string&
+        suffix() const {
+            return this->_suffix;
+        }
 
-		inline const program_map&
-		programs() const {
-			return this->_programs;
-		}
+        inline const program_map&
+        programs() const {
+            return this->_programs;
+        }
 
-		inline void
-		cache(bool b) {
-			this->_cache = b;
-		}
+        inline void
+        cache(bool b) {
+            this->_cache = b;
+        }
 
-		inline bool
-		cache() const {
-			return this->_cache;
-		}
+        inline bool
+        cache() const {
+            return this->_cache;
+        }
 
-	private:
+    private:
 
-		void
-		compile(
-			program& prg,
-			const std::string& filename,
-			const std::string& src
-		);
+        void
+        compile(
+            program& prg,
+            const std::string& filename,
+            const std::string& src
+        );
 
-		void
-		compile_from_source(program& prg, const std::string& src);
+        void
+        compile_from_source(program& prg, const std::string& src);
 
-		std::string file_to_string(const std::string& filename) const;
+        std::string file_to_string(const std::string& filename) const;
         std::string inline_sources(std::string src) const;
 
-		std::string binary_path(
-			const std::string& filename,
-			hash_type::result_type number
-		) const;
+        std::string binary_path(
+            const std::string& filename,
+            hash_type::result_type number
+        ) const;
 
-		std::string salt(const device& device) const;
+        std::string salt(const device& device) const;
 
-	};
+    };
 
 }
 

@@ -5,110 +5,110 @@
 
 namespace clx {
 
-	enum class channel_order: channel_order_type {
-		r = CL_R,
-		a = CL_A,
-		rg = CL_RG,
-		ra = CL_RA,
-		rgb = CL_RGB,
-		rgba = CL_RGBA,
-		bgra = CL_BGRA,
-		argb = CL_ARGB,
-		intensity = CL_INTENSITY,
-		luminance = CL_LUMINANCE,
-		#if CL_TARGET_VERSION >= 110
-		rx = CL_Rx,
-		rgx = CL_RGx,
-		rgbx = CL_RGBx,
-		#endif
-		#if CL_TARGET_VERSION >= 120
-		depth = CL_DEPTH,
-		depth_stencil = CL_DEPTH_STENCIL,
-		#endif
-		#if CL_TARGET_VERSION >= 200
-		srgb = CL_sRGB,
-		srgbx = CL_sRGBx,
-		srgba = CL_sRGBA,
-		sbgra = CL_sBGRA,
-		abgr = CL_ABGR,
-		#endif
-		#if defined(CL_NV21_IMG)
-		nv21 = CL_NV21_IMG,
-		#endif
-		#if defined(CL_YV12_IMG)
-		yv12 = CL_YV12_IMG,
-		#endif
-		#if CL_TARGET_VERSION >= 120 && defined(cl_intel_packed_yuv)
-		yuyv = CL_YUYV_INTEL,
-		uyvy = CL_UYVY_INTEL,
-		yvyu = CL_YVYU_INTEL,
-		vyuy = CL_VYUY_INTEL,
-		#endif
-		#if CL_TARGET_VERSION >= 120 && defined(cl_intel_planar_yuv)
-		nv12 = CL_NV12_INTEL,
-		#endif
-	};
+    enum class channel_order: channel_order_type {
+        r = CL_R,
+        a = CL_A,
+        rg = CL_RG,
+        ra = CL_RA,
+        rgb = CL_RGB,
+        rgba = CL_RGBA,
+        bgra = CL_BGRA,
+        argb = CL_ARGB,
+        intensity = CL_INTENSITY,
+        luminance = CL_LUMINANCE,
+        #if CL_TARGET_VERSION >= 110
+        rx = CL_Rx,
+        rgx = CL_RGx,
+        rgbx = CL_RGBx,
+        #endif
+        #if CL_TARGET_VERSION >= 120
+        depth = CL_DEPTH,
+        depth_stencil = CL_DEPTH_STENCIL,
+        #endif
+        #if CL_TARGET_VERSION >= 200
+        srgb = CL_sRGB,
+        srgbx = CL_sRGBx,
+        srgba = CL_sRGBA,
+        sbgra = CL_sBGRA,
+        abgr = CL_ABGR,
+        #endif
+        #if defined(CL_NV21_IMG)
+        nv21 = CL_NV21_IMG,
+        #endif
+        #if defined(CL_YV12_IMG)
+        yv12 = CL_YV12_IMG,
+        #endif
+        #if CL_TARGET_VERSION >= 120 && defined(cl_intel_packed_yuv)
+        yuyv = CL_YUYV_INTEL,
+        uyvy = CL_UYVY_INTEL,
+        yvyu = CL_YVYU_INTEL,
+        vyuy = CL_VYUY_INTEL,
+        #endif
+        #if CL_TARGET_VERSION >= 120 && defined(cl_intel_planar_yuv)
+        nv12 = CL_NV12_INTEL,
+        #endif
+    };
 
-	enum class channel_data: channel_data_type {
-		float16 = CL_HALF_FLOAT,
-		float32 = CL_FLOAT,
-		int8 = CL_SIGNED_INT8,
-		int8_norm = CL_SNORM_INT8,
-		int16 = CL_SIGNED_INT16,
-		int16_norm = CL_SNORM_INT16,
-		int32 = CL_SIGNED_INT32,
-		uint8 = CL_UNSIGNED_INT8,
-		uint8_norm = CL_UNORM_INT8,
-		uint16 = CL_UNSIGNED_INT16,
-		uint16_norm = CL_UNORM_INT16,
-		uint16_norm_555 = CL_UNORM_SHORT_555,
-		uint16_norm_565 = CL_UNORM_SHORT_565,
-		#if CL_TARGET_VERSION >= 120
-		uint24_norm = CL_UNORM_INT24,
-		#endif
-		uint32 = CL_UNSIGNED_INT32,
-		uint32_norm_101010 = CL_UNORM_INT_101010,
-		#if CL_TARGET_VERSION >= 210
-		uint32_norm_101010_2 = CL_UNORM_INT_101010_2,
-		#endif
-	};
+    enum class channel_data: channel_data_type {
+        float16 = CL_HALF_FLOAT,
+        float32 = CL_FLOAT,
+        int8 = CL_SIGNED_INT8,
+        int8_norm = CL_SNORM_INT8,
+        int16 = CL_SIGNED_INT16,
+        int16_norm = CL_SNORM_INT16,
+        int32 = CL_SIGNED_INT32,
+        uint8 = CL_UNSIGNED_INT8,
+        uint8_norm = CL_UNORM_INT8,
+        uint16 = CL_UNSIGNED_INT16,
+        uint16_norm = CL_UNORM_INT16,
+        uint16_norm_555 = CL_UNORM_SHORT_555,
+        uint16_norm_565 = CL_UNORM_SHORT_565,
+        #if CL_TARGET_VERSION >= 120
+        uint24_norm = CL_UNORM_INT24,
+        #endif
+        uint32 = CL_UNSIGNED_INT32,
+        uint32_norm_101010 = CL_UNORM_INT_101010,
+        #if CL_TARGET_VERSION >= 210
+        uint32_norm_101010_2 = CL_UNORM_INT_101010_2,
+        #endif
+    };
 
-	class image_format: public image_format_type {
-	public:
+    class image_format: public image_format_type {
+    public:
 
-		inline
-		image_format(): image_format_type{} {}
+        inline
+        image_format(): image_format_type{} {}
 
-		inline
-		image_format(channel_order order, channel_data data):
-		image_format_type{
-			static_cast<channel_order_type>(order),
-			static_cast<channel_data_type>(data)
-		} {}
+        inline
+        image_format(channel_order order, channel_data data):
+        image_format_type{
+            static_cast<channel_order_type>(order),
+            static_cast<channel_data_type>(data)
+        } {}
 
-		inline channel_order
-		order() const noexcept {
-			return static_cast<channel_order>(this->image_channel_order);
-		}
+        inline channel_order
+        order() const noexcept {
+            return static_cast<channel_order>(this->image_channel_order);
+        }
 
-		inline void
-		order(channel_order rhs) noexcept {
-			this->image_channel_order = static_cast<channel_order_type>(rhs);
-		}
+        inline void
+        order(channel_order rhs) noexcept {
+            this->image_channel_order = static_cast<channel_order_type>(rhs);
+        }
 
-		inline channel_data
-		data() const noexcept {
-			return static_cast<channel_data>(this->image_channel_data_type);
-		}
+        inline channel_data
+        data() const noexcept {
+            return static_cast<channel_data>(this->image_channel_data_type);
+        }
 
-		inline void
-		data(channel_data rhs) noexcept {
-			this->image_channel_data_type = static_cast<channel_data_type>(rhs);
-		}
+        inline void
+        data(channel_data rhs) noexcept {
+            this->image_channel_data_type = static_cast<channel_data_type>(rhs);
+        }
 
-	};
+    };
 
-	static_assert(sizeof(image_format) == sizeof(image_format_type), "bad size");
+    static_assert(sizeof(image_format) == sizeof(image_format_type), "bad size");
 
 }
 

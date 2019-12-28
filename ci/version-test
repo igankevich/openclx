@@ -3,8 +3,8 @@
 set -e
 for version in 100 110 120 200 210 220
 do
-	build="build-$version"
-	rm -rf "$build"
-	meson -Dcpp_args="-DCL_TARGET_VERSION=$version" . "$build"
-	ninja -C "$build"
+    build="build-$version"
+    rm -rf "$build"
+    meson -Dcpp_args="-DCL_TARGET_VERSION=$version" . "$build"
+    ninja -C "$build"
 done

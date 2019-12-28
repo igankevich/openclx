@@ -20,379 +20,379 @@
 
 namespace clx {
 
-	class context {
+    class context {
 
-	private:
-		context_type _ptr = nullptr;
-		mutable ::clx::platform _platform;
+    private:
+        context_type _ptr = nullptr;
+        mutable ::clx::platform _platform;
 
-	public:
+    public:
 
-		inline explicit
-		context(context_type ptr): _ptr(ptr) {}
+        inline explicit
+        context(context_type ptr): _ptr(ptr) {}
 
-		std::vector<device>
-		devices() const;
+        std::vector<device>
+        devices() const;
 
-		inline std::vector<command_queue>
-		command_queues(const command_queue_properties& prop) const {
-			#if CL_TARGET_VERSION >= 200
-			return this->command_queues_200(prop);
-			#else
-			return this->command_queues_100(prop);
-			#endif
-		}
+        inline std::vector<command_queue>
+        command_queues(const command_queue_properties& prop) const {
+            #if CL_TARGET_VERSION >= 200
+            return this->command_queues_200(prop);
+            #else
+            return this->command_queues_100(prop);
+            #endif
+        }
 
-		::clx::program program(const std::string& src) const;
-		::clx::program program(const array_view<binary>& binaries) const;
-		#if CL_TARGET_VERSION >= 200
-		::clx::program program(const intermediate_language& il) const;
-		#endif
+        ::clx::program program(const std::string& src) const;
+        ::clx::program program(const array_view<binary>& binaries) const;
+        #if CL_TARGET_VERSION >= 200
+        ::clx::program program(const intermediate_language& il) const;
+        #endif
 
-		#if CL_TARGET_VERSION >= 120
-		::clx::header header(const std::string& name, const std::string& src) const;
-		::clx::program builtin_program(const std::string& kernel_names) const;
-		unsigned_int_type num_devices() const;
-		#endif
+        #if CL_TARGET_VERSION >= 120
+        ::clx::header header(const std::string& name, const std::string& src) const;
+        ::clx::program builtin_program(const std::string& kernel_names) const;
+        unsigned_int_type num_devices() const;
+        #endif
 
-		inline ::clx::image
-		image(
-			memory_flags flags,
-			const image_format& format,
-			const image_descriptor& descriptor,
-			void* host_pointer=nullptr
-		) const {
-			#if CL_TARGET_VERSION >= 120
-			return this->image_120(flags, format, descriptor, host_pointer);
-			#else
-			return this->image_100(flags, format, descriptor, host_pointer);
-			#endif
-		}
+        inline ::clx::image
+        image(
+            memory_flags flags,
+            const image_format& format,
+            const image_descriptor& descriptor,
+            void* host_pointer=nullptr
+        ) const {
+            #if CL_TARGET_VERSION >= 120
+            return this->image_120(flags, format, descriptor, host_pointer);
+            #else
+            return this->image_100(flags, format, descriptor, host_pointer);
+            #endif
+        }
 
-		#if CL_TARGET_VERSION >= 110 && defined(CL_MEM_ANDROID_NATIVE_BUFFER_HOST_PTR_QCOM)
-		inline ::clx::image
-		image(
-			memory_flags flags,
-			const image_format& format,
-			const image_descriptor& descriptor,
-			qcom::anb_pointer ptr
-		) const {
-			return this->image(
-				flags | memory_flags::qcom_host_pointer | memory_flags::use_host_pointer,
-				format, descriptor, &ptr
-			);
-		}
-		#endif
+        #if CL_TARGET_VERSION >= 110 && defined(CL_MEM_ANDROID_NATIVE_BUFFER_HOST_PTR_QCOM)
+        inline ::clx::image
+        image(
+            memory_flags flags,
+            const image_format& format,
+            const image_descriptor& descriptor,
+            qcom::anb_pointer ptr
+        ) const {
+            return this->image(
+                flags | memory_flags::qcom_host_pointer | memory_flags::use_host_pointer,
+                format, descriptor, &ptr
+            );
+        }
+        #endif
 
-		#if CL_TARGET_VERSION >= 110 && defined(CL_MEM_ION_HOST_PTR_QCOM)
-		inline ::clx::image
-		image(
-			memory_flags flags,
-			const image_format& format,
-			const image_descriptor& descriptor,
-			qcom::ion_pointer ptr
-		) const {
-			return this->image(
-				flags | memory_flags::qcom_host_pointer | memory_flags::use_host_pointer,
-				format, descriptor, &ptr
-			);
-		}
-		#endif
+        #if CL_TARGET_VERSION >= 110 && defined(CL_MEM_ION_HOST_PTR_QCOM)
+        inline ::clx::image
+        image(
+            memory_flags flags,
+            const image_format& format,
+            const image_descriptor& descriptor,
+            qcom::ion_pointer ptr
+        ) const {
+            return this->image(
+                flags | memory_flags::qcom_host_pointer | memory_flags::use_host_pointer,
+                format, descriptor, &ptr
+            );
+        }
+        #endif
 
-		std::vector<image_format>
-		image_formats(memory_flags flags, memory_objects type) const;
+        std::vector<image_format>
+        image_formats(memory_flags flags, memory_objects type) const;
 
-		#if CL_TARGET_VERSION >= 110
-		::clx::event event() const;
-		#endif
+        #if CL_TARGET_VERSION >= 110
+        ::clx::event event() const;
+        #endif
 
-		#if CL_TARGET_VERSION >= 110 && defined(cl_khr_gl_sharing)
-		::clx::event gl_event(gl::sync_type name) const;
-		#endif
+        #if CL_TARGET_VERSION >= 110 && defined(cl_khr_gl_sharing)
+        ::clx::event gl_event(gl::sync_type name) const;
+        #endif
 
-		#if defined(cl_khr_egl_event)
-		::clx::event egl_event(egl::sync_type name, egl::display_type display) const;
-		#endif
+        #if defined(cl_khr_egl_event)
+        ::clx::event egl_event(egl::sync_type name, egl::display_type display) const;
+        #endif
 
-		#if defined(cl_khr_egl_image)
-		egl::image egl_image(memory_flags flags, const egl::image_properties& prop) const;
-		#endif
+        #if defined(cl_khr_egl_image)
+        egl::image egl_image(memory_flags flags, const egl::image_properties& prop) const;
+        #endif
 
-		::clx::buffer
-		buffer(memory_flags flags, size_t size, void* host_pointer=nullptr) const;
+        ::clx::buffer
+        buffer(memory_flags flags, size_t size, void* host_pointer=nullptr) const;
 
-		#if CL_TARGET_VERSION >= 110 && defined(CL_MEM_ANDROID_NATIVE_BUFFER_HOST_PTR_QCOM)
-		inline ::clx::buffer
-		buffer(memory_flags flags, size_t size, const qcom::anb_pointer& ptr) const {
-			return this->buffer(
-				flags | memory_flags::qcom_host_pointer | memory_flags::use_host_pointer,
-				size,
-				&ptr
-			);
-		}
-		#endif
+        #if CL_TARGET_VERSION >= 110 && defined(CL_MEM_ANDROID_NATIVE_BUFFER_HOST_PTR_QCOM)
+        inline ::clx::buffer
+        buffer(memory_flags flags, size_t size, const qcom::anb_pointer& ptr) const {
+            return this->buffer(
+                flags | memory_flags::qcom_host_pointer | memory_flags::use_host_pointer,
+                size,
+                &ptr
+            );
+        }
+        #endif
 
-		#if CL_TARGET_VERSION >= 110 && defined(CL_MEM_ION_HOST_PTR_QCOM)
-		inline ::clx::buffer
-		buffer(memory_flags flags, size_t size, qcom::ion_pointer ptr) const {
-			return this->buffer(
-				flags | memory_flags::qcom_host_pointer | memory_flags::use_host_pointer,
-				size, &ptr
-			);
-		}
-		#endif
+        #if CL_TARGET_VERSION >= 110 && defined(CL_MEM_ION_HOST_PTR_QCOM)
+        inline ::clx::buffer
+        buffer(memory_flags flags, size_t size, qcom::ion_pointer ptr) const {
+            return this->buffer(
+                flags | memory_flags::qcom_host_pointer | memory_flags::use_host_pointer,
+                size, &ptr
+            );
+        }
+        #endif
 
-		inline ::clx::sampler
-		sampler(const sampler_properties& prop) const {
-			#if CL_TARGET_VERSION >= 200
-			return this->sampler_200(prop);
-			#else
-			return this->sampler_100(prop);
-			#endif
-		}
+        inline ::clx::sampler
+        sampler(const sampler_properties& prop) const {
+            #if CL_TARGET_VERSION >= 200
+            return this->sampler_200(prop);
+            #else
+            return this->sampler_100(prop);
+            #endif
+        }
 
-		#if CL_TARGET_VERSION >= 200
-		::clx::pipe pipe(
-			memory_flags flags,
-			unsigned_int_type packet_size,
-			unsigned_int_type max_packets
-		) const;
-		#endif
+        #if CL_TARGET_VERSION >= 200
+        ::clx::pipe pipe(
+            memory_flags flags,
+            unsigned_int_type packet_size,
+            unsigned_int_type max_packets
+        ) const;
+        #endif
 
-		#if CL_TARGET_VERSION >= 200 || \
-			(CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory))
-		inline svm_block shared_memory(svm_flags flags, size_t size, size_t alignment) const;
-		#endif
+        #if CL_TARGET_VERSION >= 200 || \
+            (CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory))
+        inline svm_block shared_memory(svm_flags flags, size_t size, size_t alignment) const;
+        #endif
 
-		#if defined(cl_khr_gl_sharing)
-		gl::buffer gl_buffer(memory_flags flags, gl::unsigned_int_type name) const;
-		gl::buffer gl_renderbuffer(memory_flags flags, gl::unsigned_int_type name) const;
-		#if CL_TARGET_VERSION >= 120
-		gl::texture gl_texture(
-			memory_flags flags,
-			gl::enum_type target,
-			gl::int_type miplevel,
-			gl::unsigned_int_type name
-		) const;
-		#endif
-		inline gl::texture gl_texture_2d(
-			memory_flags flags,
-			gl::enum_type target,
-			gl::int_type miplevel,
-			gl::unsigned_int_type name
-		) const {
-			#if CL_TARGET_VERSION >= 120
-			return this->gl_texture(flags, target, miplevel, name);
-			#else
-			return this->gl_texture_2d_100(flags, target, miplevel, name);
-			#endif
-		}
-		inline gl::texture gl_texture_3d(
-			memory_flags flags,
-			gl::enum_type target,
-			gl::int_type miplevel,
-			gl::unsigned_int_type name
-		) const {
-			#if CL_TARGET_VERSION >= 120
-			return this->gl_texture(flags, target, miplevel, name);
-			#else
-			return this->gl_texture_3d_100(flags, target, miplevel, name);
-			#endif
-		}
-		#endif
+        #if defined(cl_khr_gl_sharing)
+        gl::buffer gl_buffer(memory_flags flags, gl::unsigned_int_type name) const;
+        gl::buffer gl_renderbuffer(memory_flags flags, gl::unsigned_int_type name) const;
+        #if CL_TARGET_VERSION >= 120
+        gl::texture gl_texture(
+            memory_flags flags,
+            gl::enum_type target,
+            gl::int_type miplevel,
+            gl::unsigned_int_type name
+        ) const;
+        #endif
+        inline gl::texture gl_texture_2d(
+            memory_flags flags,
+            gl::enum_type target,
+            gl::int_type miplevel,
+            gl::unsigned_int_type name
+        ) const {
+            #if CL_TARGET_VERSION >= 120
+            return this->gl_texture(flags, target, miplevel, name);
+            #else
+            return this->gl_texture_2d_100(flags, target, miplevel, name);
+            #endif
+        }
+        inline gl::texture gl_texture_3d(
+            memory_flags flags,
+            gl::enum_type target,
+            gl::int_type miplevel,
+            gl::unsigned_int_type name
+        ) const {
+            #if CL_TARGET_VERSION >= 120
+            return this->gl_texture(flags, target, miplevel, name);
+            #else
+            return this->gl_texture_3d_100(flags, target, miplevel, name);
+            #endif
+        }
+        #endif
 
-		#if defined(cl_arm_import_memory)
-		::clx::buffer import(
-			memory_flags flags,
-			const arm::import_properties& prop,
-			void* memory,
-			size_t size
-		) const;
-		#endif
+        #if defined(cl_arm_import_memory)
+        ::clx::buffer import(
+            memory_flags flags,
+            const arm::import_properties& prop,
+            void* memory,
+            size_t size
+        ) const;
+        #endif
 
-		#if CL_TARGET_VERSION >= 120 && defined(cl_intel_motion_estimation)
-		clx::intel::me_accelerator
-		motion_estimation_accelerator(const intel::me_descriptor& desc) const;
-		#endif
+        #if CL_TARGET_VERSION >= 120 && defined(cl_intel_motion_estimation)
+        clx::intel::me_accelerator
+        motion_estimation_accelerator(const intel::me_descriptor& desc) const;
+        #endif
 
-		#if CL_TARGET_VERSION >= 120 && defined(cl_intel_advanced_motion_estimation)
-		unsigned_int_type motion_estimation_version() const;
-		#endif
+        #if CL_TARGET_VERSION >= 120 && defined(cl_intel_advanced_motion_estimation)
+        unsigned_int_type motion_estimation_version() const;
+        #endif
 
-		#if CL_TARGET_VERSION >= 120 && defined(cl_khr_terminate_context)
-		void terminate();
-		#endif
+        #if CL_TARGET_VERSION >= 120 && defined(cl_khr_terminate_context)
+        void terminate();
+        #endif
 
-		std::vector<context_properties_type> properties() const;
-		#if defined(cl_khr_gl_sharing)
-		::clx::device gl_device() const;
-		std::vector<device> gl_available_devices() const;
-		#endif
-		::clx::platform platform() const;
+        std::vector<context_properties_type> properties() const;
+        #if defined(cl_khr_gl_sharing)
+        ::clx::device gl_device() const;
+        std::vector<device> gl_available_devices() const;
+        #endif
+        ::clx::platform platform() const;
 
-		unsigned_int_type
-		num_references() const;
+        unsigned_int_type
+        num_references() const;
 
-		#if defined(cl_khr_dx9_media_sharing)
-		d3d9::media_surface
-		media_surface(memory_flags flags, d3d9::adapter_type adapter, void* ptr) const;
-		#endif
+        #if defined(cl_khr_dx9_media_sharing)
+        d3d9::media_surface
+        media_surface(memory_flags flags, d3d9::adapter_type adapter, void* ptr) const;
+        #endif
 
-		#if defined(cl_khr_d3d10_sharing)
-		d3d10::memory_object buffer(memory_flags flags, d3d10::buffer_type* ptr) const;
-		d3d10::memory_object buffer(memory_flags flags, d3d10::texture2d_type* ptr) const;
-		d3d10::memory_object buffer(memory_flags flags, d3d10::texture3d_type* ptr) const;
-		bool d3d10_prefer_shared_resources() const;
-		#endif
+        #if defined(cl_khr_d3d10_sharing)
+        d3d10::memory_object buffer(memory_flags flags, d3d10::buffer_type* ptr) const;
+        d3d10::memory_object buffer(memory_flags flags, d3d10::texture2d_type* ptr) const;
+        d3d10::memory_object buffer(memory_flags flags, d3d10::texture3d_type* ptr) const;
+        bool d3d10_prefer_shared_resources() const;
+        #endif
 
-		#if CL_TARGET_VERSION >= 120 && defined(cl_khr_d3d11_sharing)
-		d3d11::memory_object buffer(memory_flags flags, d3d11::buffer_type* ptr) const;
-		d3d11::memory_object buffer(memory_flags flags, d3d11::texture2d_type* ptr) const;
-		d3d11::memory_object buffer(memory_flags flags, d3d11::texture3d_type* ptr) const;
-		bool d3d11_prefer_shared_resources() const;
-		#endif
+        #if CL_TARGET_VERSION >= 120 && defined(cl_khr_d3d11_sharing)
+        d3d11::memory_object buffer(memory_flags flags, d3d11::buffer_type* ptr) const;
+        d3d11::memory_object buffer(memory_flags flags, d3d11::texture2d_type* ptr) const;
+        d3d11::memory_object buffer(memory_flags flags, d3d11::texture3d_type* ptr) const;
+        bool d3d11_prefer_shared_resources() const;
+        #endif
 
-		#if defined(cl_intel_dx9_media_sharing)
-		intel::memory_object
-		media_surface(
-			memory_flags flags,
-			intel::surface_type* ptr,
-			intel::handle_type handle,
-			intel::uint_type plane
-		) const;
-		#endif
+        #if defined(cl_intel_dx9_media_sharing)
+        intel::memory_object
+        media_surface(
+            memory_flags flags,
+            intel::surface_type* ptr,
+            intel::handle_type handle,
+            intel::uint_type plane
+        ) const;
+        #endif
 
-		#if defined(cl_intel_va_api_media_sharing)
-		intel::va::memory_object media_surface(
-			memory_flags flags,
-			intel::va::surface_type* ptr,
-			unsigned_int_type plane) const;
-		#endif
+        #if defined(cl_intel_va_api_media_sharing)
+        intel::va::memory_object media_surface(
+            memory_flags flags,
+            intel::va::surface_type* ptr,
+            unsigned_int_type plane) const;
+        #endif
 
-		inline context_type
-		get() noexcept {
-			return this->_ptr;
-		}
+        inline context_type
+        get() noexcept {
+            return this->_ptr;
+        }
 
-		inline const context_type
-		get() const noexcept {
-			return this->_ptr;
-		}
+        inline const context_type
+        get() const noexcept {
+            return this->_ptr;
+        }
 
-		context() = default;
+        context() = default;
 
-		inline ~context() { this->release(); }
-		inline context(const context& rhs): _ptr(rhs._ptr) { this->retain(); }
+        inline ~context() { this->release(); }
+        inline context(const context& rhs): _ptr(rhs._ptr) { this->retain(); }
 
-		inline context&
-		operator=(const context& rhs) {
-			context tmp(rhs);
-			this->swap(tmp);
-			return *this;
-		}
+        inline context&
+        operator=(const context& rhs) {
+            context tmp(rhs);
+            this->swap(tmp);
+            return *this;
+        }
 
-		inline context(context&& rhs): _ptr(rhs._ptr) { rhs._ptr = nullptr; }
-		inline context& operator=(context&& rhs) { this->swap(rhs); return *this; }
+        inline context(context&& rhs): _ptr(rhs._ptr) { rhs._ptr = nullptr; }
+        inline context& operator=(context&& rhs) { this->swap(rhs); return *this; }
 
-		inline void
-		release() {
-			if (this->_ptr) {
-				CLX_CHECK(::clReleaseContext(this->_ptr));
-				this->_ptr = nullptr;
-			}
-		}
+        inline void
+        release() {
+            if (this->_ptr) {
+                CLX_CHECK(::clReleaseContext(this->_ptr));
+                this->_ptr = nullptr;
+            }
+        }
 
-		inline void
-		retain() {
-			if (this->_ptr) {
-				CLX_CHECK(::clRetainContext(this->_ptr));
-			}
-		}
+        inline void
+        retain() {
+            if (this->_ptr) {
+                CLX_CHECK(::clRetainContext(this->_ptr));
+            }
+        }
 
-		inline void
-		swap(context& rhs) {
-			std::swap(this->_ptr, rhs._ptr);
-		}
+        inline void
+        swap(context& rhs) {
+            std::swap(this->_ptr, rhs._ptr);
+        }
 
-	private:
+    private:
 
-		#if CL_TARGET_VERSION >= 200
-		::clx::svm_block shared_memory_200(
-			svm_flags flags,
-			size_t size,
-			size_t alignment
-		) const;
-		#endif
+        #if CL_TARGET_VERSION >= 200
+        ::clx::svm_block shared_memory_200(
+            svm_flags flags,
+            size_t size,
+            size_t alignment
+        ) const;
+        #endif
 
-		#if CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
-		::clx::svm_block shared_memory_arm(
-			svm_flags flags,
-			size_t size,
-			size_t alignment
-		) const;
-		#endif
+        #if CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+        ::clx::svm_block shared_memory_arm(
+            svm_flags flags,
+            size_t size,
+            size_t alignment
+        ) const;
+        #endif
 
-		#if CL_TARGET_VERSION >= 200
-		std::vector<command_queue>
-		command_queues_200(const command_queue_properties& prop) const;
-		#endif
+        #if CL_TARGET_VERSION >= 200
+        std::vector<command_queue>
+        command_queues_200(const command_queue_properties& prop) const;
+        #endif
 
-		#if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
-		std::vector<command_queue>
-		command_queues_100(const command_queue_properties& prop) const;
-		#endif
+        #if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
+        std::vector<command_queue>
+        command_queues_100(const command_queue_properties& prop) const;
+        #endif
 
-		#if CL_TARGET_VERSION >= 120
-		::clx::image
-		image_120(
-			memory_flags flags,
-			const image_format& format,
-			const image_descriptor& descriptor,
-			void* host_pointer=nullptr
-		) const;
-		#endif
+        #if CL_TARGET_VERSION >= 120
+        ::clx::image
+        image_120(
+            memory_flags flags,
+            const image_format& format,
+            const image_descriptor& descriptor,
+            void* host_pointer=nullptr
+        ) const;
+        #endif
 
-		#if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
-		::clx::image
-		image_100(
-			memory_flags flags,
-			const image_format& format,
-			const image_descriptor& descriptor,
-			void* host_pointer=nullptr
-		) const;
-		#endif
+        #if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
+        ::clx::image
+        image_100(
+            memory_flags flags,
+            const image_format& format,
+            const image_descriptor& descriptor,
+            void* host_pointer=nullptr
+        ) const;
+        #endif
 
-		#if CL_TARGET_VERSION >= 200
-		::clx::sampler sampler_200(const sampler_properties& prop) const;
-		#endif
+        #if CL_TARGET_VERSION >= 200
+        ::clx::sampler sampler_200(const sampler_properties& prop) const;
+        #endif
 
-		#if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
-		::clx::sampler sampler_100(const sampler_properties& prop) const;
-		#endif
+        #if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
+        ::clx::sampler sampler_100(const sampler_properties& prop) const;
+        #endif
 
-		#if defined(cl_khr_gl_sharing)
-		#if (CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS))
-		gl::texture gl_texture_2d_100(
-			memory_flags flags,
-			gl::enum_type target,
-			gl::int_type miplevel,
-			gl::unsigned_int_type name
-		) const;
-		gl::texture gl_texture_3d_100(
-			memory_flags flags,
-			gl::enum_type target,
-			gl::int_type miplevel,
-			gl::unsigned_int_type name
-		) const;
-		#endif
-		#endif
+        #if defined(cl_khr_gl_sharing)
+        #if (CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS))
+        gl::texture gl_texture_2d_100(
+            memory_flags flags,
+            gl::enum_type target,
+            gl::int_type miplevel,
+            gl::unsigned_int_type name
+        ) const;
+        gl::texture gl_texture_3d_100(
+            memory_flags flags,
+            gl::enum_type target,
+            gl::int_type miplevel,
+            gl::unsigned_int_type name
+        ) const;
+        #endif
+        #endif
 
-	};
+    };
 
-	inline void
-	swap(context& lhs, context& rhs) {
-		lhs.swap(rhs);
-	}
+    inline void
+    swap(context& lhs, context& rhs) {
+        lhs.swap(rhs);
+    }
 
 }
 

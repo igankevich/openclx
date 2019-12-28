@@ -6,75 +6,75 @@
 
 namespace clx {
 
-	enum class command_queue_flags: command_queue_flags_type {
-		out_of_order=CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE,
-		profiling=CL_QUEUE_PROFILING_ENABLE,
-		#if CL_TARGET_VERSION >= 200
-		on_device=CL_QUEUE_ON_DEVICE,
-		on_device_default=CL_QUEUE_ON_DEVICE_DEFAULT,
-		#endif
-		#if defined(cl_intel_thread_local_exec)
-		thread_local_execute=CL_QUEUE_THREAD_LOCAL_EXEC_ENABLE_INTEL,
-		#endif
-	};
+    enum class command_queue_flags: command_queue_flags_type {
+        out_of_order=CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE,
+        profiling=CL_QUEUE_PROFILING_ENABLE,
+        #if CL_TARGET_VERSION >= 200
+        on_device=CL_QUEUE_ON_DEVICE,
+        on_device_default=CL_QUEUE_ON_DEVICE_DEFAULT,
+        #endif
+        #if defined(cl_intel_thread_local_exec)
+        thread_local_execute=CL_QUEUE_THREAD_LOCAL_EXEC_ENABLE_INTEL,
+        #endif
+    };
 
-	CLX_FLAGS(command_queue_flags, command_queue_flags_type);
+    CLX_FLAGS(command_queue_flags, command_queue_flags_type);
 
-	enum class queue_priority {
-		#if defined(CL_QUEUE_PRIORITY_HIGH_KHR)
-		high=CL_QUEUE_PRIORITY_HIGH_KHR,
-		#endif
-		#if defined(CL_QUEUE_PRIORITY_MED_KHR)
-		medium=CL_QUEUE_PRIORITY_MED_KHR,
-		#endif
-		#if defined(CL_QUEUE_PRIORITY_LOW_KHR)
-		low=CL_QUEUE_PRIORITY_LOW_KHR,
-		#endif
-	};
+    enum class queue_priority {
+        #if defined(CL_QUEUE_PRIORITY_HIGH_KHR)
+        high=CL_QUEUE_PRIORITY_HIGH_KHR,
+        #endif
+        #if defined(CL_QUEUE_PRIORITY_MED_KHR)
+        medium=CL_QUEUE_PRIORITY_MED_KHR,
+        #endif
+        #if defined(CL_QUEUE_PRIORITY_LOW_KHR)
+        low=CL_QUEUE_PRIORITY_LOW_KHR,
+        #endif
+    };
 
-	enum class queue_throttle {
-		#if defined(CL_QUEUE_THROTTLE_HIGH_KHR)
-		high=CL_QUEUE_THROTTLE_HIGH_KHR,
-		#endif
-		#if defined(CL_QUEUE_THROTTLE_MED_KHR)
-		medium=CL_QUEUE_THROTTLE_MED_KHR,
-		#endif
-		#if defined(CL_QUEUE_THROTTLE_LOW_KHR)
-		low=CL_QUEUE_THROTTLE_LOW_KHR,
-		#endif
-	};
+    enum class queue_throttle {
+        #if defined(CL_QUEUE_THROTTLE_HIGH_KHR)
+        high=CL_QUEUE_THROTTLE_HIGH_KHR,
+        #endif
+        #if defined(CL_QUEUE_THROTTLE_MED_KHR)
+        medium=CL_QUEUE_THROTTLE_MED_KHR,
+        #endif
+        #if defined(CL_QUEUE_THROTTLE_LOW_KHR)
+        low=CL_QUEUE_THROTTLE_LOW_KHR,
+        #endif
+    };
 
-	class command_queue_properties {
+    class command_queue_properties {
 
-	private:
-		command_queue_flags _flags{};
-		unsigned_int_type _size = 0;
-		#if defined(CL_QUEUE_PRIORITY_MED_KHR)
-		queue_priority _priority = queue_priority::medium;
-		#else
-		queue_priority _priority{};
-		#endif
-		#if defined(CL_QUEUE_THROTTLE_MED_KHR)
-		queue_throttle _throttle = queue_throttle::medium;
-		#else
-		queue_throttle _throttle{};
-		#endif
+    private:
+        command_queue_flags _flags{};
+        unsigned_int_type _size = 0;
+        #if defined(CL_QUEUE_PRIORITY_MED_KHR)
+        queue_priority _priority = queue_priority::medium;
+        #else
+        queue_priority _priority{};
+        #endif
+        #if defined(CL_QUEUE_THROTTLE_MED_KHR)
+        queue_throttle _throttle = queue_throttle::medium;
+        #else
+        queue_throttle _throttle{};
+        #endif
 
-	public:
+    public:
 
-		inline command_queue_flags flags() const { return this->_flags; }
-		inline void flags(command_queue_flags rhs) { this->_flags = rhs; }
-		inline unsigned_int_type size() const { return this->_size; }
-		inline void size(unsigned_int_type rhs) { this->_size = rhs; }
-		inline queue_priority priority() const { return this->_priority; }
-		inline void priority(queue_priority rhs) { this->_priority = rhs; }
-		inline queue_throttle throttle() const { return this->_throttle; }
-		inline void throttle(queue_throttle rhs) { this->_throttle = rhs; }
+        inline command_queue_flags flags() const { return this->_flags; }
+        inline void flags(command_queue_flags rhs) { this->_flags = rhs; }
+        inline unsigned_int_type size() const { return this->_size; }
+        inline void size(unsigned_int_type rhs) { this->_size = rhs; }
+        inline queue_priority priority() const { return this->_priority; }
+        inline void priority(queue_priority rhs) { this->_priority = rhs; }
+        inline queue_throttle throttle() const { return this->_throttle; }
+        inline void throttle(queue_throttle rhs) { this->_throttle = rhs; }
 
-		std::vector<queue_properties_type>
-		operator()(const extensions& extensions) const;
+        std::vector<queue_properties_type>
+        operator()(const extensions& extensions) const;
 
-	};
+    };
 
 }
 

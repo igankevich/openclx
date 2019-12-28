@@ -5,192 +5,192 @@
 
 namespace clx {
 
-	#define CLX_FUNCTION(name, name2) \
-		inline static constexpr value_type \
-		name() noexcept { \
-			return name2; \
-		}
+    #define CLX_FUNCTION(name, name2) \
+        inline static constexpr value_type \
+        name() noexcept { \
+            return name2; \
+        }
 
-	#define CLX_FIELD(name, name2) \
-		static constexpr const value_type name = name2;
+    #define CLX_FIELD(name, name2) \
+        static constexpr const value_type name = name2;
 
-	template <class T>
-	struct numeric_limits {
-		typedef T value_type;
-		CLX_FIELD(is_specialized, false)
-	};
+    template <class T>
+    struct numeric_limits {
+        typedef T value_type;
+        CLX_FIELD(is_specialized, false)
+    };
 
-	template <>
-	struct numeric_limits<char_type> {
-		typedef char_type value_type;
-		CLX_FUNCTION(min, CL_CHAR_MIN)
-		CLX_FUNCTION(max, CL_CHAR_MAX)
-		CLX_FIELD(digits, CL_CHAR_BIT)
-		CLX_FIELD(is_signed, true)
-		CLX_FIELD(is_specialized, true)
-		CLX_FIELD(is_integer, true)
-		CLX_FIELD(is_exact, true)
-		CLX_FIELD(has_infinity, false)
-		CLX_FIELD(has_quiet_NaN, false)
-	};
+    template <>
+    struct numeric_limits<char_type> {
+        typedef char_type value_type;
+        CLX_FUNCTION(min, CL_CHAR_MIN)
+        CLX_FUNCTION(max, CL_CHAR_MAX)
+        CLX_FIELD(digits, CL_CHAR_BIT)
+        CLX_FIELD(is_signed, true)
+        CLX_FIELD(is_specialized, true)
+        CLX_FIELD(is_integer, true)
+        CLX_FIELD(is_exact, true)
+        CLX_FIELD(has_infinity, false)
+        CLX_FIELD(has_quiet_NaN, false)
+    };
 
-	template <>
-	struct numeric_limits<unsigned_char_type> {
-		typedef unsigned_char_type value_type;
-		CLX_FUNCTION(min, 0)
-		CLX_FUNCTION(max, CL_UCHAR_MAX)
-		CLX_FIELD(digits, CL_CHAR_BIT)
-		CLX_FIELD(is_signed, false)
-		CLX_FIELD(is_specialized, true)
-		CLX_FIELD(is_integer, true)
-		CLX_FIELD(is_exact, true)
-		CLX_FIELD(has_infinity, false)
-		CLX_FIELD(has_quiet_NaN, false)
-	};
+    template <>
+    struct numeric_limits<unsigned_char_type> {
+        typedef unsigned_char_type value_type;
+        CLX_FUNCTION(min, 0)
+        CLX_FUNCTION(max, CL_UCHAR_MAX)
+        CLX_FIELD(digits, CL_CHAR_BIT)
+        CLX_FIELD(is_signed, false)
+        CLX_FIELD(is_specialized, true)
+        CLX_FIELD(is_integer, true)
+        CLX_FIELD(is_exact, true)
+        CLX_FIELD(has_infinity, false)
+        CLX_FIELD(has_quiet_NaN, false)
+    };
 
-	template <>
-	struct numeric_limits<short_type> {
-		typedef short_type value_type;
-		CLX_FUNCTION(min, CL_SHRT_MIN)
-		CLX_FUNCTION(max, CL_SHRT_MAX)
-		CLX_FIELD(is_signed, true)
-		CLX_FIELD(is_specialized, true)
-		CLX_FIELD(is_integer, true)
-		CLX_FIELD(is_exact, true)
-		CLX_FIELD(has_infinity, false)
-		CLX_FIELD(has_quiet_NaN, false)
-	};
+    template <>
+    struct numeric_limits<short_type> {
+        typedef short_type value_type;
+        CLX_FUNCTION(min, CL_SHRT_MIN)
+        CLX_FUNCTION(max, CL_SHRT_MAX)
+        CLX_FIELD(is_signed, true)
+        CLX_FIELD(is_specialized, true)
+        CLX_FIELD(is_integer, true)
+        CLX_FIELD(is_exact, true)
+        CLX_FIELD(has_infinity, false)
+        CLX_FIELD(has_quiet_NaN, false)
+    };
 
-	template <>
-	struct numeric_limits<unsigned_short_type> {
-		typedef unsigned_short_type value_type;
-		CLX_FUNCTION(min, 0)
-		CLX_FUNCTION(max, CL_USHRT_MAX)
-		CLX_FIELD(is_signed, false)
-		CLX_FIELD(is_specialized, true)
-		CLX_FIELD(is_integer, true)
-		CLX_FIELD(is_exact, true)
-		CLX_FIELD(has_infinity, false)
-		CLX_FIELD(has_quiet_NaN, false)
-	};
+    template <>
+    struct numeric_limits<unsigned_short_type> {
+        typedef unsigned_short_type value_type;
+        CLX_FUNCTION(min, 0)
+        CLX_FUNCTION(max, CL_USHRT_MAX)
+        CLX_FIELD(is_signed, false)
+        CLX_FIELD(is_specialized, true)
+        CLX_FIELD(is_integer, true)
+        CLX_FIELD(is_exact, true)
+        CLX_FIELD(has_infinity, false)
+        CLX_FIELD(has_quiet_NaN, false)
+    };
 
-	template <>
-	struct numeric_limits<int_type> {
-		typedef int_type value_type;
-		CLX_FUNCTION(min, CL_INT_MIN)
-		CLX_FUNCTION(max, CL_INT_MAX)
-		CLX_FIELD(is_signed, true)
-		CLX_FIELD(is_specialized, true)
-		CLX_FIELD(is_integer, true)
-		CLX_FIELD(is_exact, true)
-		CLX_FIELD(has_infinity, false)
-		CLX_FIELD(has_quiet_NaN, false)
-	};
+    template <>
+    struct numeric_limits<int_type> {
+        typedef int_type value_type;
+        CLX_FUNCTION(min, CL_INT_MIN)
+        CLX_FUNCTION(max, CL_INT_MAX)
+        CLX_FIELD(is_signed, true)
+        CLX_FIELD(is_specialized, true)
+        CLX_FIELD(is_integer, true)
+        CLX_FIELD(is_exact, true)
+        CLX_FIELD(has_infinity, false)
+        CLX_FIELD(has_quiet_NaN, false)
+    };
 
-	template <>
-	struct numeric_limits<unsigned_int_type> {
-		typedef unsigned_int_type value_type;
-		CLX_FUNCTION(min, 0)
-		CLX_FUNCTION(max, CL_UINT_MAX)
-		CLX_FIELD(is_signed, false)
-		CLX_FIELD(is_specialized, true)
-		CLX_FIELD(is_integer, true)
-		CLX_FIELD(is_exact, true)
-		CLX_FIELD(has_infinity, false)
-		CLX_FIELD(has_quiet_NaN, false)
-	};
+    template <>
+    struct numeric_limits<unsigned_int_type> {
+        typedef unsigned_int_type value_type;
+        CLX_FUNCTION(min, 0)
+        CLX_FUNCTION(max, CL_UINT_MAX)
+        CLX_FIELD(is_signed, false)
+        CLX_FIELD(is_specialized, true)
+        CLX_FIELD(is_integer, true)
+        CLX_FIELD(is_exact, true)
+        CLX_FIELD(has_infinity, false)
+        CLX_FIELD(has_quiet_NaN, false)
+    };
 
-	template <>
-	struct numeric_limits<long_type> {
-		typedef long_type value_type;
-		CLX_FUNCTION(min, CL_LONG_MIN)
-		CLX_FUNCTION(max, CL_LONG_MAX)
-		CLX_FIELD(is_signed, true)
-		CLX_FIELD(is_specialized, true)
-		CLX_FIELD(is_integer, true)
-		CLX_FIELD(is_exact, true)
-		CLX_FIELD(has_infinity, false)
-		CLX_FIELD(has_quiet_NaN, false)
-	};
+    template <>
+    struct numeric_limits<long_type> {
+        typedef long_type value_type;
+        CLX_FUNCTION(min, CL_LONG_MIN)
+        CLX_FUNCTION(max, CL_LONG_MAX)
+        CLX_FIELD(is_signed, true)
+        CLX_FIELD(is_specialized, true)
+        CLX_FIELD(is_integer, true)
+        CLX_FIELD(is_exact, true)
+        CLX_FIELD(has_infinity, false)
+        CLX_FIELD(has_quiet_NaN, false)
+    };
 
-	template <>
-	struct numeric_limits<unsigned_long_type> {
-		typedef unsigned_long_type value_type;
-		CLX_FUNCTION(min, 0)
-		CLX_FUNCTION(max, CL_ULONG_MAX)
-		CLX_FIELD(is_signed, false)
-		CLX_FIELD(is_specialized, true)
-		CLX_FIELD(is_integer, true)
-		CLX_FIELD(is_exact, true)
-		CLX_FIELD(has_infinity, false)
-		CLX_FIELD(has_quiet_NaN, false)
-	};
+    template <>
+    struct numeric_limits<unsigned_long_type> {
+        typedef unsigned_long_type value_type;
+        CLX_FUNCTION(min, 0)
+        CLX_FUNCTION(max, CL_ULONG_MAX)
+        CLX_FIELD(is_signed, false)
+        CLX_FIELD(is_specialized, true)
+        CLX_FIELD(is_integer, true)
+        CLX_FIELD(is_exact, true)
+        CLX_FIELD(has_infinity, false)
+        CLX_FIELD(has_quiet_NaN, false)
+    };
 
-	struct numeric_limits_half {
-		typedef half_type value_type;
-		CLX_FUNCTION(min, CL_HALF_MIN)
-		CLX_FUNCTION(max, CL_HALF_MAX)
-		CLX_FUNCTION(epsilon, CL_HALF_EPSILON)
-		CLX_FIELD(digits, CL_HALF_MANT_DIG)
-		CLX_FIELD(digits10, CL_HALF_DIG)
-		CLX_FIELD(radix, CL_HALF_RADIX)
-		CLX_FIELD(min_exponent, CL_HALF_MIN_EXP)
-		CLX_FIELD(min_exponent10, CL_HALF_MIN_10_EXP)
-		CLX_FIELD(max_exponent, CL_HALF_MAX_EXP)
-		CLX_FIELD(max_exponent10, CL_HALF_MAX_10_EXP)
-		CLX_FIELD(is_signed, true)
-		CLX_FIELD(is_specialized, true)
-		CLX_FIELD(is_integer, false)
-		CLX_FIELD(is_exact, false)
-		CLX_FIELD(has_infinity, false)
-		CLX_FIELD(has_quiet_NaN, false)
-	};
+    struct numeric_limits_half {
+        typedef half_type value_type;
+        CLX_FUNCTION(min, CL_HALF_MIN)
+        CLX_FUNCTION(max, CL_HALF_MAX)
+        CLX_FUNCTION(epsilon, CL_HALF_EPSILON)
+        CLX_FIELD(digits, CL_HALF_MANT_DIG)
+        CLX_FIELD(digits10, CL_HALF_DIG)
+        CLX_FIELD(radix, CL_HALF_RADIX)
+        CLX_FIELD(min_exponent, CL_HALF_MIN_EXP)
+        CLX_FIELD(min_exponent10, CL_HALF_MIN_10_EXP)
+        CLX_FIELD(max_exponent, CL_HALF_MAX_EXP)
+        CLX_FIELD(max_exponent10, CL_HALF_MAX_10_EXP)
+        CLX_FIELD(is_signed, true)
+        CLX_FIELD(is_specialized, true)
+        CLX_FIELD(is_integer, false)
+        CLX_FIELD(is_exact, false)
+        CLX_FIELD(has_infinity, false)
+        CLX_FIELD(has_quiet_NaN, false)
+    };
 
-	template <>
-	struct numeric_limits<float_type> {
-		typedef float_type value_type;
-		CLX_FUNCTION(min, CL_FLT_MIN)
-		CLX_FUNCTION(max, CL_FLT_MAX)
-		CLX_FUNCTION(epsilon, CL_FLT_EPSILON)
-		CLX_FUNCTION(infinity, CL_HUGE_VALF)
-		CLX_FUNCTION(quiet_NaN, CL_NAN)
-		CLX_FIELD(digits, CL_FLT_MANT_DIG)
-		CLX_FIELD(digits10, CL_FLT_DIG)
-		CLX_FIELD(radix, CL_FLT_RADIX)
-		CLX_FIELD(min_exponent, CL_FLT_MIN_EXP)
-		CLX_FIELD(min_exponent10, CL_FLT_MIN_10_EXP)
-		CLX_FIELD(max_exponent, CL_FLT_MAX_EXP)
-		CLX_FIELD(max_exponent10, CL_FLT_MAX_10_EXP)
-		CLX_FIELD(is_signed, true)
-		CLX_FIELD(is_specialized, true)
-		CLX_FIELD(is_integer, false)
-		CLX_FIELD(is_exact, false)
-		CLX_FIELD(has_infinity, true)
-		CLX_FIELD(has_quiet_NaN, true)
-	};
+    template <>
+    struct numeric_limits<float_type> {
+        typedef float_type value_type;
+        CLX_FUNCTION(min, CL_FLT_MIN)
+        CLX_FUNCTION(max, CL_FLT_MAX)
+        CLX_FUNCTION(epsilon, CL_FLT_EPSILON)
+        CLX_FUNCTION(infinity, CL_HUGE_VALF)
+        CLX_FUNCTION(quiet_NaN, CL_NAN)
+        CLX_FIELD(digits, CL_FLT_MANT_DIG)
+        CLX_FIELD(digits10, CL_FLT_DIG)
+        CLX_FIELD(radix, CL_FLT_RADIX)
+        CLX_FIELD(min_exponent, CL_FLT_MIN_EXP)
+        CLX_FIELD(min_exponent10, CL_FLT_MIN_10_EXP)
+        CLX_FIELD(max_exponent, CL_FLT_MAX_EXP)
+        CLX_FIELD(max_exponent10, CL_FLT_MAX_10_EXP)
+        CLX_FIELD(is_signed, true)
+        CLX_FIELD(is_specialized, true)
+        CLX_FIELD(is_integer, false)
+        CLX_FIELD(is_exact, false)
+        CLX_FIELD(has_infinity, true)
+        CLX_FIELD(has_quiet_NaN, true)
+    };
 
-	template <>
-	struct numeric_limits<double_type> {
-		typedef double_type value_type;
-		CLX_FUNCTION(min, CL_DBL_MIN)
-		CLX_FUNCTION(max, CL_DBL_MAX)
-		CLX_FUNCTION(epsilon, CL_DBL_EPSILON)
-		CLX_FUNCTION(infinity, CL_HUGE_VAL)
-		CLX_FUNCTION(quiet_NaN, CL_NAN)
-		CLX_FIELD(digits, CL_DBL_MANT_DIG)
-		CLX_FIELD(digits10, CL_DBL_DIG)
-		CLX_FIELD(radix, CL_DBL_RADIX)
-		CLX_FIELD(min_exponent, CL_DBL_MIN_EXP)
-		CLX_FIELD(min_exponent10, CL_DBL_MIN_10_EXP)
-		CLX_FIELD(max_exponent, CL_DBL_MAX_EXP)
-		CLX_FIELD(max_exponent10, CL_DBL_MAX_10_EXP)
-		CLX_FIELD(is_signed, true)
-		CLX_FIELD(is_specialized, true)
-		CLX_FIELD(is_integer, false)
-		CLX_FIELD(is_exact, false)
-		CLX_FIELD(has_infinity, true)
-		CLX_FIELD(has_quiet_NaN, true)
-	};
+    template <>
+    struct numeric_limits<double_type> {
+        typedef double_type value_type;
+        CLX_FUNCTION(min, CL_DBL_MIN)
+        CLX_FUNCTION(max, CL_DBL_MAX)
+        CLX_FUNCTION(epsilon, CL_DBL_EPSILON)
+        CLX_FUNCTION(infinity, CL_HUGE_VAL)
+        CLX_FUNCTION(quiet_NaN, CL_NAN)
+        CLX_FIELD(digits, CL_DBL_MANT_DIG)
+        CLX_FIELD(digits10, CL_DBL_DIG)
+        CLX_FIELD(radix, CL_DBL_RADIX)
+        CLX_FIELD(min_exponent, CL_DBL_MIN_EXP)
+        CLX_FIELD(min_exponent10, CL_DBL_MIN_10_EXP)
+        CLX_FIELD(max_exponent, CL_DBL_MAX_EXP)
+        CLX_FIELD(max_exponent10, CL_DBL_MAX_10_EXP)
+        CLX_FIELD(is_signed, true)
+        CLX_FIELD(is_specialized, true)
+        CLX_FIELD(is_integer, false)
+        CLX_FIELD(is_exact, false)
+        CLX_FIELD(has_infinity, true)
+        CLX_FIELD(has_quiet_NaN, true)
+    };
 
 }
 

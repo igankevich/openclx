@@ -7,63 +7,63 @@
 
 namespace clx {
 
-	#if CL_TARGET_VERSION >= 120
-	enum class argument_type_qualifiers: argument_type_qualifiers_type {
-		none=CL_KERNEL_ARG_TYPE_NONE,
-		q_const=CL_KERNEL_ARG_TYPE_CONST,
-		q_restrict=CL_KERNEL_ARG_TYPE_RESTRICT,
-		q_volatile=CL_KERNEL_ARG_TYPE_VOLATILE,
-		#if CL_TARGET_VERSION >= 200
-		pipe=CL_KERNEL_ARG_TYPE_PIPE,
-		#endif
-	};
+    #if CL_TARGET_VERSION >= 120
+    enum class argument_type_qualifiers: argument_type_qualifiers_type {
+        none=CL_KERNEL_ARG_TYPE_NONE,
+        q_const=CL_KERNEL_ARG_TYPE_CONST,
+        q_restrict=CL_KERNEL_ARG_TYPE_RESTRICT,
+        q_volatile=CL_KERNEL_ARG_TYPE_VOLATILE,
+        #if CL_TARGET_VERSION >= 200
+        pipe=CL_KERNEL_ARG_TYPE_PIPE,
+        #endif
+    };
 
-	CLX_FLAGS(argument_type_qualifiers, argument_type_qualifiers_type)
+    CLX_FLAGS(argument_type_qualifiers, argument_type_qualifiers_type)
 
-	enum class access_qualifiers: access_qualifiers_type {
-		read_only=CL_KERNEL_ARG_ACCESS_READ_ONLY,
-		write_only=CL_KERNEL_ARG_ACCESS_WRITE_ONLY,
-		read_write=CL_KERNEL_ARG_ACCESS_READ_WRITE,
-		none=CL_KERNEL_ARG_ACCESS_NONE,
-	};
+    enum class access_qualifiers: access_qualifiers_type {
+        read_only=CL_KERNEL_ARG_ACCESS_READ_ONLY,
+        write_only=CL_KERNEL_ARG_ACCESS_WRITE_ONLY,
+        read_write=CL_KERNEL_ARG_ACCESS_READ_WRITE,
+        none=CL_KERNEL_ARG_ACCESS_NONE,
+    };
 
-	enum class address_qualifiers: address_qualifiers_type {
-		q_global=CL_KERNEL_ARG_ADDRESS_GLOBAL,
-		q_local=CL_KERNEL_ARG_ADDRESS_LOCAL,
-		q_constant=CL_KERNEL_ARG_ADDRESS_CONSTANT,
-		q_private=CL_KERNEL_ARG_ADDRESS_PRIVATE,
-	};
+    enum class address_qualifiers: address_qualifiers_type {
+        q_global=CL_KERNEL_ARG_ADDRESS_GLOBAL,
+        q_local=CL_KERNEL_ARG_ADDRESS_LOCAL,
+        q_constant=CL_KERNEL_ARG_ADDRESS_CONSTANT,
+        q_private=CL_KERNEL_ARG_ADDRESS_PRIVATE,
+    };
 
-	class kernel_argument {
+    class kernel_argument {
 
-	private:
-		kernel _kernel;
-		unsigned_int_type _index;
+    private:
+        kernel _kernel;
+        unsigned_int_type _index;
 
-	public:
+    public:
 
-		inline explicit
-		kernel_argument(kernel kernel, unsigned_int_type index):
-		_kernel(kernel), _index(index) {}
+        inline explicit
+        kernel_argument(kernel kernel, unsigned_int_type index):
+        _kernel(kernel), _index(index) {}
 
-		std::string name() const;
-		std::string type_name() const;
-		argument_type_qualifiers type() const;
-		access_qualifiers access() const;
-		address_qualifiers address() const;
+        std::string name() const;
+        std::string type_name() const;
+        argument_type_qualifiers type() const;
+        access_qualifiers access() const;
+        address_qualifiers address() const;
 
-		inline kernel_type
-		get() noexcept {
-			return this->_kernel.get();
-		}
+        inline kernel_type
+        get() noexcept {
+            return this->_kernel.get();
+        }
 
-		inline const kernel_type
-		get() const noexcept {
-			return this->_kernel.get();
-		}
+        inline const kernel_type
+        get() const noexcept {
+            return this->_kernel.get();
+        }
 
-	};
-	#endif
+    };
+    #endif
 
 }
 

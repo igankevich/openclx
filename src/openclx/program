@@ -11,157 +11,157 @@
 
 namespace clx {
 
-	class program {
+    class program {
 
-	public:
-		typedef void (*callback_type)(program_type, void *);
-		typedef array_view<header> header_array;
-		typedef array_view<device> device_array;
+    public:
+        typedef void (*callback_type)(program_type, void *);
+        typedef array_view<header> header_array;
+        typedef array_view<device> device_array;
 
-	private:
-		program_type _ptr = nullptr;
+    private:
+        program_type _ptr = nullptr;
 
-	public:
+    public:
 
-		inline explicit
-		program(program_type ptr): _ptr(ptr) {}
+        inline explicit
+        program(program_type ptr): _ptr(ptr) {}
 
-		inline void
-		build(const std::string& options) {
-			this->build(options, {});
-		}
+        inline void
+        build(const std::string& options) {
+            this->build(options, {});
+        }
 
-		void
-		build(const std::string& options, const device_array& devices);
+        void
+        build(const std::string& options, const device_array& devices);
 
-		::clx::build_status build_status(const device& dev) const;
-		std::string options(const device& dev) const;
-		std::string build_log(const device& dev) const;
-		std::vector<binary> binaries() const;
-		#if CL_TARGET_VERSION >= 120
-		binary_types binary_type(const device& dev) const;
-		#endif
-		#if CL_TARGET_VERSION >= 120
-		size_t size_of_global_variables(const device& dev) const;
-		#endif
+        ::clx::build_status build_status(const device& dev) const;
+        std::string options(const device& dev) const;
+        std::string build_log(const device& dev) const;
+        std::vector<binary> binaries() const;
+        #if CL_TARGET_VERSION >= 120
+        binary_types binary_type(const device& dev) const;
+        #endif
+        #if CL_TARGET_VERSION >= 120
+        size_t size_of_global_variables(const device& dev) const;
+        #endif
 
-		#if CL_TARGET_VERSION >= 120
-		inline void
-		compile(const std::string& options) {
-			this->compile(options, {}, {});
-		}
+        #if CL_TARGET_VERSION >= 120
+        inline void
+        compile(const std::string& options) {
+            this->compile(options, {}, {});
+        }
 
-		inline void
-		compile(const std::string& options, const device_array& devices) {
-			this->compile(options, {}, devices);
-		}
+        inline void
+        compile(const std::string& options, const device_array& devices) {
+            this->compile(options, {}, devices);
+        }
 
-		inline void
-		compile(const std::string& options, const header_array& headers) {
-			this->compile(options, headers, {});
-		}
+        inline void
+        compile(const std::string& options, const header_array& headers) {
+            this->compile(options, headers, {});
+        }
 
-		void compile(
-			const std::string& options,
-			const header_array& headers,
-			const device_array& devices
-		);
-		#endif
+        void compile(
+            const std::string& options,
+            const header_array& headers,
+            const device_array& devices
+        );
+        #endif
 
-		std::vector<::clx::kernel> kernels() const;
-		::clx::kernel kernel(const char* name) const;
-		::clx::context context() const;
-		unsigned_int_type num_references() const;
-		unsigned_int_type num_devices() const;
-		std::vector<device> devices() const;
-		std::string source() const;
+        std::vector<::clx::kernel> kernels() const;
+        ::clx::kernel kernel(const char* name) const;
+        ::clx::context context() const;
+        unsigned_int_type num_references() const;
+        unsigned_int_type num_devices() const;
+        std::vector<device> devices() const;
+        std::string source() const;
 
-		#if CL_TARGET_VERSION >= 210
-		::clx::intermediate_language intermediate_language() const;
-		#endif
+        #if CL_TARGET_VERSION >= 210
+        ::clx::intermediate_language intermediate_language() const;
+        #endif
 
-		#if CL_TARGET_VERSION >= 220
-		template <class T>
-		inline void
-		constant(unsigned_int_type id, T value) {
-			CLX_CHECK(::clSetProgramSpecializationConstant(
-				this->_ptr, id, sizeof(T), &value
-			));
-		}
-		#endif
+        #if CL_TARGET_VERSION >= 220
+        template <class T>
+        inline void
+        constant(unsigned_int_type id, T value) {
+            CLX_CHECK(::clSetProgramSpecializationConstant(
+                this->_ptr, id, sizeof(T), &value
+            ));
+        }
+        #endif
 
-		inline program_type
-		get() noexcept {
-			return this->_ptr;
-		}
+        inline program_type
+        get() noexcept {
+            return this->_ptr;
+        }
 
-		inline const program_type
-		get() const noexcept {
-			return this->_ptr;
-		}
+        inline const program_type
+        get() const noexcept {
+            return this->_ptr;
+        }
 
-		program() = default;
-		inline ~program() { this->release(); }
-		inline program(const program& rhs): _ptr(rhs._ptr) { this->retain(); }
+        program() = default;
+        inline ~program() { this->release(); }
+        inline program(const program& rhs): _ptr(rhs._ptr) { this->retain(); }
 
-		inline program&
-		operator=(const program& rhs) {
-			program tmp(rhs);
-			this->swap(tmp);
-			return *this;
-		}
+        inline program&
+        operator=(const program& rhs) {
+            program tmp(rhs);
+            this->swap(tmp);
+            return *this;
+        }
 
-		inline program(program&& rhs): _ptr(rhs._ptr) { rhs._ptr = nullptr; }
-		inline program& operator=(program&& rhs) { this->swap(rhs); return *this; }
+        inline program(program&& rhs): _ptr(rhs._ptr) { rhs._ptr = nullptr; }
+        inline program& operator=(program&& rhs) { this->swap(rhs); return *this; }
 
-		inline void
-		release() {
-			if (this->_ptr) {
-				CLX_CHECK(::clReleaseProgram(this->_ptr));
-				this->_ptr = nullptr;
-			}
-		}
+        inline void
+        release() {
+            if (this->_ptr) {
+                CLX_CHECK(::clReleaseProgram(this->_ptr));
+                this->_ptr = nullptr;
+            }
+        }
 
-		inline void
-		retain() {
-			if (this->_ptr) {
-				CLX_CHECK(::clRetainProgram(this->_ptr));
-			}
-		}
+        inline void
+        retain() {
+            if (this->_ptr) {
+                CLX_CHECK(::clRetainProgram(this->_ptr));
+            }
+        }
 
-		inline void
-		swap(program& rhs) {
-			std::swap(this->_ptr, rhs._ptr);
-		}
+        inline void
+        swap(program& rhs) {
+            std::swap(this->_ptr, rhs._ptr);
+        }
 
-	};
+    };
 
-	inline void
-	swap(program& lhs, program& rhs) {
-		lhs.swap(rhs);
-	}
+    inline void
+    swap(program& lhs, program& rhs) {
+        lhs.swap(rhs);
+    }
 
-	#if CL_TARGET_VERSION >= 120
-	program
-	link(
-		const array_view<program>& programs,
-		const std::string& options,
-		const array_view<device>& devices
-	);
-	#endif
+    #if CL_TARGET_VERSION >= 120
+    program
+    link(
+        const array_view<program>& programs,
+        const std::string& options,
+        const array_view<device>& devices
+    );
+    #endif
 
-	#if CL_TARGET_VERSION >= 120
-	inline program
-	link(const array_view<program>& programs, const std::string& options) {
-		return link(programs, options, {});
-	}
-	#endif
+    #if CL_TARGET_VERSION >= 120
+    inline program
+    link(const array_view<program>& programs, const std::string& options) {
+        return link(programs, options, {});
+    }
+    #endif
 
-	class header {
-	public:
-		::clx::program program;
-		std::string name;
-	};
+    class header {
+    public:
+        ::clx::program program;
+        std::string name;
+    };
 
 }
 

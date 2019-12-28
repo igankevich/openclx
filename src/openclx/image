@@ -7,38 +7,38 @@
 
 namespace clx {
 
-	class image: public memory_object {
+    class image: public memory_object {
 
-	public:
-		typedef slice_3d<const image&> slice_3d_type;
+    public:
+        typedef slice_3d<const image&> slice_3d_type;
 
-	public:
+    public:
 
-		inline explicit
-		image(memory_object_type ptr): memory_object(ptr) {}
+        inline explicit
+        image(memory_object_type ptr): memory_object(ptr) {}
 
-		inline slice_3d_type
-		slice(
-			const range& offset, const range& size,
-			size_t row_pitch=0, size_t slice_pitch=0
-		) const {
-			return {*this,offset,size,row_pitch,slice_pitch};
-		}
+        inline slice_3d_type
+        slice(
+            const range& offset, const range& size,
+            size_t row_pitch=0, size_t slice_pitch=0
+        ) const {
+            return {*this,offset,size,row_pitch,slice_pitch};
+        }
 
-		inline range
-		dimensions() const {
-			return {width(),height(),depth()};
-		}
+        inline range
+        dimensions() const {
+            return {width(),height(),depth()};
+        }
 
-		image_format format() const;
-		size_t element_size() const;
-		size_t row_pitch() const;
-		size_t slice_pitch() const;
-		size_t width() const;
-		size_t height() const;
-		size_t depth() const;
+        image_format format() const;
+        size_t element_size() const;
+        size_t row_pitch() const;
+        size_t slice_pitch() const;
+        size_t width() const;
+        size_t height() const;
+        size_t depth() const;
 
-	};
+    };
 
 }
 

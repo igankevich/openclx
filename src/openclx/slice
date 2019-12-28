@@ -5,15 +5,15 @@
 
 namespace clx {
 
-	template <class T>
-	class slice_3d {
-	public:
-		T object;
-		const range& offset;
-		const range& size;
-		size_t row_pitch;
-		size_t slice_pitch;
-	};
+    template <class T>
+    class slice_3d {
+    public:
+        T object;
+        const range& offset;
+        const range& size;
+        size_t row_pitch;
+        size_t slice_pitch;
+    };
 
 }
 

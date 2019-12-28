@@ -6,44 +6,44 @@
 
 namespace clx {
 
-	namespace egl {
+    namespace egl {
 
-		#if defined(cl_khr_egl_image)
-		class image_properties {
+        #if defined(cl_khr_egl_image)
+        class image_properties {
 
-		private:
-			display_type _display;
-			sync_type _sync;
-			mutable std::vector<image_properties_type> prop;
+        private:
+            display_type _display;
+            sync_type _sync;
+            mutable std::vector<image_properties_type> prop;
 
-		public:
+        public:
 
-			inline display_type display() { return this->_display; }
-			inline sync_type sync() { return this->_sync; }
-			inline const image_properties_type* commit() const {
-				if (prop.empty()) { return nullptr; }
-				prop.emplace_back(0):
-				return prop.data();
-			}
+            inline display_type display() { return this->_display; }
+            inline sync_type sync() { return this->_sync; }
+            inline const image_properties_type* commit() const {
+                if (prop.empty()) { return nullptr; }
+                prop.emplace_back(0):
+                return prop.data();
+            }
 
-			#if defined(cl_intel_egl_image_yuv)
-			inline void yuv_plane(image_properties_type plane) {
-				prop.emplace_back(CL_EGL_YUV_PLANE_INTEL);
-				prop.emplace_back(plane);
-			}
-			#endif
+            #if defined(cl_intel_egl_image_yuv)
+            inline void yuv_plane(image_properties_type plane) {
+                prop.emplace_back(CL_EGL_YUV_PLANE_INTEL);
+                prop.emplace_back(plane);
+            }
+            #endif
 
-		};
-		#endif
+        };
+        #endif
 
-		class image: public ::clx::memory_object {
+        class image: public ::clx::memory_object {
 
-			inline explicit
-			image(memory_object_type ptr): ::clx::memory_object(ptr) {}
+            inline explicit
+            image(memory_object_type ptr): ::clx::memory_object(ptr) {}
 
-		};
+        };
 
-	}
+    }
 
 }
 

@@ -5,15 +5,15 @@
 
 namespace clx {
 
-	enum class binary_types: program_binary_type {
-		none=CL_PROGRAM_BINARY_TYPE_NONE,
-		compiled_object=CL_PROGRAM_BINARY_TYPE_COMPILED_OBJECT,
-		library=CL_PROGRAM_BINARY_TYPE_LIBRARY,
-		executable=CL_PROGRAM_BINARY_TYPE_EXECUTABLE,
-		#if defined(CL_PROGRAM_BINARY_TYPE_INTERMEDIATE)
-		intermediate=CL_PROGRAM_BINARY_TYPE_INTERMEDIATE,
-		#endif
-	};
+    enum class binary_types: program_binary_type {
+        none=CL_PROGRAM_BINARY_TYPE_NONE,
+        compiled_object=CL_PROGRAM_BINARY_TYPE_COMPILED_OBJECT,
+        library=CL_PROGRAM_BINARY_TYPE_LIBRARY,
+        executable=CL_PROGRAM_BINARY_TYPE_EXECUTABLE,
+        #if defined(CL_PROGRAM_BINARY_TYPE_INTERMEDIATE)
+        intermediate=CL_PROGRAM_BINARY_TYPE_INTERMEDIATE,
+        #endif
+    };
 
 }
 

@@ -9,108 +9,108 @@
 
 namespace clx {
 
-	class event {
+    class event {
 
-	public:
-		typedef std::chrono::nanoseconds nanoseconds;
-		typedef void (*callback_type)(event_type, int_type, void*);
+    public:
+        typedef std::chrono::nanoseconds nanoseconds;
+        typedef void (*callback_type)(event_type, int_type, void*);
 
-	private:
-		event_type _ptr = nullptr;
+    private:
+        event_type _ptr = nullptr;
 
-	public:
+    public:
 
-		inline explicit
-		event(event_type ptr): _ptr(ptr) {}
+        inline explicit
+        event(event_type ptr): _ptr(ptr) {}
 
-		::clx::command_queue queue() const;
-		::clx::command command() const;
-		::clx::execution_status status() const;
-		unsigned_int_type num_references() const;
+        ::clx::command_queue queue() const;
+        ::clx::command command() const;
+        ::clx::execution_status status() const;
+        unsigned_int_type num_references() const;
 
-		nanoseconds time_queued() const;
-		nanoseconds time_submitted() const;
-		nanoseconds time_started() const;
-		nanoseconds time_ended() const;
-		nanoseconds time_completed() const;
+        nanoseconds time_queued() const;
+        nanoseconds time_submitted() const;
+        nanoseconds time_started() const;
+        nanoseconds time_ended() const;
+        nanoseconds time_completed() const;
 
-		inline void
-		status(int_type s) {
-			CLX_CHECK(::clSetUserEventStatus(this->_ptr, s));
-		}
+        inline void
+        status(int_type s) {
+            CLX_CHECK(::clSetUserEventStatus(this->_ptr, s));
+        }
 
-		inline void
-		wait() {
-			CLX_CHECK(::clWaitForEvents(1, &this->_ptr));
-		}
+        inline void
+        wait() {
+            CLX_CHECK(::clWaitForEvents(1, &this->_ptr));
+        }
 
-		#if CL_TARGET_VERSION >= 110
-		inline void
-		callback(callback_type cb, execution_status status, void* data=nullptr) {
-			CLX_CHECK(::clSetEventCallback(
-				this->_ptr,
-				static_cast<int_type>(status),
-				cb,
-				data
-			));
-		}
-		#endif
+        #if CL_TARGET_VERSION >= 110
+        inline void
+        callback(callback_type cb, execution_status status, void* data=nullptr) {
+            CLX_CHECK(::clSetEventCallback(
+                this->_ptr,
+                static_cast<int_type>(status),
+                cb,
+                data
+            ));
+        }
+        #endif
 
-		inline event_type
-		get() noexcept {
-			return this->_ptr;
-		}
+        inline event_type
+        get() noexcept {
+            return this->_ptr;
+        }
 
-		inline const event_type
-		get() const noexcept {
-			return this->_ptr;
-		}
+        inline const event_type
+        get() const noexcept {
+            return this->_ptr;
+        }
 
-		event() = default;
-		inline ~event() { this->release(); }
-		inline event(const event& rhs): _ptr(rhs._ptr) { this->retain(); }
+        event() = default;
+        inline ~event() { this->release(); }
+        inline event(const event& rhs): _ptr(rhs._ptr) { this->retain(); }
 
-		inline event&
-		operator=(const event& rhs) {
-			event tmp(rhs);
-			this->swap(tmp);
-			return *this;
-		}
+        inline event&
+        operator=(const event& rhs) {
+            event tmp(rhs);
+            this->swap(tmp);
+            return *this;
+        }
 
-		inline event(event&& rhs): _ptr(rhs._ptr) { rhs._ptr = nullptr; }
-		inline event& operator=(event&& rhs) { this->swap(rhs); return *this; }
+        inline event(event&& rhs): _ptr(rhs._ptr) { rhs._ptr = nullptr; }
+        inline event& operator=(event&& rhs) { this->swap(rhs); return *this; }
 
-		inline void
-		release() {
-			if (this->_ptr) {
-				CLX_CHECK(::clReleaseEvent(this->_ptr));
-				this->_ptr = nullptr;
-			}
-		}
+        inline void
+        release() {
+            if (this->_ptr) {
+                CLX_CHECK(::clReleaseEvent(this->_ptr));
+                this->_ptr = nullptr;
+            }
+        }
 
-		inline void
-		retain() {
-			if (this->_ptr) {
-				CLX_CHECK(::clRetainEvent(this->_ptr));
-			}
-		}
+        inline void
+        retain() {
+            if (this->_ptr) {
+                CLX_CHECK(::clRetainEvent(this->_ptr));
+            }
+        }
 
-		inline void
-		swap(event& rhs) {
-			std::swap(this->_ptr, rhs._ptr);
-		}
+        inline void
+        swap(event& rhs) {
+            std::swap(this->_ptr, rhs._ptr);
+        }
 
-	};
+    };
 
-	static_assert(sizeof(event) == sizeof(event_type), "bad size");
+    static_assert(sizeof(event) == sizeof(event_type), "bad size");
 
-	inline void
-	swap(event& lhs, event& rhs) {
-		lhs.swap(rhs);
-	}
+    inline void
+    swap(event& lhs, event& rhs) {
+        lhs.swap(rhs);
+    }
 
-	void
-	wait(const array_view<event>& events);
+    void
+    wait(const array_view<event>& events);
 
 }
 

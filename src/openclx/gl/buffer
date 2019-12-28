@@ -6,21 +6,21 @@
 
 namespace clx {
 
-	namespace gl {
+    namespace gl {
 
-		class buffer: public ::clx::buffer {
+        class buffer: public ::clx::buffer {
 
-		public:
+        public:
 
-			inline explicit
-			buffer(memory_object_type ptr): ::clx::buffer(ptr) {}
+            inline explicit
+            buffer(memory_object_type ptr): ::clx::buffer(ptr) {}
 
-			memory_objects type() const;
-			unsigned_int_type name() const;
+            memory_objects type() const;
+            unsigned_int_type name() const;
 
-		};
+        };
 
-	}
+    }
 
 }
 

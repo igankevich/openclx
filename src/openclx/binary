@@ -6,43 +6,43 @@
 
 namespace clx {
 
-	class binary {
+    class binary {
 
-	public:
-		typedef unsigned char value_type;
-		typedef size_t size_type;
+    public:
+        typedef unsigned char value_type;
+        typedef size_t size_type;
 
-	private:
-		std::vector<value_type> _bytes;
+    private:
+        std::vector<value_type> _bytes;
 
-	public:
+    public:
 
-		binary() = default;
-		inline explicit binary(size_type n): _bytes(n) {}
+        binary() = default;
+        inline explicit binary(size_type n): _bytes(n) {}
 
-		inline explicit
-		binary(const value_type* bytes, size_type n):
-		_bytes(bytes, bytes+n) {}
+        inline explicit
+        binary(const value_type* bytes, size_type n):
+        _bytes(bytes, bytes+n) {}
 
-		void write(std::ostream& out) const;
-		void read(std::istream& in);
+        void write(std::ostream& out) const;
+        void read(std::istream& in);
 
-		inline value_type* data() { return this->_bytes.data(); }
-		inline const value_type* data() const { return this->_bytes.data(); }
-		inline size_type size() const { return this->_bytes.size(); }
+        inline value_type* data() { return this->_bytes.data(); }
+        inline const value_type* data() const { return this->_bytes.data(); }
+        inline size_type size() const { return this->_bytes.size(); }
 
-	};
+    };
 
-	std::ostream&
-	operator<<(std::ostream& out, const binary& rhs);
+    std::ostream&
+    operator<<(std::ostream& out, const binary& rhs);
 
-	std::istream&
-	operator>>(std::istream& in, binary& rhs);
+    std::istream&
+    operator>>(std::istream& in, binary& rhs);
 
-	class intermediate_language: public binary {
-	public:
-		using binary::binary;
-	};
+    class intermediate_language: public binary {
+    public:
+        using binary::binary;
+    };
 
 }
 

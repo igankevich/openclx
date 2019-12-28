@@ -6,79 +6,79 @@
 
 namespace clx {
 
-	#define CLX_IMAGE_FIELD(type, name) \
-		inline type name() const noexcept { \
-			return this->image_##name; \
-		} \
-		inline void name(type rhs) noexcept { \
-			this->image_##name = rhs; \
-		}
+    #define CLX_IMAGE_FIELD(type, name) \
+        inline type name() const noexcept { \
+            return this->image_##name; \
+        } \
+        inline void name(type rhs) noexcept { \
+            this->image_##name = rhs; \
+        }
 
-	#if CL_TARGET_VERSION < 120
-	struct image_descriptor_type {
-		memory_objects_type image_type{};
-		size_t image_width{};
-		size_t image_height{};
-		size_t image_depth{};
-		size_t image_array_size{};
-		size_t image_row_pitch{};
-		size_t image_slice_pitch{};
-		int_type ip_levels{};
-		int_type num_samples{};
-		union {
-			memory_object_type buffer{};
-			memory_object_type mem_object;
-		};
-		image_descriptor_type() {}
-		~image_descriptor_type() {}
-	};
-	#endif
+    #if CL_TARGET_VERSION < 120
+    struct image_descriptor_type {
+        memory_objects_type image_type{};
+        size_t image_width{};
+        size_t image_height{};
+        size_t image_depth{};
+        size_t image_array_size{};
+        size_t image_row_pitch{};
+        size_t image_slice_pitch{};
+        int_type ip_levels{};
+        int_type num_samples{};
+        union {
+            memory_object_type buffer{};
+            memory_object_type mem_object;
+        };
+        image_descriptor_type() {}
+        ~image_descriptor_type() {}
+    };
+    #endif
 
-	struct image_descriptor: image_descriptor_type {
+    struct image_descriptor: image_descriptor_type {
 
-		inline
-		image_descriptor(): image_descriptor_type{} {}
+        inline
+        image_descriptor(): image_descriptor_type{} {}
 
-		inline memory_objects
-		type() const noexcept {
-			return static_cast<memory_objects>(this->image_type);
-		}
+        inline memory_objects
+        type() const noexcept {
+            return static_cast<memory_objects>(this->image_type);
+        }
 
-		inline void
-		type(memory_objects rhs) noexcept {
-			this->image_type = static_cast<memory_objects_type>(rhs);
-		}
+        inline void
+        type(memory_objects rhs) noexcept {
+            this->image_type = static_cast<memory_objects_type>(rhs);
+        }
 
-		inline void
-		buffer(memory_object_type rhs) {
-			this->image_descriptor_type::buffer = rhs;
-		}
+        inline void
+        buffer(memory_object_type rhs) {
+            this->image_descriptor_type::buffer = rhs;
+        }
 
-		inline memory_object_type
-		buffer() {
-			return this->image_descriptor_type::buffer;
-		}
+        inline memory_object_type
+        buffer() {
+            return this->image_descriptor_type::buffer;
+        }
 
-		inline const memory_object_type
-		buffer() const {
-			return this->image_descriptor_type::buffer;
-		}
+        inline const memory_object_type
+        buffer() const {
+            return this->image_descriptor_type::buffer;
+        }
 
-		CLX_IMAGE_FIELD(size_t, width)
-		CLX_IMAGE_FIELD(size_t, height)
-		CLX_IMAGE_FIELD(size_t, depth)
-		CLX_IMAGE_FIELD(size_t, array_size)
-		CLX_IMAGE_FIELD(size_t, row_pitch)
-		CLX_IMAGE_FIELD(size_t, slice_pitch)
+        CLX_IMAGE_FIELD(size_t, width)
+        CLX_IMAGE_FIELD(size_t, height)
+        CLX_IMAGE_FIELD(size_t, depth)
+        CLX_IMAGE_FIELD(size_t, array_size)
+        CLX_IMAGE_FIELD(size_t, row_pitch)
+        CLX_IMAGE_FIELD(size_t, slice_pitch)
 
-	};
+    };
 
-	static_assert(
-		sizeof(image_descriptor) == sizeof(image_descriptor_type),
-		"bad size"
-	);
+    static_assert(
+        sizeof(image_descriptor) == sizeof(image_descriptor_type),
+        "bad size"
+    );
 
-	#undef CLX_IMAGE_FIELD
+    #undef CLX_IMAGE_FIELD
 
 }
 

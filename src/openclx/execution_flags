@@ -6,12 +6,12 @@
 
 namespace clx {
 
-	enum class execution_flags: execution_flags_type {
-		kernel=CL_EXEC_KERNEL,
-		native_kernel=CL_EXEC_NATIVE_KERNEL,
-	};
+    enum class execution_flags: execution_flags_type {
+        kernel=CL_EXEC_KERNEL,
+        native_kernel=CL_EXEC_NATIVE_KERNEL,
+    };
 
-	CLX_FLAGS(execution_flags, execution_flags_type)
+    CLX_FLAGS(execution_flags, execution_flags_type)
 
 }
 

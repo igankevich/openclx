@@ -6,20 +6,20 @@
 
 namespace clx {
 
-	namespace intel {
+    namespace intel {
 
-		class me_descriptor: public me_descriptor_type {};
+        class me_descriptor: public me_descriptor_type {};
 
-		class me_accelerator: public accelerator {
+        class me_accelerator: public accelerator {
 
-		public:
-			using accelerator::accelerator;
+        public:
+            using accelerator::accelerator;
 
-			me_descriptor descriptor() const;
+            me_descriptor descriptor() const;
 
-		};
+        };
 
-	}
+    }
 
 }
 

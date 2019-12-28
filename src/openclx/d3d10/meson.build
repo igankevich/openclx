@@ -1,5 +1,5 @@
 openclx_src += files([
-	'memory_object.cc',
+    'memory_object.cc',
 ])
 
 install_headers(

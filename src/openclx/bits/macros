@@ -8,140 +8,140 @@
 
 namespace clx {
 
-	namespace bits {
+    namespace bits {
 
-		typedef int_type (*info_type)(...);
+        typedef int_type (*info_type)(...);
 
-		template <class ... Args>
-		std::string
-		body_string(info_type function, void* ptr, Args ... args) {
-			size_t actual_size = 0;
-			std::string value(4096, ' ');
-			errc ret;
-			bool success = false;
-			while (!success) {
-				ret = errc(
-					function(ptr, args..., value.size(), &value[0], &actual_size)
-				);
-				value.resize(actual_size);
-				if (ret != errc::invalid_value && actual_size <= value.size()) {
-					CLX_CHECK(ret);
-					success = true;
-				}
-			}
-			while (!value.empty() && value.back() == 0) { value.pop_back(); }
-			return value;
-		}
+        template <class ... Args>
+        std::string
+        body_string(info_type function, void* ptr, Args ... args) {
+            size_t actual_size = 0;
+            std::string value(4096, ' ');
+            errc ret;
+            bool success = false;
+            while (!success) {
+                ret = errc(
+                    function(ptr, args..., value.size(), &value[0], &actual_size)
+                );
+                value.resize(actual_size);
+                if (ret != errc::invalid_value && actual_size <= value.size()) {
+                    CLX_CHECK(ret);
+                    success = true;
+                }
+            }
+            while (!value.empty() && value.back() == 0) { value.pop_back(); }
+            return value;
+        }
 
-		template <class T, class ... Args>
-		std::vector<T>
-		body_array(info_type function, void* ptr, Args ... args) {
-			size_t actual_size = 0;
-			std::vector<T> result(4096 / sizeof(T));
-			int_type ret;
-			bool success = false;
-			while (!success) {
-				ret = function(ptr, args..., result.size()*sizeof(T),
-					result.data(), &actual_size);
-				auto nvalues = actual_size / sizeof(T);
-				result.resize(nvalues);
-				if (errc(ret) != errc::invalid_value && nvalues <= result.size()) {
-					CLX_CHECK(ret);
-					success = true;
-				}
-			}
-			return result;
-		}
+        template <class T, class ... Args>
+        std::vector<T>
+        body_array(info_type function, void* ptr, Args ... args) {
+            size_t actual_size = 0;
+            std::vector<T> result(4096 / sizeof(T));
+            int_type ret;
+            bool success = false;
+            while (!success) {
+                ret = function(ptr, args..., result.size()*sizeof(T),
+                    result.data(), &actual_size);
+                auto nvalues = actual_size / sizeof(T);
+                result.resize(nvalues);
+                if (errc(ret) != errc::invalid_value && nvalues <= result.size()) {
+                    CLX_CHECK(ret);
+                    success = true;
+                }
+            }
+            return result;
+        }
 
-	}
+    }
 
 }
 
 #define CLX_BODY_STRING(function, ...) \
-	return ::clx::bits::body_string( \
-		reinterpret_cast<bits::info_type>(function), \
-		this->get(), __VA_ARGS__)
+    return ::clx::bits::body_string( \
+        reinterpret_cast<bits::info_type>(function), \
+        this->get(), __VA_ARGS__)
 
 /*
 #define CLX_BODY_STRING(function, ...) \
-	size_t actual_size = 0; \
-	std::string value(4096, ' '); \
-	errc ret; \
-	bool success = false; \
-	while (!success) { \
-		ret = errc( \
-			function(this->get(), __VA_ARGS__, value.size(), &value[0], &actual_size) \
-		); \
-		value.resize(actual_size); \
-		if (ret != errc::invalid_value && actual_size <= value.size()) { \
-			CLX_CHECK(ret); \
-			success = true; \
-		} \
-	} \
-	while (!value.empty() && value.back() == 0) { value.pop_back(); } \
-	return value;
+    size_t actual_size = 0; \
+    std::string value(4096, ' '); \
+    errc ret; \
+    bool success = false; \
+    while (!success) { \
+        ret = errc( \
+            function(this->get(), __VA_ARGS__, value.size(), &value[0], &actual_size) \
+        ); \
+        value.resize(actual_size); \
+        if (ret != errc::invalid_value && actual_size <= value.size()) { \
+            CLX_CHECK(ret); \
+            success = true; \
+        } \
+    } \
+    while (!value.empty() && value.back() == 0) { value.pop_back(); } \
+    return value;
 */
 
 #define CLX_METHOD_STRING(method, function, ...) \
-	std::string \
-	method() const { \
-		CLX_BODY_STRING(function, __VA_ARGS__); \
-	}
+    std::string \
+    method() const { \
+        CLX_BODY_STRING(function, __VA_ARGS__); \
+    }
 
 #define CLX_METHOD_STRING2(method, function, return_type, ...) \
-	return_type \
-	method() const { \
-		CLX_BODY_STRING(function, __VA_ARGS__); \
-	}
+    return_type \
+    method() const { \
+        CLX_BODY_STRING(function, __VA_ARGS__); \
+    }
 
 #define CLX_BODY_ARRAY(function, key, return_type) \
-	size_t actual_size = 0; \
-	std::vector<return_type> result(4096 / sizeof(return_type)); \
-	int_type ret; \
-	bool success = false; \
-	while (!success) { \
-		ret = function( \
-			this->get(), \
-			key, \
-			result.size()*sizeof(return_type), \
-			result.data(), \
-			&actual_size \
-		); \
-		auto nvalues = actual_size / sizeof(return_type); \
-		result.resize(nvalues); \
-		if (errc(ret) != errc::invalid_value && nvalues <= result.size()) { \
-			CLX_CHECK(ret); \
-			success = true; \
-		} \
-	} \
-	return result;
+    size_t actual_size = 0; \
+    std::vector<return_type> result(4096 / sizeof(return_type)); \
+    int_type ret; \
+    bool success = false; \
+    while (!success) { \
+        ret = function( \
+            this->get(), \
+            key, \
+            result.size()*sizeof(return_type), \
+            result.data(), \
+            &actual_size \
+        ); \
+        auto nvalues = actual_size / sizeof(return_type); \
+        result.resize(nvalues); \
+        if (errc(ret) != errc::invalid_value && nvalues <= result.size()) { \
+            CLX_CHECK(ret); \
+            success = true; \
+        } \
+    } \
+    return result;
 
 #define CLX_METHOD_ARRAY(name, function, key, return_type) \
-	auto \
-	name() const -> std::vector<return_type> { \
-		CLX_BODY_ARRAY(function, key, return_type) \
-	}
+    auto \
+    name() const -> std::vector<return_type> { \
+        CLX_BODY_ARRAY(function, key, return_type) \
+    }
 
 #define CLX_BODY_SCALAR(function, type, ...) \
-	type value{}; \
-	CLX_CHECK(function(this->get(), __VA_ARGS__, sizeof(type), &value, nullptr)); \
-	return value;
+    type value{}; \
+    CLX_CHECK(function(this->get(), __VA_ARGS__, sizeof(type), &value, nullptr)); \
+    return value;
 
 #define CLX_METHOD_SCALAR(name, function, type, ...) \
-	auto \
-	name() const -> type { \
-		CLX_BODY_SCALAR(function, type, __VA_ARGS__) \
-	}
+    auto \
+    name() const -> type { \
+        CLX_BODY_SCALAR(function, type, __VA_ARGS__) \
+    }
 
 #define CLX_METHOD_BOOL(name, function, ...) \
-	auto \
-	name() const -> bool { \
-		bool_type value{}; \
-		CLX_CHECK(function(this->get(), __VA_ARGS__, sizeof(bool_type), &value, nullptr)); \
-		return static_cast<bool>(value); \
-	}
+    auto \
+    name() const -> bool { \
+        bool_type value{}; \
+        CLX_CHECK(function(this->get(), __VA_ARGS__, sizeof(bool_type), &value, nullptr)); \
+        return static_cast<bool>(value); \
+    }
 
 #define CLX_EXTENSION(name, platform) \
-	(platform).function<name##_fn>(::clx::extension_function::name)
+    (platform).function<name##_fn>(::clx::extension_function::name)
 
 #endif // vim:filetype=cpp

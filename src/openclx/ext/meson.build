@@ -1,5 +1,5 @@
 openclx_src += files([
-	'device.cc',
+    'device.cc',
 ])
 
 install_headers(

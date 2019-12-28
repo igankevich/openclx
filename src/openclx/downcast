@@ -5,90 +5,90 @@
 
 namespace clx {
 
-	template <class T>
-	struct downcast_type { typedef T type; };
+    template <class T>
+    struct downcast_type { typedef T type; };
 
-	#define CLX_MAKE_DOWNCAST_TYPE(name) \
-		template <> \
-		struct downcast_type<name> { typedef name##_type type; }
+    #define CLX_MAKE_DOWNCAST_TYPE(name) \
+        template <> \
+        struct downcast_type<name> { typedef name##_type type; }
 
-	#define CLX_MAKE_DOWNCAST_TYPE2(name,new_name) \
-		template <> \
-		struct downcast_type<name> { typedef new_name type; }
+    #define CLX_MAKE_DOWNCAST_TYPE2(name,new_name) \
+        template <> \
+        struct downcast_type<name> { typedef new_name type; }
 
-	CLX_MAKE_DOWNCAST_TYPE(platform);
-	CLX_MAKE_DOWNCAST_TYPE(device);
-	CLX_MAKE_DOWNCAST_TYPE(context);
-	CLX_MAKE_DOWNCAST_TYPE(command_queue);
-	CLX_MAKE_DOWNCAST_TYPE(program);
-	CLX_MAKE_DOWNCAST_TYPE(kernel);
-	CLX_MAKE_DOWNCAST_TYPE(event);
-	CLX_MAKE_DOWNCAST_TYPE(memory_object);
-	CLX_MAKE_DOWNCAST_TYPE2(image, memory_object_type);
-	CLX_MAKE_DOWNCAST_TYPE2(buffer, memory_object_type);
-	CLX_MAKE_DOWNCAST_TYPE(sampler);
-	CLX_MAKE_DOWNCAST_TYPE2(errc, int_type);
-	CLX_MAKE_DOWNCAST_TYPE(memory_flags);
-	CLX_MAKE_DOWNCAST_TYPE(memory_objects);
-	CLX_MAKE_DOWNCAST_TYPE(image_format);
-	CLX_MAKE_DOWNCAST_TYPE(map_flags);
-	#if CL_TARGET_VERSION >= 120
-	CLX_MAKE_DOWNCAST_TYPE(migration_flags);
-	#endif
-	#if CL_TARGET_VERSION >= 200
-	CLX_MAKE_DOWNCAST_TYPE(svm_flags);
-	#endif
-	#if defined(cl_khr_gl_sharing)
-	CLX_MAKE_DOWNCAST_TYPE2(::clx::gl::buffer, memory_object_type);
-	#endif
-	#if defined(cl_ext_device_fission)
-	CLX_MAKE_DOWNCAST_TYPE2(::clx::ext::device, device_type);
-	#endif
-	CLX_MAKE_DOWNCAST_TYPE2(command_queue_flags, queue_properties_type);
+    CLX_MAKE_DOWNCAST_TYPE(platform);
+    CLX_MAKE_DOWNCAST_TYPE(device);
+    CLX_MAKE_DOWNCAST_TYPE(context);
+    CLX_MAKE_DOWNCAST_TYPE(command_queue);
+    CLX_MAKE_DOWNCAST_TYPE(program);
+    CLX_MAKE_DOWNCAST_TYPE(kernel);
+    CLX_MAKE_DOWNCAST_TYPE(event);
+    CLX_MAKE_DOWNCAST_TYPE(memory_object);
+    CLX_MAKE_DOWNCAST_TYPE2(image, memory_object_type);
+    CLX_MAKE_DOWNCAST_TYPE2(buffer, memory_object_type);
+    CLX_MAKE_DOWNCAST_TYPE(sampler);
+    CLX_MAKE_DOWNCAST_TYPE2(errc, int_type);
+    CLX_MAKE_DOWNCAST_TYPE(memory_flags);
+    CLX_MAKE_DOWNCAST_TYPE(memory_objects);
+    CLX_MAKE_DOWNCAST_TYPE(image_format);
+    CLX_MAKE_DOWNCAST_TYPE(map_flags);
+    #if CL_TARGET_VERSION >= 120
+    CLX_MAKE_DOWNCAST_TYPE(migration_flags);
+    #endif
+    #if CL_TARGET_VERSION >= 200
+    CLX_MAKE_DOWNCAST_TYPE(svm_flags);
+    #endif
+    #if defined(cl_khr_gl_sharing)
+    CLX_MAKE_DOWNCAST_TYPE2(::clx::gl::buffer, memory_object_type);
+    #endif
+    #if defined(cl_ext_device_fission)
+    CLX_MAKE_DOWNCAST_TYPE2(::clx::ext::device, device_type);
+    #endif
+    CLX_MAKE_DOWNCAST_TYPE2(command_queue_flags, queue_properties_type);
 
-	CLX_MAKE_DOWNCAST_TYPE2(::clx::intel::device, ::clx::device_type);
-	#if defined(cl_intel_accelerator)
-	CLX_MAKE_DOWNCAST_TYPE(::clx::intel::accelerators);
-	#endif
-	#if defined(cl_intel_driver_diagnostics)
-	CLX_MAKE_DOWNCAST_TYPE(::clx::intel::diagnostics_level);
-	#endif
-	#if defined(cl_khr_dx9_media_sharing)
-	CLX_MAKE_DOWNCAST_TYPE(::clx::d3d9::adapter_type);
-	#endif
-	#if defined(cl_intel_dx9_media_sharing)
-	CLX_MAKE_DOWNCAST_TYPE(::clx::intel::device_source);
-	CLX_MAKE_DOWNCAST_TYPE(::clx::intel::device_set);
-	CLX_MAKE_DOWNCAST_TYPE2(::clx::intel::memory_object, ::clx::memory_object_type);
-	#endif
-	#if defined(cl_intel_va_api_media_sharing)
-	CLX_MAKE_DOWNCAST_TYPE(::clx::intel::va::device_source);
-	CLX_MAKE_DOWNCAST_TYPE(::clx::intel::va::device_set);
-	CLX_MAKE_DOWNCAST_TYPE2(::clx::intel::va::memory_object, ::clx::memory_object_type);
-	#endif
+    CLX_MAKE_DOWNCAST_TYPE2(::clx::intel::device, ::clx::device_type);
+    #if defined(cl_intel_accelerator)
+    CLX_MAKE_DOWNCAST_TYPE(::clx::intel::accelerators);
+    #endif
+    #if defined(cl_intel_driver_diagnostics)
+    CLX_MAKE_DOWNCAST_TYPE(::clx::intel::diagnostics_level);
+    #endif
+    #if defined(cl_khr_dx9_media_sharing)
+    CLX_MAKE_DOWNCAST_TYPE(::clx::d3d9::adapter_type);
+    #endif
+    #if defined(cl_intel_dx9_media_sharing)
+    CLX_MAKE_DOWNCAST_TYPE(::clx::intel::device_source);
+    CLX_MAKE_DOWNCAST_TYPE(::clx::intel::device_set);
+    CLX_MAKE_DOWNCAST_TYPE2(::clx::intel::memory_object, ::clx::memory_object_type);
+    #endif
+    #if defined(cl_intel_va_api_media_sharing)
+    CLX_MAKE_DOWNCAST_TYPE(::clx::intel::va::device_source);
+    CLX_MAKE_DOWNCAST_TYPE(::clx::intel::va::device_set);
+    CLX_MAKE_DOWNCAST_TYPE2(::clx::intel::va::memory_object, ::clx::memory_object_type);
+    #endif
 
-	template <class T>
-	inline const typename downcast_type<T>::type*
-	downcast(const T* x) {
-		typedef typename downcast_type<T>::type target_type;
-		static_assert(sizeof(T) == sizeof(target_type), "bad size");
-		return reinterpret_cast<const target_type*>(x);
-	}
+    template <class T>
+    inline const typename downcast_type<T>::type*
+    downcast(const T* x) {
+        typedef typename downcast_type<T>::type target_type;
+        static_assert(sizeof(T) == sizeof(target_type), "bad size");
+        return reinterpret_cast<const target_type*>(x);
+    }
 
-	template <class T>
-	inline typename downcast_type<T>::type*
-	downcast(T* x) {
-		typedef typename downcast_type<T>::type target_type;
-		static_assert(sizeof(T) == sizeof(target_type), "bad size");
-		return reinterpret_cast<target_type*>(x);
-	}
+    template <class T>
+    inline typename downcast_type<T>::type*
+    downcast(T* x) {
+        typedef typename downcast_type<T>::type target_type;
+        static_assert(sizeof(T) == sizeof(target_type), "bad size");
+        return reinterpret_cast<target_type*>(x);
+    }
 
-	template <class T>
-	inline typename downcast_type<T>::type
-	downcast(T x) {
-		typedef typename downcast_type<T>::type target_type;
-		return static_cast<target_type>(x);
-	}
+    template <class T>
+    inline typename downcast_type<T>::type
+    downcast(T x) {
+        typedef typename downcast_type<T>::type target_type;
+        return static_cast<target_type>(x);
+    }
 
 }
 

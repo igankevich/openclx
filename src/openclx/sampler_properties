@@ -6,51 +6,51 @@
 
 namespace clx {
 
-	enum class addressing_mode: addressing_mode_type {
-		none=CL_ADDRESS_NONE,
-		clamp_to_edge=CL_ADDRESS_CLAMP_TO_EDGE,
-		clamp=CL_ADDRESS_CLAMP,
-		repeat=CL_ADDRESS_REPEAT,
-		#if CL_TARGET_VERSION >= 110
-		mirrored_repeat=CL_ADDRESS_MIRRORED_REPEAT,
-		#endif
-	};
+    enum class addressing_mode: addressing_mode_type {
+        none=CL_ADDRESS_NONE,
+        clamp_to_edge=CL_ADDRESS_CLAMP_TO_EDGE,
+        clamp=CL_ADDRESS_CLAMP,
+        repeat=CL_ADDRESS_REPEAT,
+        #if CL_TARGET_VERSION >= 110
+        mirrored_repeat=CL_ADDRESS_MIRRORED_REPEAT,
+        #endif
+    };
 
-	enum class filter_mode: filter_mode_type {
-		nearest=CL_FILTER_NEAREST,
-		linear=CL_FILTER_LINEAR,
-	};
+    enum class filter_mode: filter_mode_type {
+        nearest=CL_FILTER_NEAREST,
+        linear=CL_FILTER_LINEAR,
+    };
 
-	class sampler_properties {
+    class sampler_properties {
 
-	private:
-		bool _normalised = false;
-		addressing_mode _addressing_mode = addressing_mode::none;
-		filter_mode _filter_mode = filter_mode::nearest;
-		filter_mode _mip_filter_mode = filter_mode::nearest;
-		float _lod_min = 0.f;
-		float _lod_max = numeric_limits<float>::max();
+    private:
+        bool _normalised = false;
+        addressing_mode _addressing_mode = addressing_mode::none;
+        filter_mode _filter_mode = filter_mode::nearest;
+        filter_mode _mip_filter_mode = filter_mode::nearest;
+        float _lod_min = 0.f;
+        float _lod_max = numeric_limits<float>::max();
 
-	public:
-		inline void normalised(bool b) { this->_normalised = b; }
-		inline bool normalised() const { return this->_normalised; }
-		inline addressing_mode get_addressing_mode() const { return this->_addressing_mode; }
-		inline void mode(addressing_mode m) { this->_addressing_mode = m; }
-		inline filter_mode get_filter_mode() const { return this->_filter_mode; }
-		inline void mode(filter_mode m) { this->_filter_mode = m; }
-		inline void mipmode(filter_mode m) { this->_mip_filter_mode = m; }
-		inline filter_mode mipmode() const { return this->_mip_filter_mode; }
-		inline void lod_min(float f) { this->_lod_min = f; }
-		inline float lod_min() const { return this->_lod_min; }
-		inline void lod_max(float f) { this->_lod_max = f; }
-		inline float lod_max() const { return this->_lod_max; }
+    public:
+        inline void normalised(bool b) { this->_normalised = b; }
+        inline bool normalised() const { return this->_normalised; }
+        inline addressing_mode get_addressing_mode() const { return this->_addressing_mode; }
+        inline void mode(addressing_mode m) { this->_addressing_mode = m; }
+        inline filter_mode get_filter_mode() const { return this->_filter_mode; }
+        inline void mode(filter_mode m) { this->_filter_mode = m; }
+        inline void mipmode(filter_mode m) { this->_mip_filter_mode = m; }
+        inline filter_mode mipmode() const { return this->_mip_filter_mode; }
+        inline void lod_min(float f) { this->_lod_min = f; }
+        inline float lod_min() const { return this->_lod_min; }
+        inline void lod_max(float f) { this->_lod_max = f; }
+        inline float lod_max() const { return this->_lod_max; }
 
-		#if CL_TARGET_VERSION >= 200
-		std::vector<sampler_properties_type>
-		operator()(const extensions& extensions) const;
-		#endif
+        #if CL_TARGET_VERSION >= 200
+        std::vector<sampler_properties_type>
+        operator()(const extensions& extensions) const;
+        #endif
 
-	};
+    };
 
 }
 

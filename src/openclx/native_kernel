@@ -5,81 +5,81 @@
 
 namespace clx {
 
-	typedef void (*native_kernel_type)(void *);
+    typedef void (*native_kernel_type)(void *);
 
-	template <class ... Args>
-	class argument;
+    template <class ... Args>
+    class argument;
 
-	template <class Head>
-	class argument<Head> {
+    template <class Head>
+    class argument<Head> {
 
-	private:
-		Head _value{};
+    private:
+        Head _value{};
 
-	public:
+    public:
 
-		inline
-		argument(const Head& value): _value(value) {}
+        inline
+        argument(const Head& value): _value(value) {}
 
-		inline size_t
-		num_arguments() const {
-			return 1;
-		}
+        inline size_t
+        num_arguments() const {
+            return 1;
+        }
 
-		inline void
-		memory_objects(
-			unsigned_int_type& n,
-			memory_object_type* objects,
-			const void** locations
-		) const {
-			if (std::is_same<Head,memory_object>::value ||
-				std::is_same<Head,memory_object_type>::value) {
-				*objects++ = static_cast<const memory_object_type>(this->_value);
-				*locations++ = &this->_value;
-			}
-		}
+        inline void
+        memory_objects(
+            unsigned_int_type& n,
+            memory_object_type* objects,
+            const void** locations
+        ) const {
+            if (std::is_same<Head,memory_object>::value ||
+                std::is_same<Head,memory_object_type>::value) {
+                *objects++ = static_cast<const memory_object_type>(this->_value);
+                *locations++ = &this->_value;
+            }
+        }
 
-	};
+    };
 
-	template <class Head, class ... Tail>
-	class argument<Head,Tail...>: public argument<Tail...> {
+    template <class Head, class ... Tail>
+    class argument<Head,Tail...>: public argument<Tail...> {
 
-	private:
-		Head _value{};
+    private:
+        Head _value{};
 
-	public:
+    public:
 
-		inline
-		argument(const Head& value, const Tail& ... args):
-		argument<Tail...>(args...), _value(value) {}
+        inline
+        argument(const Head& value, const Tail& ... args):
+        argument<Tail...>(args...), _value(value) {}
 
-		inline size_t
-		num_arguments() const {
-			return 1 + sizeof...(Tail);
-		}
+        inline size_t
+        num_arguments() const {
+            return 1 + sizeof...(Tail);
+        }
 
-		inline void
-		memory_objects(
-			unsigned_int_type& n,
-			memory_object_type* objects,
-			const void** locations
-		) const {
-			if (std::is_same<Head,memory_object>::value ||
-				std::is_same<Head,memory_object_type>::value) {
-				*objects++ = static_cast<const memory_object_type>(this->_value);
-				*locations++ = &this->_value;
-				++n;
-			}
-			this->argument<Tail...>::memory_objects(n, objects);
-		}
+        inline void
+        memory_objects(
+            unsigned_int_type& n,
+            memory_object_type* objects,
+            const void** locations
+        ) const {
+            if (std::is_same<Head,memory_object>::value ||
+                std::is_same<Head,memory_object_type>::value) {
+                *objects++ = static_cast<const memory_object_type>(this->_value);
+                *locations++ = &this->_value;
+                ++n;
+            }
+            this->argument<Tail...>::memory_objects(n, objects);
+        }
 
-	};
+    };
 
-	template <class ... Args>
-	inline argument<Args...>
-	make_arguments(const Args& ... args) {
-		return argument<Args...>(args...);
-	}
+    template <class ... Args>
+    inline argument<Args...>
+    make_arguments(const Args& ... args) {
+        return argument<Args...>(args...);
+    }
 
 }
 

@@ -5,11 +5,11 @@
 
 namespace clx {
 
-	enum class device_memory_cache: device_memory_cache_type {
-		none=CL_NONE,
-		read_only=CL_READ_ONLY_CACHE,
-		read_write=CL_READ_WRITE_CACHE,
-	};
+    enum class device_memory_cache: device_memory_cache_type {
+        none=CL_NONE,
+        read_only=CL_READ_ONLY_CACHE,
+        read_write=CL_READ_WRITE_CACHE,
+    };
 
 }
 

@@ -1,5 +1,5 @@
 openclx_src += files([
-	'media_surface.cc',
+    'media_surface.cc',
 ])
 
 install_headers(

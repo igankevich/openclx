@@ -5,124 +5,124 @@
 
 namespace clx {
 
-	template <class T>
-	class array_view {
+    template <class T>
+    class array_view {
 
-	public:
-		typedef T value_type;
-		typedef value_type* pointer;
-		typedef const value_type* const_pointer;
-		typedef value_type& reference;
-		typedef const value_type& const_reference;
-		typedef std::size_t size_type;
+    public:
+        typedef T value_type;
+        typedef value_type* pointer;
+        typedef const value_type* const_pointer;
+        typedef value_type& reference;
+        typedef const value_type& const_reference;
+        typedef std::size_t size_type;
 
-	private:
-		const value_type* _data;
-		size_type _size;
+    private:
+        const value_type* _data;
+        size_type _size;
 
-	public:
+    public:
 
-		inline
-		array_view(): _data{nullptr}, _size{0} {}
+        inline
+        array_view(): _data{nullptr}, _size{0} {}
 
-		inline
-		array_view(const value_type* data, size_type size):
-		_data(data), _size(size) {}
+        inline
+        array_view(const value_type* data, size_type size):
+        _data(data), _size(size) {}
 
-		inline
-		array_view(const value_type& value):
-		_data(&value), _size(1) {}
+        inline
+        array_view(const value_type& value):
+        _data(&value), _size(1) {}
 
-		template <class Container>
-		inline
-		array_view(const Container& cont):
-		_data(cont.data()), _size(cont.size()) {}
+        template <class Container>
+        inline
+        array_view(const Container& cont):
+        _data(cont.data()), _size(cont.size()) {}
 
-		inline const_pointer
-		data() const {
-			return this->_data;
-		}
+        inline const_pointer
+        data() const {
+            return this->_data;
+        }
 
-		inline size_type
-		size() const {
-			return this->_size;
-		}
+        inline size_type
+        size() const {
+            return this->_size;
+        }
 
-		inline const_pointer
-		begin() const {
-			return this->_data;
-		}
+        inline const_pointer
+        begin() const {
+            return this->_data;
+        }
 
-		inline const_pointer
-		end() const {
-			return this->_data + this->_size;
-		}
+        inline const_pointer
+        end() const {
+            return this->_data + this->_size;
+        }
 
-		inline const_reference
-		front() const {
-			return *this->begin();
-		}
+        inline const_reference
+        front() const {
+            return *this->begin();
+        }
 
-		inline const_reference
-		back() const {
-			return *(this->end()-1);
-		}
+        inline const_reference
+        back() const {
+            return *(this->end()-1);
+        }
 
-		inline bool
-		empty() const {
-			return this->_size == 0;
-		}
+        inline bool
+        empty() const {
+            return this->_size == 0;
+        }
 
-	};
+    };
 
-	template <>
-	class array_view<void> {
+    template <>
+    class array_view<void> {
 
-	public:
-		typedef void value_type;
-		typedef value_type* pointer;
-		typedef const value_type* const_pointer;
-		typedef std::size_t size_type;
+    public:
+        typedef void value_type;
+        typedef value_type* pointer;
+        typedef const value_type* const_pointer;
+        typedef std::size_t size_type;
 
-	private:
-		mutable value_type* _data;
-		size_type _size;
+    private:
+        mutable value_type* _data;
+        size_type _size;
 
-	public:
+    public:
 
-		inline
-		array_view(): _data{nullptr}, _size{0} {}
+        inline
+        array_view(): _data{nullptr}, _size{0} {}
 
-		inline
-		array_view(pointer data, size_type size):
-		_data(data), _size(size) {}
+        inline
+        array_view(pointer data, size_type size):
+        _data(data), _size(size) {}
 
-		template <class Container>
-		inline
-		array_view(const Container& cont):
-		_data(cont.data()), _size(cont.size()) {}
+        template <class Container>
+        inline
+        array_view(const Container& cont):
+        _data(cont.data()), _size(cont.size()) {}
 
-		inline pointer
-		data() const {
-			return this->_data;
-		}
+        inline pointer
+        data() const {
+            return this->_data;
+        }
 
-		inline pointer
-		data() {
-			return this->_data;
-		}
+        inline pointer
+        data() {
+            return this->_data;
+        }
 
-		inline size_type
-		size() const {
-			return this->_size;
-		}
+        inline size_type
+        size() const {
+            return this->_size;
+        }
 
-		inline bool
-		empty() const {
-			return this->_size == 0;
-		}
+        inline bool
+        empty() const {
+            return this->_size == 0;
+        }
 
-	};
+    };
 
 }
 

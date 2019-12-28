@@ -1,0 +1,16 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.4.0
+    hooks:
+    -   id: check-added-large-files
+        args: ['--maxkb=100']
+    -   id: check-merge-conflict
+    -   id: check-yaml
+-   repo: https://github.com/igankevich/pre-commit-cpp
+    rev: 0.2.2
+    hooks:
+    -   id: normalise
+        types: [text]
+        files: .*
+    -   id: header-guard
+        files: ^src/[^\.]+$

@@ -6,68 +6,68 @@
 
 namespace clx {
 
-	namespace bits {
+    namespace bits {
 
-		template <class T, int N>
-		struct make_vector {};
+        template <class T, int N>
+        struct make_vector {};
 
-		#define CLX_MAKE_VECTOR3(tp, n, m) \
-			template <> \
-			struct make_vector<tp,n> { typedef cl_##tp##m type; };
+        #define CLX_MAKE_VECTOR3(tp, n, m) \
+            template <> \
+            struct make_vector<tp,n> { typedef cl_##tp##m type; };
 
-		#define CLX_MAKE_VECTOR(tp) \
-			CLX_MAKE_VECTOR3(tp, 2, 2); \
-			CLX_MAKE_VECTOR3(tp, 3, 3); \
-			CLX_MAKE_VECTOR3(tp, 4, 4); \
-			CLX_MAKE_VECTOR3(tp, 5, 8); \
-			CLX_MAKE_VECTOR3(tp, 6, 8); \
-			CLX_MAKE_VECTOR3(tp, 7, 8); \
-			CLX_MAKE_VECTOR3(tp, 8, 8); \
-			CLX_MAKE_VECTOR3(tp, 9, 16); \
-			CLX_MAKE_VECTOR3(tp, 10, 16); \
-			CLX_MAKE_VECTOR3(tp, 11, 16); \
-			CLX_MAKE_VECTOR3(tp, 12, 16); \
-			CLX_MAKE_VECTOR3(tp, 13, 16); \
-			CLX_MAKE_VECTOR3(tp, 14, 16); \
-			CLX_MAKE_VECTOR3(tp, 15, 16); \
-			CLX_MAKE_VECTOR3(tp, 16, 16)
+        #define CLX_MAKE_VECTOR(tp) \
+            CLX_MAKE_VECTOR3(tp, 2, 2); \
+            CLX_MAKE_VECTOR3(tp, 3, 3); \
+            CLX_MAKE_VECTOR3(tp, 4, 4); \
+            CLX_MAKE_VECTOR3(tp, 5, 8); \
+            CLX_MAKE_VECTOR3(tp, 6, 8); \
+            CLX_MAKE_VECTOR3(tp, 7, 8); \
+            CLX_MAKE_VECTOR3(tp, 8, 8); \
+            CLX_MAKE_VECTOR3(tp, 9, 16); \
+            CLX_MAKE_VECTOR3(tp, 10, 16); \
+            CLX_MAKE_VECTOR3(tp, 11, 16); \
+            CLX_MAKE_VECTOR3(tp, 12, 16); \
+            CLX_MAKE_VECTOR3(tp, 13, 16); \
+            CLX_MAKE_VECTOR3(tp, 14, 16); \
+            CLX_MAKE_VECTOR3(tp, 15, 16); \
+            CLX_MAKE_VECTOR3(tp, 16, 16)
 
-		CLX_MAKE_VECTOR(float);
-		CLX_MAKE_VECTOR(double);
-		CLX_MAKE_VECTOR(int);
+        CLX_MAKE_VECTOR(float);
+        CLX_MAKE_VECTOR(double);
+        CLX_MAKE_VECTOR(int);
 
-		#undef CLX_MAKE_VECTOR3
-		#undef CLX_MAKE_VECTOR
+        #undef CLX_MAKE_VECTOR3
+        #undef CLX_MAKE_VECTOR
 
-	}
+    }
 
-	/**
-	\brief A union that defines a mapping between OpenCL
-	device and host types with proper alignment.
-	*/
-	template <class T, int N>
-	union Vector {
+    /**
+    \brief A union that defines a mapping between OpenCL
+    device and host types with proper alignment.
+    */
+    template <class T, int N>
+    union Vector {
 
-	private:
-		typedef typename bits::make_vector<T,N>::type device_vector_type;
+    private:
+        typedef typename bits::make_vector<T,N>::type device_vector_type;
 
-	private:
-		T _vec1[N];
-		device_vector_type _vec2;
+    private:
+        T _vec1[N];
+        device_vector_type _vec2;
 
-	public:
-		inline explicit
-		Vector(const T* rhs) {
-			for (int i=0; i<N; ++i) { this->_vec1[i] = rhs[i]; }
-		}
+    public:
+        inline explicit
+        Vector(const T* rhs) {
+            for (int i=0; i<N; ++i) { this->_vec1[i] = rhs[i]; }
+        }
 
-	};
+    };
 
-	template <class T, int N>
-	inline Vector<T,N>
-	make_vector(const array_view<T>& rhs) {
-		return Vector<T,N>(rhs.data());
-	}
+    template <class T, int N>
+    inline Vector<T,N>
+    make_vector(const array_view<T>& rhs) {
+        return Vector<T,N>(rhs.data());
+    }
 
 }
 

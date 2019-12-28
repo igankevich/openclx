@@ -5,12 +5,12 @@
 
 namespace clx {
 
-	enum class build_status: build_status_type {
-		success = CL_BUILD_SUCCESS,
-		none = CL_BUILD_NONE,
-		error = CL_BUILD_ERROR,
-		in_progress = CL_BUILD_IN_PROGRESS,
-	};
+    enum class build_status: build_status_type {
+        success = CL_BUILD_SUCCESS,
+        none = CL_BUILD_NONE,
+        error = CL_BUILD_ERROR,
+        in_progress = CL_BUILD_IN_PROGRESS,
+    };
 
 }
 

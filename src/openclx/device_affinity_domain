@@ -6,18 +6,18 @@
 
 namespace clx {
 
-	#if CL_TARGET_VERSION >= 120
-	enum class device_affinity_domain: affinity_domain_type {
-		numa=CL_DEVICE_AFFINITY_DOMAIN_NUMA,
-		L4_cache=CL_DEVICE_AFFINITY_DOMAIN_L4_CACHE,
-		L3_cache=CL_DEVICE_AFFINITY_DOMAIN_L3_CACHE,
-		L2_cache=CL_DEVICE_AFFINITY_DOMAIN_L2_CACHE,
-		L1_cache=CL_DEVICE_AFFINITY_DOMAIN_L1_CACHE,
-		next=CL_DEVICE_AFFINITY_DOMAIN_NEXT_PARTITIONABLE,
-	};
+    #if CL_TARGET_VERSION >= 120
+    enum class device_affinity_domain: affinity_domain_type {
+        numa=CL_DEVICE_AFFINITY_DOMAIN_NUMA,
+        L4_cache=CL_DEVICE_AFFINITY_DOMAIN_L4_CACHE,
+        L3_cache=CL_DEVICE_AFFINITY_DOMAIN_L3_CACHE,
+        L2_cache=CL_DEVICE_AFFINITY_DOMAIN_L2_CACHE,
+        L1_cache=CL_DEVICE_AFFINITY_DOMAIN_L1_CACHE,
+        next=CL_DEVICE_AFFINITY_DOMAIN_NEXT_PARTITIONABLE,
+    };
 
-	CLX_FLAGS(device_affinity_domain, affinity_domain_type)
-	#endif
+    CLX_FLAGS(device_affinity_domain, affinity_domain_type)
+    #endif
 
 }
 

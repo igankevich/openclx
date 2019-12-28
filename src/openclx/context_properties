@@ -6,133 +6,133 @@
 
 namespace clx {
 
-	class context_properties {
+    class context_properties {
 
-	public:
-		typedef void (*printf_callback_type)(
-			const char* buffer,
-			size_t len,
-			size_t complete,
-			void* user_data
-		);
+    public:
+        typedef void (*printf_callback_type)(
+            const char* buffer,
+            size_t len,
+            size_t complete,
+            void* user_data
+        );
 
-	private:
-		bool_type _terminated{CL_FALSE};
-		printf_callback_type _printf_callback = nullptr;
-		size_t _printf_buffer_size = 0;
-		unsigned_int_type _initmemory = 0;
-		#if defined(cl_khr_gl_sharing)
-		void* _gl_context = nullptr;
-		union {
-			void* _glx_display = nullptr;
-			void* _egl_display;
-			void* _wgl_display;
-			void* _any_display;
-		};
-		context_properties_type _display = 0;
-		void* _cgl_sharegroup = nullptr;
-		#endif
-		#if defined(cl_intel_driver_diagnostics)
-		intel::diagnostics_level _level;
-		#endif
-		#if defined(cl_khr_dx9_media_sharing) || defined(cl_intel_dx9_media_sharing)
-		void* _d3d9_adapter = nullptr;
-		void* _d3d9ex_adapter = nullptr;
-		void* _dxva_adapter = nullptr;
-		#endif
-		#if defined(cl_khr_d3d10_sharing)
-		void* _d3d10_device = nullptr;
-		#endif
-		#if defined(cl_khr_d3d11_sharing)
-		void* _d3d11_device = nullptr;
-		#endif
-		#if defined(cl_intel_va_api_media_sharing)
-		void* _va_display = nullptr;
-		#endif
+    private:
+        bool_type _terminated{CL_FALSE};
+        printf_callback_type _printf_callback = nullptr;
+        size_t _printf_buffer_size = 0;
+        unsigned_int_type _initmemory = 0;
+        #if defined(cl_khr_gl_sharing)
+        void* _gl_context = nullptr;
+        union {
+            void* _glx_display = nullptr;
+            void* _egl_display;
+            void* _wgl_display;
+            void* _any_display;
+        };
+        context_properties_type _display = 0;
+        void* _cgl_sharegroup = nullptr;
+        #endif
+        #if defined(cl_intel_driver_diagnostics)
+        intel::diagnostics_level _level;
+        #endif
+        #if defined(cl_khr_dx9_media_sharing) || defined(cl_intel_dx9_media_sharing)
+        void* _d3d9_adapter = nullptr;
+        void* _d3d9ex_adapter = nullptr;
+        void* _dxva_adapter = nullptr;
+        #endif
+        #if defined(cl_khr_d3d10_sharing)
+        void* _d3d10_device = nullptr;
+        #endif
+        #if defined(cl_khr_d3d11_sharing)
+        void* _d3d11_device = nullptr;
+        #endif
+        #if defined(cl_intel_va_api_media_sharing)
+        void* _va_display = nullptr;
+        #endif
 
-	public:
-		inline bool_type can_be_terminated() const { return this->_terminated; }
-		inline void can_be_terminated(bool b) {
-			this->_terminated = static_cast<bool_type>(b); }
+    public:
+        inline bool_type can_be_terminated() const { return this->_terminated; }
+        inline void can_be_terminated(bool b) {
+            this->_terminated = static_cast<bool_type>(b); }
 
-		inline void
-		printf_callback(printf_callback_type cb) {
-			this->_printf_callback = cb;
-		}
+        inline void
+        printf_callback(printf_callback_type cb) {
+            this->_printf_callback = cb;
+        }
 
-		inline printf_callback_type
-		printf_callback() const {
-			return this->_printf_callback;
-		}
+        inline printf_callback_type
+        printf_callback() const {
+            return this->_printf_callback;
+        }
 
-		inline void printf_buffer_size(size_t n) { this->_printf_buffer_size = n; }
-		inline size_t printf_buffer_size() const { return this->_printf_buffer_size; }
+        inline void printf_buffer_size(size_t n) { this->_printf_buffer_size = n; }
+        inline size_t printf_buffer_size() const { return this->_printf_buffer_size; }
 
-		inline void init_memory(unsigned_int_type rhs) { this->_initmemory = rhs; }
-		inline unsigned_int_type init_memory() const { return this->_initmemory; }
+        inline void init_memory(unsigned_int_type rhs) { this->_initmemory = rhs; }
+        inline unsigned_int_type init_memory() const { return this->_initmemory; }
 
-		#if defined(cl_khr_gl_sharing)
-		inline void gl_context(void* rhs) { this->_gl_context = rhs; }
-		inline const void* gl_context() const { return this->_gl_context; }
-		inline void
-		glx_display(void* rhs) {
-			this->_glx_display = rhs, this->_display = CL_GLX_DISPLAY_KHR;
-		}
-		inline void
-		egl_display(void* rhs) {
-			this->_egl_display = rhs, this->_display = CL_EGL_DISPLAY_KHR;
-		}
-		inline void
-		wgl_display(void* rhs) {
-			this->_wgl_display = rhs, this->_display = CL_WGL_HDC_KHR;
-		}
-		inline const void* gl_display() const { return this->_any_display; }
-		inline void gl_sharegroup(void* rhs) { this->_cgl_sharegroup = rhs; }
-		inline const void* gl_sharegroup() const { return this->_cgl_sharegroup; }
-		#endif
+        #if defined(cl_khr_gl_sharing)
+        inline void gl_context(void* rhs) { this->_gl_context = rhs; }
+        inline const void* gl_context() const { return this->_gl_context; }
+        inline void
+        glx_display(void* rhs) {
+            this->_glx_display = rhs, this->_display = CL_GLX_DISPLAY_KHR;
+        }
+        inline void
+        egl_display(void* rhs) {
+            this->_egl_display = rhs, this->_display = CL_EGL_DISPLAY_KHR;
+        }
+        inline void
+        wgl_display(void* rhs) {
+            this->_wgl_display = rhs, this->_display = CL_WGL_HDC_KHR;
+        }
+        inline const void* gl_display() const { return this->_any_display; }
+        inline void gl_sharegroup(void* rhs) { this->_cgl_sharegroup = rhs; }
+        inline const void* gl_sharegroup() const { return this->_cgl_sharegroup; }
+        #endif
 
-		#if defined(cl_intel_driver_diagnostics)
-		inline intel::diagnostics_level diagnostics() const {
-			return this->_level;
-		}
-		inline void diagnostics(intel::diagnostics_level rhs) { this->_level = rhs; }
-		#endif
+        #if defined(cl_intel_driver_diagnostics)
+        inline intel::diagnostics_level diagnostics() const {
+            return this->_level;
+        }
+        inline void diagnostics(intel::diagnostics_level rhs) { this->_level = rhs; }
+        #endif
 
-		#if defined(cl_khr_dx9_media_sharing) || defined(cl_intel_dx9_media_sharing)
-		inline void d3d9_adapter(void* rhs) { this->_d3d9_adapter = rhs; }
-		inline const void* d3d9_adapter() { return this->_d3d9_adapter; }
-		inline void d3d9ex_adapter(void* rhs) { this->_d3d9ex_adapter = rhs; }
-		inline const void* d3d9ex_adapter() { return this->_d3d9ex_adapter; }
-		inline void dxva_adapter(void* rhs) { this->_dxva_adapter = rhs; }
-		inline const void* dxva_adapter() { return this->_dxva_adapter; }
-		#endif
+        #if defined(cl_khr_dx9_media_sharing) || defined(cl_intel_dx9_media_sharing)
+        inline void d3d9_adapter(void* rhs) { this->_d3d9_adapter = rhs; }
+        inline const void* d3d9_adapter() { return this->_d3d9_adapter; }
+        inline void d3d9ex_adapter(void* rhs) { this->_d3d9ex_adapter = rhs; }
+        inline const void* d3d9ex_adapter() { return this->_d3d9ex_adapter; }
+        inline void dxva_adapter(void* rhs) { this->_dxva_adapter = rhs; }
+        inline const void* dxva_adapter() { return this->_dxva_adapter; }
+        #endif
 
-		#if defined(cl_khr_d3d10_sharing)
-		inline void d3d10_device(void* rhs) { this->_d3d10_device = rhs; }
-		inline const void* d3d10_device() { return this->_d3d10_device; }
-		#endif
+        #if defined(cl_khr_d3d10_sharing)
+        inline void d3d10_device(void* rhs) { this->_d3d10_device = rhs; }
+        inline const void* d3d10_device() { return this->_d3d10_device; }
+        #endif
 
-		#if defined(cl_khr_d3d11_sharing)
-		inline void d3d11_device(void* rhs) { this->_d3d11_device = rhs; }
-		inline const void* d3d11_device() { return this->_d3d11_device; }
-		#endif
+        #if defined(cl_khr_d3d11_sharing)
+        inline void d3d11_device(void* rhs) { this->_d3d11_device = rhs; }
+        inline const void* d3d11_device() { return this->_d3d11_device; }
+        #endif
 
-		#if defined(cl_intel_va_api_media_sharing)
-		inline void va_display(void* rhs) { this->_va_display = rhs; }
-		inline void* va_display() const { return this->_va_display; }
-		#endif
+        #if defined(cl_intel_va_api_media_sharing)
+        inline void va_display(void* rhs) { this->_va_display = rhs; }
+        inline void* va_display() const { return this->_va_display; }
+        #endif
 
-		std::vector<context_properties_type>
-		operator()(const extensions& extensions) const;
+        std::vector<context_properties_type>
+        operator()(const extensions& extensions) const;
 
-	};
+    };
 
-	template <class T>
-	inline std::vector<context_properties_type>&
-	operator<<(std::vector<context_properties_type>& out, const T& rhs) {
-		out.emplace_back(context_properties_type(rhs));
-		return out;
-	}
+    template <class T>
+    inline std::vector<context_properties_type>&
+    operator<<(std::vector<context_properties_type>& out, const T& rhs) {
+        out.emplace_back(context_properties_type(rhs));
+        return out;
+    }
 
 
 

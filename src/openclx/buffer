@@ -6,42 +6,44 @@
 
 namespace clx {
 
-	class buffer_slice {
-	public:
-		const ::clx::buffer& buffer;
-		const size_t offset;
-		const size_t size;
-	};
+    class buffer_slice {
+    public:
+        const ::clx::buffer& buffer;
+        const size_t offset;
+        const size_t size;
+    };
 
-	class buffer: public memory_object {
+    class buffer: public memory_object {
 
-	public:
-		typedef slice_3d<const buffer&> slice_3d_type;
+    public:
+        using slice_3d_type = slice_3d<const buffer&>;
 
-	public:
+    public:
 
-		inline explicit
-		buffer(memory_object_type ptr): memory_object(ptr) {}
+        buffer() = default;
 
-		inline buffer_slice
-		slice(size_t offset, size_t size) const {
-			return {*this,offset,size};
-		}
+        inline explicit
+        buffer(memory_object_type ptr): memory_object(ptr) {}
 
-		inline slice_3d_type
-		slice(
-			const range& offset, const range& size,
-			size_t row_pitch=0, size_t slice_pitch=0
-		) const {
-			return {*this,offset,size,row_pitch,slice_pitch};
-		}
+        inline buffer_slice
+        slice(size_t offset, size_t size) const {
+            return {*this,offset,size};
+        }
 
-		#if CL_TARGET_VERSION >= 110
-		buffer
-		subbuffer(size_t origin, size_t size, memory_flags flags);
-		#endif
+        inline slice_3d_type
+        slice(
+            const range& offset, const range& size,
+            size_t row_pitch=0, size_t slice_pitch=0
+        ) const {
+            return {*this,offset,size,row_pitch,slice_pitch};
+        }
 
-	};
+        #if CL_TARGET_VERSION >= 110
+        buffer
+        subbuffer(size_t origin, size_t size, memory_flags flags);
+        #endif
+
+    };
 
 }
 

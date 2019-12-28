@@ -6,83 +6,83 @@
 
 namespace clx {
 
-	#if CL_TARGET_VERSION >= 200 || \
-		(CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory))
-	class svm_block {
+    #if CL_TARGET_VERSION >= 200 || \
+        (CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory))
+    class svm_block {
 
-	public:
-		typedef void* pointer;
-		typedef const void* const_pointer;
+    public:
+        typedef void* pointer;
+        typedef const void* const_pointer;
 
-	private:
-		context _context;
-		pointer _ptr = nullptr;
-		size_t _size = 0;
+    private:
+        context _context;
+        pointer _ptr = nullptr;
+        size_t _size = 0;
 
-	public:
+    public:
 
-		inline explicit
-		svm_block(pointer ptr, size_t size):
-		_ptr(ptr), _size(size) {}
+        inline explicit
+        svm_block(pointer ptr, size_t size):
+        _ptr(ptr), _size(size) {}
 
-		inline const_pointer
-		data() const {
-			return this->_ptr;
-		}
+        inline const_pointer
+        data() const {
+            return this->_ptr;
+        }
 
-		inline pointer
-		data() {
-			return this->_ptr;
-		}
+        inline pointer
+        data() {
+            return this->_ptr;
+        }
 
-		inline size_t
-		size() const {
-			return this->_size;
-		}
+        inline size_t
+        size() const {
+            return this->_size;
+        }
 
-		~svm_block();
+        ~svm_block();
 
-		svm_block(const svm_block&) = delete;
-		svm_block& operator=(const svm_block&) = delete;
+        svm_block(const svm_block&) = delete;
+        svm_block& operator=(const svm_block&) = delete;
 
-		inline
-		svm_block(svm_block&& rhs):
-		_context(std::move(rhs._context)),
-		_ptr(rhs._ptr),
-		_size(rhs._size)
-		{ rhs._ptr = nullptr; }
+        inline
+        svm_block(svm_block&& rhs):
+        _context(std::move(rhs._context)),
+        _ptr(rhs._ptr),
+        _size(rhs._size)
+        { rhs._ptr = nullptr; }
 
-		inline svm_block&
-		operator=(svm_block&& rhs) {
-			this->swap(rhs);
-			return *this;
-		}
+        inline svm_block&
+        operator=(svm_block&& rhs) {
+            this->swap(rhs);
+            return *this;
+        }
 
-		inline void
-		swap(svm_block& rhs) {
-			using std::swap;
-			swap(this->_context, rhs._context);
-			swap(this->_ptr, rhs._ptr);
-			swap(this->_size, rhs._size);
-		}
+        inline void
+        swap(svm_block& rhs) {
+            using std::swap;
+            swap(this->_context, rhs._context);
+            swap(this->_ptr, rhs._ptr);
+            swap(this->_size, rhs._size);
+        }
 
-	};
+    };
 
-	inline void
-	swap(svm_block& lhs, svm_block& rhs) {
-		lhs.swap(rhs);
-	}
+    inline void
+    swap(svm_block& lhs, svm_block& rhs) {
+        lhs.swap(rhs);
+    }
 
-	inline svm_block
-	context::shared_memory(svm_flags flags, size_t size, size_t alignment) const {
-		#if CL_TARGET_VERSION >= 200
-		return this->shared_memory_200(flags, size, alignment);
-		#elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
-		return this->shared_memory_arm(flags, size, alignment);
-		#endif
-	}
+    inline svm_block
+    context::shared_memory(svm_flags flags, size_t size, size_t alignment) const {
+        #if CL_TARGET_VERSION >= 200
+        return this->shared_memory_200(flags, size, alignment);
+        #elif CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+        return this->shared_memory_arm(flags, size, alignment);
+        #endif
+    }
 
-	#endif
+    #endif
 
 }
 
