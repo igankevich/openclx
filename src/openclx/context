@@ -210,15 +210,6 @@ namespace clx {
         ) const;
         #endif
 
-        #if CL_TARGET_VERSION >= 120 && defined(cl_intel_motion_estimation)
-        clx::intel::me_accelerator
-        motion_estimation_accelerator(const intel::me_descriptor& desc) const;
-        #endif
-
-        #if CL_TARGET_VERSION >= 120 && defined(cl_intel_advanced_motion_estimation)
-        unsigned_int_type motion_estimation_version() const;
-        #endif
-
         #if CL_TARGET_VERSION >= 120 && defined(cl_khr_terminate_context)
         void terminate();
         #endif
@@ -250,23 +241,6 @@ namespace clx {
         d3d11::memory_object buffer(memory_flags flags, d3d11::texture2d_type* ptr) const;
         d3d11::memory_object buffer(memory_flags flags, d3d11::texture3d_type* ptr) const;
         bool d3d11_prefer_shared_resources() const;
-        #endif
-
-        #if defined(cl_intel_dx9_media_sharing)
-        intel::memory_object
-        media_surface(
-            memory_flags flags,
-            intel::surface_type* ptr,
-            intel::handle_type handle,
-            intel::uint_type plane
-        ) const;
-        #endif
-
-        #if defined(cl_intel_va_api_media_sharing)
-        intel::va::memory_object media_surface(
-            memory_flags flags,
-            intel::va::surface_type* ptr,
-            unsigned_int_type plane) const;
         #endif
 
         inline context_type

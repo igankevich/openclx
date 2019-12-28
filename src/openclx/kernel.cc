@@ -91,16 +91,6 @@ CLX_METHOD_SCALAR(
     CL_KERNEL_PROGRAM
 )
 
-#define CLX_WG_FIELD(field, key) \
-    CLX_CHECK(::clGetKernelWorkGroupInfo( \
-        this->_ptr, \
-        dev.get(), \
-        key, \
-        sizeof(field), \
-        &field, \
-        nullptr \
-    ))
-
 clx::work_group
 clx::kernel::work_group_100(const device& dev) const {
     ::clx::work_group wg{};
@@ -119,20 +109,6 @@ clx::kernel::work_group_110(const device& dev) const {
     CLX_WG_FIELD(wg.size_multiple, CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE);
     CLX_WG_FIELD(wg.local_memory_size, CL_KERNEL_LOCAL_MEM_SIZE);
     CLX_WG_FIELD(wg.private_memory_size, CL_KERNEL_PRIVATE_MEM_SIZE);
-    return wg;
-}
-#endif
-
-#if CL_TARGET_VERSION >= 120 && defined(cl_intel_required_subgroup_size)
-clx::work_group
-clx::kernel::work_group_intel(const device& dev) const {
-    ::clx::work_group wg{};
-    CLX_WG_FIELD(wg.size, CL_KERNEL_WORK_GROUP_SIZE);
-    CLX_WG_FIELD(wg.size_hint, CL_KERNEL_COMPILE_WORK_GROUP_SIZE);
-    CLX_WG_FIELD(wg.size_multiple, CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE);
-    CLX_WG_FIELD(wg.local_memory_size, CL_KERNEL_LOCAL_MEM_SIZE);
-    CLX_WG_FIELD(wg.private_memory_size, CL_KERNEL_PRIVATE_MEM_SIZE);
-    CLX_WG_FIELD(wg.spill_memory_size, CL_KERNEL_SPILL_MEM_SIZE_INTEL);
     return wg;
 }
 #endif
@@ -224,19 +200,3 @@ clx::kernel::num_sub_groups_khr(const device& device, const range& range) const 
     );
 }
 #endif
-
-#if CL_TARGET_VERSION >= 120 && defined(cl_intel_required_subgroup_size)
-size_t
-clx::kernel::sub_groups_size(const device& device) const {
-    size_t result = 0;
-    CLX_BODY_SCALAR(
-        ::clGetKernelSubGroupInfo,
-        size_t,
-        device.get(),
-        CL_KERNEL_COMPILE_SUB_GROUP_SIZE_INTEL,
-        sizeof(size_t), &result
-    );
-    return result;
-}
-#endif
-

@@ -154,16 +154,6 @@ namespace clx {
         devices(d3d11::dxgi_adapter_type* object, d3d11::device_set set) const;
         #endif
 
-        #if defined(cl_intel_dx9_media_sharing)
-        std::vector<device>
-        devices(intel::device_source src, void* object, intel::device_set set) const;
-        #endif
-
-        #if defined(cl_intel_va_api_media_sharing)
-        std::vector<device>
-        devices(intel::va::device_source src, void* object, intel::va::device_set set) const;
-        #endif
-
         platform() = default;
         ~platform() = default;
         platform(const platform&) = default;

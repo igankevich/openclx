@@ -63,64 +63,6 @@ CLX_METHOD_STRING(
 );
 #endif
 
-#if CL_TARGET_VERSION >= 120 && defined(cl_intel_device_side_avc_motion_estimation)
-CLX_METHOD_SCALAR(
-    clx::device::video_motion_estimation_version,
-    ::clGetDeviceInfo,
-    unsigned_int_type,
-    CL_DEVICE_AVC_ME_VERSION_INTEL
-);
-CLX_METHOD_BOOL(
-    clx::device::supports_texture_sampler,
-    ::clGetDeviceInfo,
-    CL_DEVICE_AVC_ME_SUPPORTS_TEXTURE_SAMPLER_USE_INTEL
-);
-CLX_METHOD_BOOL(
-    clx::device::supports_preemption,
-    ::clGetDeviceInfo,
-    CL_DEVICE_AVC_ME_SUPPORTS_PREEMPTION_INTEL
-);
-#endif
-
-#if CL_TARGET_VERSION >= 120 && defined(cl_intel_planar_yuv)
-CLX_METHOD_SCALAR(
-    clx::device::planar_yuv_image_max_width,
-    ::clGetDeviceInfo,
-    size_t,
-    CL_DEVICE_PLANAR_YUV_MAX_WIDTH_INTEL
-);
-CLX_METHOD_SCALAR(
-    clx::device::planar_yuv_image_max_height,
-    ::clGetDeviceInfo,
-    size_t,
-    CL_DEVICE_PLANAR_YUV_MAX_HEIGHT_INTEL
-);
-#endif
-
-#if CL_TARGET_VERSION >= 120 && defined(cl_intel_required_subgroup_size)
-CLX_METHOD_ARRAY(
-    clx::device::supported_sub_group_sizes,
-    ::clGetDeviceInfo,
-    CL_DEVICE_SUB_GROUP_SIZES_INTEL,
-    size_t
-)
-#endif
-
-#if CL_TARGET_VERSION >= 120 && defined(cl_intel_simultaneous_sharing)
-CLX_METHOD_SCALAR(
-    clx::device::num_simultaneous_graphics,
-    ::clGetDeviceInfo,
-    unsigned_int_type,
-    CL_DEVICE_NUM_SIMULTANEOUS_INTEROPS_INTEL
-);
-CLX_METHOD_ARRAY(
-    clx::device::simultaneous_graphics_combinations,
-    ::clGetDeviceInfo,
-    CL_DEVICE_SIMULTANEOUS_INTEROPS_INTEL,
-    unsigned_int_type
-)
-#endif
-
 #if CL_TARGET_VERSION >= 110 && defined(cl_qcom_ext_host_ptr)
 CLX_METHOD_SCALAR(
     clx::device::memory_padding,

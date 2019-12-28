@@ -22,9 +22,6 @@ namespace clx {
         unsigned_long_type local_memory_size = 0;
         unsigned_long_type private_memory_size = 0;
         #endif
-        #if CL_TARGET_VERSION >= 120 && defined(cl_intel_required_subgroup_size)
-        unsigned_long_type spill_memory_size = 0;
-        #endif
     };
 
     class kernel {
@@ -115,10 +112,6 @@ namespace clx {
         }
         #endif
 
-        #if CL_TARGET_VERSION >= 120 && defined(cl_intel_required_subgroup_size)
-        size_t sub_groups_size(const device& device) const;
-        #endif
-
         std::string name() const;
         unsigned_int_type num_arguments() const;
         unsigned_int_type num_references() const;
@@ -127,9 +120,7 @@ namespace clx {
 
         inline ::clx::work_group
         work_group(const device& dev) const {
-            #if CL_TARGET_VERSION >= 120 && defined(cl_intel_required_subgroup_size)
-            return this->work_group_intel(dev);
-            #elif CL_TARGET_VERSION >= 110
+            #if CL_TARGET_VERSION >= 110
             return this->work_group_110(dev);
             #else
             return this->work_group_100(dev);
@@ -205,9 +196,6 @@ namespace clx {
         ::clx::work_group work_group_100(const device& dev) const;
         #if CL_TARGET_VERSION >= 110
         ::clx::work_group work_group_110(const device& dev) const;
-        #endif
-        #if CL_TARGET_VERSION >= 120 && defined(cl_intel_required_subgroup_size)
-        ::clx::work_group work_group_intel(const device& dev) const;
         #endif
     };
 

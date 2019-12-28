@@ -18,6 +18,26 @@ namespace clx {
             partition_by_names(const std::vector<unsigned int>& names) const;
             #endif
 
+            #if CL_TARGET_VERSION >= 120 && defined(cl_intel_device_side_avc_motion_estimation)
+            unsigned_int_type video_motion_estimation_version() const;
+            bool supports_texture_sampler() const;
+            bool supports_preemption() const;
+            #endif
+
+            #if CL_TARGET_VERSION >= 120 && defined(cl_intel_planar_yuv)
+            size_t planar_yuv_image_max_width() const;
+            size_t planar_yuv_image_max_height() const;
+            #endif
+
+            #if CL_TARGET_VERSION >= 120 && defined(cl_intel_required_subgroup_size)
+            std::vector<size_t> supported_sub_group_sizes() const;
+            #endif
+
+            #if CL_TARGET_VERSION >= 120 && defined(cl_intel_simultaneous_sharing)
+            unsigned_int_type num_simultaneous_graphics() const;
+            std::vector<unsigned_int_type> simultaneous_graphics_combinations() const;
+            #endif
+
         };
 
     }

@@ -1,3 +1,4 @@
+#include <openclx/bits/macros>
 #include <openclx/downcast>
 #include <openclx/intel/device>
 
@@ -22,5 +23,63 @@ clx::intel::device::partition_by_names(const std::vector<unsigned int>& names) c
     result.resize(actual_size);
     return result;
 }
+#endif
+
+#if CL_TARGET_VERSION >= 120 && defined(cl_intel_device_side_avc_motion_estimation)
+CLX_METHOD_SCALAR(
+    clx::intel::device::video_motion_estimation_version,
+    ::clGetDeviceInfo,
+    unsigned_int_type,
+    CL_DEVICE_AVC_ME_VERSION_INTEL
+);
+CLX_METHOD_BOOL(
+    clx::intel::device::supports_texture_sampler,
+    ::clGetDeviceInfo,
+    CL_DEVICE_AVC_ME_SUPPORTS_TEXTURE_SAMPLER_USE_INTEL
+);
+CLX_METHOD_BOOL(
+    clx::intel::device::supports_preemption,
+    ::clGetDeviceInfo,
+    CL_DEVICE_AVC_ME_SUPPORTS_PREEMPTION_INTEL
+);
+#endif
+
+#if CL_TARGET_VERSION >= 120 && defined(cl_intel_planar_yuv)
+CLX_METHOD_SCALAR(
+    clx::intel::device::planar_yuv_image_max_width,
+    ::clGetDeviceInfo,
+    size_t,
+    CL_DEVICE_PLANAR_YUV_MAX_WIDTH_INTEL
+);
+CLX_METHOD_SCALAR(
+    clx::intel::device::planar_yuv_image_max_height,
+    ::clGetDeviceInfo,
+    size_t,
+    CL_DEVICE_PLANAR_YUV_MAX_HEIGHT_INTEL
+);
+#endif
+
+#if CL_TARGET_VERSION >= 120 && defined(cl_intel_required_subgroup_size)
+CLX_METHOD_ARRAY(
+    clx::intel::device::supported_sub_group_sizes,
+    ::clGetDeviceInfo,
+    CL_DEVICE_SUB_GROUP_SIZES_INTEL,
+    size_t
+)
+#endif
+
+#if CL_TARGET_VERSION >= 120 && defined(cl_intel_simultaneous_sharing)
+CLX_METHOD_SCALAR(
+    clx::intel::device::num_simultaneous_graphics,
+    ::clGetDeviceInfo,
+    unsigned_int_type,
+    CL_DEVICE_NUM_SIMULTANEOUS_INTEROPS_INTEL
+);
+CLX_METHOD_ARRAY(
+    clx::intel::device::simultaneous_graphics_combinations,
+    ::clGetDeviceInfo,
+    CL_DEVICE_SIMULTANEOUS_INTEROPS_INTEL,
+    unsigned_int_type
+)
 #endif
 

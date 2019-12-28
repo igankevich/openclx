@@ -144,4 +144,14 @@ namespace clx {
 #define CLX_EXTENSION(name, platform) \
     (platform).function<name##_fn>(::clx::extension_function::name)
 
+#define CLX_WG_FIELD(field, key) \
+    CLX_CHECK(::clGetKernelWorkGroupInfo( \
+        this->get(), \
+        dev.get(), \
+        key, \
+        sizeof(field), \
+        &field, \
+        nullptr \
+    ))
+
 #endif // vim:filetype=cpp

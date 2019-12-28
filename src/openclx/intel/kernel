@@ -1,0 +1,36 @@
+#ifndef OPENCLX_INTEL_KERNEL
+#define OPENCLX_INTEL_KERNEL
+
+#include <openclx/forward>
+#include <openclx/kernel>
+
+namespace clx {
+
+    namespace intel {
+
+        struct work_group: public ::clx::work_group {
+            #if CL_TARGET_VERSION >= 120 && defined(cl_intel_required_subgroup_size)
+            unsigned_long_type spill_memory_size = 0;
+            #endif
+        };
+
+        class kernel: public ::clx::kernel {
+
+        public:
+            using ::clx::kernel::kernel;
+
+            #if CL_TARGET_VERSION >= 120 && defined(cl_intel_required_subgroup_size)
+            ::clx::intel::work_group work_group(const device& dev) const;
+            #endif
+
+            #if CL_TARGET_VERSION >= 120 && defined(cl_intel_required_subgroup_size)
+            size_t sub_groups_size(const device& device) const;
+            #endif
+
+        };
+
+    }
+
+}
+
+#endif // vim:filetype=cpp
