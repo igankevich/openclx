@@ -88,17 +88,18 @@ install_headers(
 	subdir: join_paths('openclx')
 )
 
-subdir('gl')
-subdir('egl')
-subdir('d3d9')
+subdir('arm')
+subdir('bits')
 subdir('d3d10')
 subdir('d3d11')
+subdir('d3d9')
+subdir('egl')
 subdir('ext')
+subdir('gl')
 subdir('intel')
 
-openclx_deps = [
-	dependency('OpenCL')
-]
+opencl = dependency('OpenCL')
+openclx_deps = [opencl]
 
 libopenclx = library(
 	'openclx',
@@ -112,11 +113,13 @@ libopenclx = library(
 
 pkgconfig = import('pkgconfig')
 pkgconfig.generate(
+    libopenclx,
 	libraries: libopenclx,
+    requires: openclx_deps,
 	version: meson.project_version(),
 	name: meson.project_name(),
+	filebase: meson.project_name(),
 	description: 'C++ wrapper for OpenCL',
-	filebase: meson.project_name()
 )
 
 executable(
