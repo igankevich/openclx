@@ -124,7 +124,17 @@ namespace clx {
         unsigned_int_type num_references() const;
         ::clx::context context() const;
         ::clx::program program() const;
-        ::clx::work_group work_group(const device& dev) const;
+
+        inline ::clx::work_group
+        work_group(const device& dev) const {
+            #if CL_TARGET_VERSION >= 120 && defined(cl_intel_required_subgroup_size)
+            return this->work_group_intel(dev);
+            #elif CL_TARGET_VERSION >= 110
+            return this->work_group_110(dev);
+            #else
+            return this->work_group_100(dev);
+            #endif
+        }
 
         inline kernel_type
         get() noexcept {
@@ -192,6 +202,13 @@ namespace clx {
         size_t num_sub_groups_khr(const device& device, const range& range) const;
         #endif
 
+        ::clx::work_group work_group_100(const device& dev) const;
+        #if CL_TARGET_VERSION >= 110
+        ::clx::work_group work_group_110(const device& dev) const;
+        #endif
+        #if CL_TARGET_VERSION >= 120 && defined(cl_intel_required_subgroup_size)
+        ::clx::work_group work_group_intel(const device& dev) const;
+        #endif
     };
 
     static_assert(sizeof(kernel) == sizeof(kernel_type), "bad size");
