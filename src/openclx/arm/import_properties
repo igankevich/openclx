@@ -5,39 +5,43 @@
 
 namespace clx {
 
-    #if defined(cl_arm_import_memory)
-    enum class memory_type: unsigned_int_type {
-        #if defined(CL_IMPORT_TYPE_HOST_ARM)
-        host=CL_IMPORT_TYPE_HOST_ARM,
+    namespace arm {
+
+        #if defined(cl_arm_import_memory)
+        enum class import_memory_type: unsigned_int_type {
+            #if defined(CL_IMPORT_TYPE_HOST_ARM)
+            host=CL_IMPORT_TYPE_HOST_ARM,
+            #endif
+            #if defined(CL_IMPORT_TYPE_DMA_BUF_ARM)
+            dma=CL_IMPORT_TYPE_DMA_BUF_ARM,
+            #endif
+            #if defined(CL_IMPORT_TYPE_PROTECTED_ARM)
+            dma_protected=CL_IMPORT_TYPE_PROTECTED_ARM,
+            #endif
+        };
         #endif
-        #if defined(CL_IMPORT_TYPE_DMA_BUF_ARM)
-        dma=CL_IMPORT_TYPE_DMA_BUF_ARM,
+
+        #if defined(cl_arm_import_memory)
+        class import_properties {
+
+        private:
+            import_properties_type prop[2*1+1] {};
+            int_type idx = 0;
+
+        public:
+
+            inline void
+            type(import_memory_type rhs) {
+                prop[idx++] = CL_IMPORT_TYPE_ARM;
+                prop[idx++] = static_cast<import_properties_type>(rhs);
+            }
+
+            inline const import_properties_type* data() const { return prop; }
+
+        };
         #endif
-        #if defined(CL_IMPORT_TYPE_PROTECTED_ARM)
-        dma_protected=CL_IMPORT_TYPE_PROTECTED_ARM,
-        #endif
-    };
-    #endif
 
-    #if defined(cl_arm_import_memory)
-    class import_properties {
-
-    private:
-        import_properties_type prop[2*1+1] {};
-        int_type idx = 0;
-
-    public:
-
-        inline void
-        type(memory_type rhs) {
-            prop[idx++] = CL_IMPORT_TYPE_ARM;
-            prop[idx++] = rhs;
-        }
-
-        inline const import_properties_type* data() const { return prop; }
-
-    };
-    #endif
+    }
 
 }
 

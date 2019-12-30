@@ -1,0 +1,40 @@
+#ifndef OPENCLX_ARM_DEVICE
+#define OPENCLX_ARM_DEVICE
+
+#include <openclx/device>
+#include <openclx/forward>
+
+namespace clx {
+
+    namespace arm {
+
+        class device: public ::clx::device {
+
+        public:
+
+            svm_flags supported_svm_flags() const;
+
+            #if defined(cl_arm_core_id) && CL_TARGET_VERSION >= 120
+            unsigned_long_type compute_units_mask() const;
+            #endif
+
+            using ::clx::device::device;
+            inline device(const ::clx::device& rhs): ::clx::device(rhs) {}
+            inline device(::clx::device&& rhs): ::clx::device(std::move(rhs)) {}
+            inline device& operator=(const ::clx::device& rhs) {
+                this->::clx::device::operator=(rhs);
+                return *this;
+            }
+            inline device& operator=(::clx::device&& rhs) {
+                this->::clx::device::swap(rhs);
+                return *this;
+            }
+
+        };
+
+    }
+
+}
+
+#endif // vim:filetype=cpp
+

@@ -69,36 +69,6 @@ namespace clx {
             #endif
         }
 
-        #if CL_TARGET_VERSION >= 110 && defined(CL_MEM_ANDROID_NATIVE_BUFFER_HOST_PTR_QCOM)
-        inline ::clx::image
-        image(
-            memory_flags flags,
-            const image_format& format,
-            const image_descriptor& descriptor,
-            qcom::anb_pointer ptr
-        ) const {
-            return this->image(
-                flags | memory_flags::qcom_host_pointer | memory_flags::use_host_pointer,
-                format, descriptor, &ptr
-            );
-        }
-        #endif
-
-        #if CL_TARGET_VERSION >= 110 && defined(CL_MEM_ION_HOST_PTR_QCOM)
-        inline ::clx::image
-        image(
-            memory_flags flags,
-            const image_format& format,
-            const image_descriptor& descriptor,
-            qcom::ion_pointer ptr
-        ) const {
-            return this->image(
-                flags | memory_flags::qcom_host_pointer | memory_flags::use_host_pointer,
-                format, descriptor, &ptr
-            );
-        }
-        #endif
-
         std::vector<image_format>
         image_formats(memory_flags flags, memory_objects type) const;
 
@@ -120,27 +90,6 @@ namespace clx {
 
         ::clx::buffer
         buffer(memory_flags flags, size_t size, void* host_pointer=nullptr) const;
-
-        #if CL_TARGET_VERSION >= 110 && defined(CL_MEM_ANDROID_NATIVE_BUFFER_HOST_PTR_QCOM)
-        inline ::clx::buffer
-        buffer(memory_flags flags, size_t size, const qcom::anb_pointer& ptr) const {
-            return this->buffer(
-                flags | memory_flags::qcom_host_pointer | memory_flags::use_host_pointer,
-                size,
-                &ptr
-            );
-        }
-        #endif
-
-        #if CL_TARGET_VERSION >= 110 && defined(CL_MEM_ION_HOST_PTR_QCOM)
-        inline ::clx::buffer
-        buffer(memory_flags flags, size_t size, qcom::ion_pointer ptr) const {
-            return this->buffer(
-                flags | memory_flags::qcom_host_pointer | memory_flags::use_host_pointer,
-                size, &ptr
-            );
-        }
-        #endif
 
         inline ::clx::sampler
         sampler(const sampler_properties& prop) const {

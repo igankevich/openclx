@@ -1,0 +1,39 @@
+#ifndef OPENCLX_ARM_MEMORY_OBJECT
+#define OPENCLX_ARM_MEMORY_OBJECT
+
+#include <openclx/forward>
+#include <openclx/memory_object>
+
+namespace clx {
+
+    namespace arm {
+
+        class memory_object: public ::clx::memory_object {
+
+        public:
+
+            #if CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+            bool uses_svm_pointer() const;
+            #endif
+
+            using ::clx::memory_object::memory_object;
+            inline memory_object(const ::clx::memory_object& rhs): ::clx::memory_object(rhs) {}
+            inline memory_object(::clx::memory_object&& rhs): ::clx::memory_object(std::move(rhs)) {}
+            inline memory_object& operator=(const ::clx::memory_object& rhs) {
+                this->::clx::memory_object::operator=(rhs);
+                return *this;
+            }
+            inline memory_object& operator=(::clx::memory_object&& rhs) {
+                this->::clx::memory_object::swap(rhs);
+                return *this;
+            }
+
+        };
+
+    }
+
+}
+
+#endif // vim:filetype=cpp
+
+

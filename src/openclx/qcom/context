@@ -1,0 +1,86 @@
+#ifndef OPENCLX_QCOM_CONTEXT
+#define OPENCLX_QCOM_CONTEXT
+
+#include <openclx/context>
+#include <openclx/forward>
+
+namespace clx {
+
+    namespace qcom {
+
+        class context: public ::clx::context {
+
+        public:
+
+            #if CL_TARGET_VERSION >= 110 && defined(CL_MEM_ANDROID_NATIVE_BUFFER_HOST_PTR_QCOM)
+            inline ::clx::image
+            image(
+                memory_flags flags,
+                const image_format& format,
+                const image_descriptor& descriptor,
+                anb_pointer ptr
+            ) const {
+                return this->image(
+                    flags | memory_flags::qcom_host_pointer | memory_flags::use_host_pointer,
+                    format, descriptor, ptr.get()
+                );
+            }
+            #endif
+
+            #if CL_TARGET_VERSION >= 110 && defined(CL_MEM_ION_HOST_PTR_QCOM)
+            inline ::clx::image
+            image(
+                memory_flags flags,
+                const image_format& format,
+                const image_descriptor& descriptor,
+                ion_pointer ptr
+            ) const {
+                return this->image(
+                    flags | memory_flags::qcom_host_pointer | memory_flags::use_host_pointer,
+                    format, descriptor, ptr
+                );
+            }
+            #endif
+
+            #if CL_TARGET_VERSION >= 110 && defined(CL_MEM_ANDROID_NATIVE_BUFFER_HOST_PTR_QCOM)
+            inline ::clx::buffer
+            buffer(memory_flags flags, size_t size, const anb_pointer& ptr) const {
+                return this->buffer(
+                    flags | memory_flags::qcom_host_pointer | memory_flags::use_host_pointer,
+                    size,
+                    ptr.get()
+                );
+            }
+            #endif
+
+            #if CL_TARGET_VERSION >= 110 && defined(CL_MEM_ION_HOST_PTR_QCOM)
+            inline ::clx::buffer
+            buffer(memory_flags flags, size_t size, ion_pointer ptr) const {
+                return this->buffer(
+                    flags | memory_flags::qcom_host_pointer | memory_flags::use_host_pointer,
+                    size, ptr
+                );
+            }
+            #endif
+
+            using ::clx::context::context;
+            inline context(const ::clx::context& rhs): ::clx::context(rhs) {}
+            inline context(::clx::context&& rhs): ::clx::context(std::move(rhs)) {}
+            inline context& operator=(const ::clx::context& rhs) {
+                this->::clx::context::operator=(rhs);
+                return *this;
+            }
+            inline context& operator=(::clx::context&& rhs) {
+                this->::clx::context::swap(rhs);
+                return *this;
+            }
+
+        };
+
+    }
+
+}
+
+#endif // vim:filetype=cpp
+
+

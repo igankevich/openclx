@@ -1,0 +1,50 @@
+#ifndef OPENCLX_QCOM_DEVICE
+#define OPENCLX_QCOM_DEVICE
+
+#include <openclx/device>
+#include <openclx/forward>
+#include <openclx/qcom/context>
+
+namespace clx {
+
+    namespace qcom {
+
+        class device: public ::clx::device {
+
+        public:
+
+            #if CL_TARGET_VERSION >= 110 && defined(cl_qcom_ext_host_ptr)
+            size_t memory_padding() const;
+            size_t page_size() const;
+            ::clx::qcom::image_pitch image_pitch(
+                size_t width,
+                size_t height,
+                const image_format& format
+            ) const;
+            #endif
+
+            using ::clx::device::device;
+            inline device(const ::clx::device& rhs): ::clx::device(rhs) {}
+            inline device(::clx::device&& rhs): ::clx::device(std::move(rhs)) {}
+            inline device& operator=(const ::clx::device& rhs) {
+                this->::clx::device::operator=(rhs);
+                return *this;
+            }
+            inline device& operator=(::clx::device&& rhs) {
+                this->::clx::device::swap(rhs);
+                return *this;
+            }
+
+            inline ::clx::qcom::context
+            context() const {
+                return ::clx::device::context();
+            }
+
+        };
+
+    }
+
+}
+
+#endif // vim:filetype=cpp
+

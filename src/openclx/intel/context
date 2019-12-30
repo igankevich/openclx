@@ -3,6 +3,7 @@
 
 #include <openclx/context>
 #include <openclx/forward>
+#include <openclx/intel/platform>
 
 namespace clx {
 
@@ -11,7 +12,6 @@ namespace clx {
         class context: public ::clx::context {
 
         public:
-            using ::clx::context::context;
 
             #if CL_TARGET_VERSION >= 120 && defined(cl_intel_motion_estimation)
             clx::intel::me_accelerator
@@ -38,6 +38,23 @@ namespace clx {
                 intel::va::surface_type* ptr,
                 unsigned_int_type plane) const;
             #endif
+
+            using ::clx::context::context;
+            inline context(const ::clx::context& rhs): ::clx::context(rhs) {}
+            inline context(::clx::context&& rhs): ::clx::context(std::move(rhs)) {}
+            inline context& operator=(::clx::context rhs) {
+                this->::clx::context::operator=(rhs);
+                return *this;
+            }
+            inline context& operator=(::clx::context&& rhs) {
+                this->::clx::context::swap(rhs);
+                return *this;
+            }
+
+            inline ::clx::intel::platform
+            platform() const {
+                return ::clx::context::platform();
+            }
 
         };
 

@@ -257,8 +257,11 @@ namespace clx {
     #if defined(cl_arm_import_memory)
     namespace arm {
         typedef ::cl_import_properties_arm import_properties_type;
-        enum class memory_type: unsigned_int_type;
+        enum class import_memory_type: unsigned_int_type;
         class import_properties;
+        class device;
+        class kernel;
+        class memory_object;
     }
     #endif
 
@@ -276,7 +279,9 @@ namespace clx {
 
     namespace intel {
 
+        class context;
         class device;
+        class platform;
 
         #if defined(cl_intel_accelerator)
         using accelerator_type = ::cl_accelerator_intel;
@@ -338,7 +343,14 @@ namespace clx {
 
     }
 
+    namespace nv {
+        class device;
+    }
+
     namespace qcom {
+
+        class context;
+        class device;
 
         #if defined(cl_qcom_ext_host_ptr)
         enum class host_cache_policy: unsigned_int_type {
@@ -365,14 +377,16 @@ namespace clx {
 
         #if defined(cl_qcom_ext_host_ptr)
         struct host_pointer: public ::cl_mem_ext_host_ptr {
-            inline void cache_policy(host_cache_policy rhs) {
-                this->host_cache_policy = rhs;
+            using allocation_type_enum = ::clx::qcom::allocation_type;
+            using host_cache_policy_enum = ::clx::qcom::host_cache_policy;
+            inline void cache_policy(host_cache_policy_enum rhs) {
+                this->host_cache_policy = unsigned_int_type(rhs);
             }
-            inline host_cache_policy cache_policy() const {
-                return host_cache_policy(this->host_cache_policy);
+            inline host_cache_policy_enum cache_policy() const {
+                return host_cache_policy_enum(this->host_cache_policy);
             }
-            inline ::clx::qcom::allocation_type allocation() const {
-                return ::clx::qcom::alllocation_type(this->alllocation_type);
+            inline allocation_type_enum allocation() const {
+                return allocation_type_enum(this->allocation_type);
             }
         };
         #endif
@@ -383,6 +397,8 @@ namespace clx {
                 this->ext_host_ptr.allocation_type =
                     CL_MEM_ANDROID_NATIVE_BUFFER_HOST_PTR_QCOM;
             }
+            inline ::clx::host_pointer get() { return this->anb_ptr; }
+            inline ::clx::const_host_pointer get() const { return this->anb_ptr; }
         };
         #endif
 
@@ -391,6 +407,8 @@ namespace clx {
             inline ion_pointer() {
                 this->ext_host_ptr.allocation_type = CL_MEM_ION_HOST_PTR_QCOM;
             }
+            inline ::clx::host_pointer get() { return this->ion_hostptr; }
+            inline ::clx::const_host_pointer get() const { return this->ion_hostptr; }
         };
         #endif
 

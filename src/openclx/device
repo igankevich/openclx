@@ -82,16 +82,6 @@ namespace clx {
         std::string builtin_kernels() const;
         #endif
 
-        #if CL_TARGET_VERSION >= 110 && defined(cl_qcom_ext_host_ptr)
-        size_t memory_padding() const;
-        size_t page_size() const;
-        ::clx::qcom::image_pitch image_pitch(
-            size_t width,
-            size_t height,
-            const image_format& format,
-        ) const;
-        #endif
-
         unsigned_int_type vendor_id() const;
         ::clx::platform platform() const;
         ::clx::context context() const;
@@ -241,14 +231,6 @@ namespace clx {
 
         device_flags type() const;
 
-        unsigned_int_type compute_capability_major() const;
-        unsigned_int_type compute_capability_minor() const;
-        unsigned_int_type max_registers() const;
-        unsigned_int_type warp_size() const;
-        bool overlap() const;
-        bool kernel_execution_timeout() const;
-        bool integrated_memory() const;
-
         std::string board_name() const;
         unsigned_int_type wavefront_width() const;
         unsigned_int_type simd_per_compute_unit() const;
@@ -268,10 +250,6 @@ namespace clx {
         std::vector<size_t> global_free_memory() const;
 
         unsigned_int_type max_named_barriers() const;
-
-        #if defined(cl_arm_core_id) && CL_TARGET_VERSION >= 120
-        unsigned_long_type compute_units_mask() const;
-        #endif
 
         #if CL_TARGET_VERSION >= 110
         bool has_unified_memory() const;

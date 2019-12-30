@@ -1,0 +1,39 @@
+#ifndef OPENCLX_ARM_KERNEL
+#define OPENCLX_ARM_KERNEL
+
+#include <openclx/forward>
+#include <openclx/kernel>
+
+namespace clx {
+
+    namespace arm {
+
+        class kernel: public ::clx::kernel {
+
+        public:
+
+            #if CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
+            void svm_pointers(const array_view<void*>& pointers);
+            void fine_grain_system_svm_pointers(bool b);
+            #endif
+
+            using ::clx::kernel::kernel;
+            inline kernel(const ::clx::kernel& rhs): ::clx::kernel(rhs) {}
+            inline kernel(::clx::kernel&& rhs): ::clx::kernel(std::move(rhs)) {}
+            inline kernel& operator=(const ::clx::kernel& rhs) {
+                this->::clx::kernel::operator=(rhs);
+                return *this;
+            }
+            inline kernel& operator=(::clx::kernel&& rhs) {
+                this->::clx::kernel::swap(rhs);
+                return *this;
+            }
+
+        };
+
+    }
+
+}
+
+#endif // vim:filetype=cpp
+

@@ -17,7 +17,6 @@ namespace clx {
         class kernel: public ::clx::kernel {
 
         public:
-            using ::clx::kernel::kernel;
 
             #if CL_TARGET_VERSION >= 120 && defined(cl_intel_required_subgroup_size)
             ::clx::intel::work_group work_group(const device& dev) const;
@@ -26,6 +25,23 @@ namespace clx {
             #if CL_TARGET_VERSION >= 120 && defined(cl_intel_required_subgroup_size)
             size_t sub_groups_size(const device& device) const;
             #endif
+
+            using ::clx::kernel::kernel;
+            inline kernel(const ::clx::kernel& rhs): ::clx::kernel(rhs) {}
+            inline kernel(::clx::kernel&& rhs): ::clx::kernel(std::move(rhs)) {}
+            inline kernel& operator=(const ::clx::kernel& rhs) {
+                this->::clx::kernel::operator=(rhs);
+                return *this;
+            }
+            inline kernel& operator=(::clx::kernel&& rhs) {
+                this->::clx::kernel::swap(rhs);
+                return *this;
+            }
+
+            inline ::clx::intel::context
+            context() const {
+                return ::clx::kernel::context();
+            }
 
         };
 

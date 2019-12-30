@@ -150,4 +150,8 @@ using clEnqueueReleaseGrallocObjectsIMG_fn = decltype(&clEnqueueReleaseGrallocOb
 #define CL_DEVICE_MAX_ATOMIC_COUNTERS_EXT  0x4032
 #endif
 
+#if defined(cl_qcom_ext_host_ptr)
+using clGetDeviceImageInfoQCOM_fn = decltype(&clGetDeviceImageInfoQCOM);
+#endif
+
 #endif // vim:filetype=cpp

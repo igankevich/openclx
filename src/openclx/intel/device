@@ -3,6 +3,8 @@
 
 #include <openclx/device>
 #include <openclx/forward>
+#include <openclx/intel/context>
+#include <openclx/intel/platform>
 
 namespace clx {
 
@@ -11,7 +13,6 @@ namespace clx {
         class device: public ::clx::device {
 
         public:
-            using ::clx::device::device;
 
             #if CL_TARGET_VERSION >= 120 && defined(cl_intel_device_partition_by_names)
             std::vector<device>
@@ -37,6 +38,28 @@ namespace clx {
             unsigned_int_type num_simultaneous_graphics() const;
             std::vector<unsigned_int_type> simultaneous_graphics_combinations() const;
             #endif
+
+            using ::clx::device::device;
+            inline device(const ::clx::device& rhs): ::clx::device(rhs) {}
+            inline device(::clx::device&& rhs): ::clx::device(std::move(rhs)) {}
+            inline device& operator=(const ::clx::device& rhs) {
+                this->::clx::device::operator=(rhs);
+                return *this;
+            }
+            inline device& operator=(::clx::device&& rhs) {
+                this->::clx::device::swap(rhs);
+                return *this;
+            }
+
+            inline ::clx::intel::platform
+            platform() const {
+                return ::clx::device::platform();
+            }
+
+            inline ::clx::intel::context
+            context() const {
+                return ::clx::device::context();
+            }
 
         };
 

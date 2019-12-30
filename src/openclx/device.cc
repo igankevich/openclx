@@ -63,44 +63,6 @@ CLX_METHOD_STRING(
 );
 #endif
 
-#if CL_TARGET_VERSION >= 110 && defined(cl_qcom_ext_host_ptr)
-CLX_METHOD_SCALAR(
-    clx::device::memory_padding,
-    ::clGetDeviceInfo,
-    size_t,
-    CL_DEVICE_EXT_MEM_PADDING_IN_BYTES_QCOM
-);
-CLX_METHOD_SCALAR(
-    clx::device::page_size,
-    ::clGetDeviceInfo,
-    size_t,
-    CL_DEVICE_PAGE_SIZE_QCOM
-);
-::clx::qcom::image_pitch
-clx::device::image_pitch(size_t width, size_t height, const image_format& format) const {
-    auto func = CLX_EXTENSION(clGetDeviceImageInfoQCOM, platform());
-    ::clx::qcom::image_pitch pitch{};
-    CLX_CHECK(func(
-        this->_ptr, width, height, format,
-        CL_IMAGE_ROW_PITCH, sizeof(unsigned_int_type), &pitch.row_pitch, nullptr
-    ));
-    CLX_CHECK(func(
-        this->_ptr, width, height, format,
-        CL_IMAGE_ROW_ALIGNMENT_QCOM, sizeof(unsigned_int_type), &pitch.row_alignment, nullptr
-    ));
-    CLX_CHECK(func(
-        this->_ptr, width, height, format,
-        CL_IMAGE_SLICE_PITCH, sizeof(unsigned_int_type), &pitch.slice_pitch, nullptr
-    ));
-    CLX_CHECK(func(
-        this->_ptr, width, height, format,
-        CL_IMAGE_SLICE_ALIGNMENT_QCOM, sizeof(unsigned_int_type), &pitch.slice_alignment,
-        nullptr
-    ));
-    return pitch;
-}
-#endif
-
 #if CL_TARGET_VERSION >= 210
 auto
 clx::device::host_time() const -> nanoseconds {
@@ -543,52 +505,6 @@ CLX_METHOD_SCALAR(
 
 CLX_METHOD_SCALAR(clx::device::type, ::clGetDeviceInfo, device_flags, CL_DEVICE_TYPE);
 
-CLX_METHOD_SCALAR(
-    clx::device::compute_capability_major,
-    ::clGetDeviceInfo,
-    unsigned_int_type,
-    CL_DEVICE_COMPUTE_CAPABILITY_MAJOR_NV
-);
-
-CLX_METHOD_SCALAR(
-    clx::device::compute_capability_minor,
-    ::clGetDeviceInfo,
-    unsigned_int_type,
-    CL_DEVICE_COMPUTE_CAPABILITY_MINOR_NV
-);
-
-CLX_METHOD_SCALAR(
-    clx::device::max_registers,
-    ::clGetDeviceInfo,
-    unsigned_int_type,
-    CL_DEVICE_REGISTERS_PER_BLOCK_NV
-);
-
-CLX_METHOD_SCALAR(
-    clx::device::warp_size,
-    ::clGetDeviceInfo,
-    unsigned_int_type,
-    CL_DEVICE_WARP_SIZE_NV
-);
-
-CLX_METHOD_BOOL(
-    clx::device::overlap,
-    ::clGetDeviceInfo,
-    CL_DEVICE_GPU_OVERLAP_NV
-);
-
-CLX_METHOD_BOOL(
-    clx::device::kernel_execution_timeout,
-    ::clGetDeviceInfo,
-    CL_DEVICE_KERNEL_EXEC_TIMEOUT_NV
-);
-
-CLX_METHOD_BOOL(
-    clx::device::integrated_memory,
-    ::clGetDeviceInfo,
-    CL_DEVICE_INTEGRATED_MEMORY_NV
-);
-
 CLX_METHOD_STRING(clx::device::board_name, ::clGetDeviceInfo, CL_DEVICE_BOARD_NAME_AMD);
 
 CLX_METHOD_SCALAR(
@@ -717,15 +633,6 @@ CLX_METHOD_SCALAR(
     unsigned_int_type,
     CL_DEVICE_MAX_NAMED_BARRIER_COUNT_KHR
 )
-#endif
-
-#if defined(cl_arm_core_id) && CL_TARGET_VERSION >= 120
-CLX_METHOD_SCALAR(
-    clx::device::compute_units_mask,
-    ::clGetDeviceInfo,
-    unsigned_long_type,
-    CL_DEVICE_COMPUTE_UNITS_BITFIELD_ARM
-);
 #endif
 
 #if CL_TARGET_VERSION >= 110

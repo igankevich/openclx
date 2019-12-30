@@ -1,7 +1,7 @@
 project(
     'openclx',
     'cpp',
-    version: '0.1.8',
+    version: '0.1.9',
     meson_version: '>=0.46',
     default_options: ['cpp_std=c++11']
 )

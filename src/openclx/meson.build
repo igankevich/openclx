@@ -97,6 +97,8 @@ subdir('egl')
 subdir('ext')
 subdir('gl')
 subdir('intel')
+subdir('nv')
+subdir('qcom')
 
 opencl = dependency('OpenCL')
 openclx_deps = [opencl]
@@ -139,6 +141,17 @@ if with_tests
         executable(
             'device-test',
             sources: 'device_test.cc',
+            include_directories: src,
+            dependencies: [openclx_deps,gtest],
+            link_with: libopenclx,
+            implicit_include_directories: false,
+        )
+    )
+    test(
+        'extensions-text',
+        executable(
+            'extensions-text',
+            sources: 'extensions_test.cc',
             include_directories: src,
             dependencies: [openclx_deps,gtest],
             link_with: libopenclx,

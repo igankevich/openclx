@@ -1,0 +1,42 @@
+#ifndef OPENCLX_NV_DEVICE
+#define OPENCLX_NV_DEVICE
+
+#include <openclx/device>
+#include <openclx/forward>
+
+namespace clx {
+
+    namespace nv {
+
+        class device: public ::clx::device {
+
+        public:
+
+            unsigned_int_type compute_capability_major() const;
+            unsigned_int_type compute_capability_minor() const;
+            unsigned_int_type max_registers() const;
+            unsigned_int_type warp_size() const;
+            bool overlap() const;
+            bool kernel_execution_timeout() const;
+            bool integrated_memory() const;
+
+            using ::clx::device::device;
+            inline device(const ::clx::device& rhs): ::clx::device(rhs) {}
+            inline device(::clx::device&& rhs): ::clx::device(std::move(rhs)) {}
+            inline device& operator=(const ::clx::device& rhs) {
+                this->::clx::device::operator=(rhs);
+                return *this;
+            }
+            inline device& operator=(::clx::device&& rhs) {
+                this->::clx::device::swap(rhs);
+                return *this;
+            }
+
+        };
+
+    }
+
+}
+
+#endif // vim:filetype=cpp
+

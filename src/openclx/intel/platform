@@ -11,7 +11,6 @@ namespace clx {
         class platform: public ::clx::platform {
 
         public:
-            using ::clx::platform::platform;
 
             #if defined(cl_intel_dx9_media_sharing)
             std::vector<device>
@@ -22,6 +21,18 @@ namespace clx {
             std::vector<device>
             devices(va::device_source src, void* object, va::device_set set) const;
             #endif
+
+            using ::clx::platform::platform;
+            inline platform(const ::clx::platform& rhs): ::clx::platform(rhs) {}
+            inline platform(::clx::platform&& rhs): ::clx::platform(std::move(rhs)) {}
+            inline platform& operator=(const ::clx::platform& rhs) {
+                this->::clx::platform::operator=(rhs);
+                return *this;
+            }
+            inline platform& operator=(::clx::platform&& rhs) {
+                this->::clx::platform::swap(rhs);
+                return *this;
+            }
 
         };
 

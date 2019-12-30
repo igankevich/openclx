@@ -2,7 +2,7 @@
 #define OPENCLX_INTEL_ACCELERATOR
 
 #include <openclx/forward>
-#include <openclx/platform>
+#include <openclx/intel/platform>
 
 namespace clx {
 

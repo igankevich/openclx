@@ -39,27 +39,6 @@ clx::kernel::fine_grain_system_svm_pointers_200(bool b) {
 }
 #endif
 
-#if CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
-void
-clx::kernel::svm_pointers_arm(const array_view<void*>& pointers) {
-    auto func = CLX_EXTENSION(clSetKernelExecInfoARM, context().platform());
-    CLX_CHECK(func(
-        this->_ptr, CL_KERNEL_EXEC_INFO_SVM_PTRS_ARM,
-        pointers.size()*sizeof(void*), pointers.data()
-    ));
-}
-
-void
-clx::kernel::fine_grain_system_svm_pointers_arm(bool b) {
-    auto func = CLX_EXTENSION(clSetKernelExecInfoARM, context().platform());
-    bool_type value = static_cast<bool_type>(b);
-    CLX_CHECK(func(
-        this->_ptr, CL_KERNEL_EXEC_INFO_SVM_FINE_GRAIN_SYSTEM_ARM,
-        sizeof(bool_type), &value
-    ));
-}
-#endif
-
 
 CLX_METHOD_STRING(clx::kernel::name, ::clGetKernelInfo, CL_KERNEL_FUNCTION_NAME)
 
