@@ -19,11 +19,7 @@ namespace clx {
         using slice_3d_type = slice_3d<const buffer&>;
 
     public:
-
-        buffer() = default;
-
-        inline explicit
-        buffer(memory_object_type ptr): memory_object(ptr) {}
+        using memory_object::memory_object;
 
         inline buffer_slice
         slice(size_t offset, size_t size) const {

@@ -9,8 +9,7 @@ namespace clx {
 
     public:
 
-        inline explicit
-        pipe(memory_object_type ptr): memory_object(ptr) {}
+        using memory_object::memory_object;
 
         unsigned_int_type
         packet_size() const;

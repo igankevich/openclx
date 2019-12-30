@@ -9,12 +9,12 @@ namespace clx {
     class array_view {
 
     public:
-        typedef T value_type;
-        typedef value_type* pointer;
-        typedef const value_type* const_pointer;
-        typedef value_type& reference;
-        typedef const value_type& const_reference;
-        typedef std::size_t size_type;
+        using value_type = T;
+        using pointer = value_type*;
+        using const_pointer = const value_type*;
+        using reference = value_type&;
+        using const_reference = const value_type&;
+        using size_type = std::size_t;
 
     private:
         const value_type* _data;
@@ -38,40 +38,13 @@ namespace clx {
         array_view(const Container& cont):
         _data(cont.data()), _size(cont.size()) {}
 
-        inline const_pointer
-        data() const {
-            return this->_data;
-        }
-
-        inline size_type
-        size() const {
-            return this->_size;
-        }
-
-        inline const_pointer
-        begin() const {
-            return this->_data;
-        }
-
-        inline const_pointer
-        end() const {
-            return this->_data + this->_size;
-        }
-
-        inline const_reference
-        front() const {
-            return *this->begin();
-        }
-
-        inline const_reference
-        back() const {
-            return *(this->end()-1);
-        }
-
-        inline bool
-        empty() const {
-            return this->_size == 0;
-        }
+        inline const_pointer data() const { return this->_data; }
+        inline size_type size() const { return this->_size; }
+        inline const_pointer begin() const { return this->_data; }
+        inline const_pointer end() const { return this->_data + this->_size; }
+        inline const_reference front() const { return *this->begin(); }
+        inline const_reference back() const { return *(this->end()-1); }
+        inline bool empty() const { return this->_size == 0; }
 
     };
 
@@ -79,10 +52,10 @@ namespace clx {
     class array_view<void> {
 
     public:
-        typedef void value_type;
-        typedef value_type* pointer;
-        typedef const value_type* const_pointer;
-        typedef std::size_t size_type;
+        using value_type = void;
+        using pointer = value_type*;
+        using const_pointer = const value_type*;
+        using size_type = std::size_t;
 
     private:
         mutable value_type* _data;
@@ -102,25 +75,10 @@ namespace clx {
         array_view(const Container& cont):
         _data(cont.data()), _size(cont.size()) {}
 
-        inline pointer
-        data() const {
-            return this->_data;
-        }
-
-        inline pointer
-        data() {
-            return this->_data;
-        }
-
-        inline size_type
-        size() const {
-            return this->_size;
-        }
-
-        inline bool
-        empty() const {
-            return this->_size == 0;
-        }
+        inline pointer data() const { return this->_data; }
+        inline pointer data() { return this->_data; }
+        inline size_type size() const { return this->_size; }
+        inline bool empty() const { return this->_size == 0; }
 
     };
 

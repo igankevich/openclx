@@ -14,11 +14,11 @@ namespace clx {
     class compiler {
 
     public:
-        typedef std::vector<device> device_array;
-        typedef std::unordered_map<std::string,program> program_map;
+        using device_array = std::vector<device>;
+        using program_map = std::unordered_map<std::string,program>;
 
     private:
-        typedef std::hash<std::string> hash_type;
+        using hash_type = std::hash<std::string>;
 
     private:
         context _context;
@@ -31,6 +31,8 @@ namespace clx {
         bool _cache = false;
 
     public:
+
+        compiler() = default;
 
         inline explicit
         compiler(context ctx): _context(ctx) {}

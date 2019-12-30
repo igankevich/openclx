@@ -49,6 +49,12 @@ namespace clx {
             CLX_CHECK(::clSetKernelArg(this->_ptr, i, value.size*sizeof(T), nullptr));
         }
 
+        template <class ... Args>
+        inline void
+        arguments(const Args& ... args) {
+            this->do_arguments(0, args...);
+        }
+
         #if CL_TARGET_VERSION >= 120
         kernel_argument
         argument(unsigned_int_type i) const;
@@ -197,6 +203,17 @@ namespace clx {
         #if CL_TARGET_VERSION >= 110
         ::clx::work_group work_group_110(const device& dev) const;
         #endif
+
+        inline void
+        do_arguments(unsigned_int_type) {}
+
+        template <class Head, class ... Tail>
+        inline void
+        do_arguments(unsigned_int_type i, const Head& head, const Tail& ... tail) {
+            this->argument(i, head);
+            this->do_arguments(i+1, tail...);
+        }
+
     };
 
     static_assert(sizeof(kernel) == sizeof(kernel_type), "bad size");

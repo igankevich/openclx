@@ -10,12 +10,11 @@ namespace clx {
     class image: public memory_object {
 
     public:
-        typedef slice_3d<const image&> slice_3d_type;
+        using slice_3d_type = slice_3d<const image&>;
 
     public:
 
-        inline explicit
-        image(memory_object_type ptr): memory_object(ptr) {}
+        using memory_object::memory_object;
 
         inline slice_3d_type
         slice(

@@ -21,43 +21,51 @@ namespace clx {
     class command_stack {
 
     public:
-        typedef std::vector<event> event_array;
-        typedef std::vector<event_array> frame_array;
-        typedef std::vector<device> device_array;
-        typedef slice_3d<const buffer&> buffer_slice_3d;
-        typedef slice_3d<const image&> image_slice_3d;
-        typedef slice_3d<host_pointer> host_slice_3d;
-        typedef slice_3d<const_host_pointer> const_host_slice_3d;
-        typedef array_view<memory_object> memory_object_array;
-        typedef void* svm_pointer;
-        typedef array_view<void> svm_array;
+        using event_array = std::vector<event>;
+        using frame_array = std::vector<event_array>;
+        using device_array = std::vector<device>;
+        using buffer_slice_3d = slice_3d<const buffer&>;
+        using image_slice_3d = slice_3d<const image&>;
+        using host_slice_3d = slice_3d<host_pointer>;
+        using const_host_slice_3d = slice_3d<const_host_pointer>;
+        using memory_object_array = array_view<memory_object>;
+        using svm_pointer = void*;
+        using svm_array = array_view<void>;
         #if defined(cl_khr_gl_sharing)
-        typedef array_view<gl::buffer> gl_memory_object_array;
+        using gl_memory_object_array = array_view<gl::buffer>;
         #endif
         #if defined(cl_khr_egl_image)
-        typedef array_view<egl::image> egl_memory_object_array;
+        using egl_memory_object_array = array_view<egl::image>;
         #endif
         #if defined(cl_khr_dx9_media_sharing)
-        typedef array_view<d3d9::media_surface> dx9_media_surface_array;
+        using dx9_media_surface_array = array_view<d3d9::media_surface>;
         #endif
         #if defined(cl_khr_d3d10_sharing)
-        typedef array_view<d3d10::memory_object> d3d10_memory_object_array;
+        using d3d10_memory_object_array = array_view<d3d10::memory_object>;
         #endif
         #if CL_TARGET_VERSION >= 120 && defined(cl_khr_d3d11_sharing)
-        typedef array_view<d3d11::memory_object> d3d11_memory_object_array;
+        using d3d11_memory_object_array = array_view<d3d11::memory_object>;
         #endif
         #if defined(cl_intel_dx9_media_sharing)
-        typedef array_view<intel::memory_object> intel_memory_object_array;
+        using intel_memory_object_array = array_view<intel::memory_object>;
         #endif
         #if defined(cl_intel_va_api_media_sharing)
-        typedef array_view<intel::va::memory_object> intel_va_memory_object_array;
+        using intel_va_memory_object_array = array_view<intel::va::memory_object>;
         #endif
+
+    public:
+        struct queue_pair {
+            command_queue kernel_queue, data_queue;
+            inline queue_pair(command_queue q1, command_queue q2):
+            kernel_queue(q1), data_queue(q2) {}
+        };
+        using queue_pair_array = std::vector<queue_pair>;
 
     private:
 
         struct step_guard {
 
-            typedef const event_type* const_pointer;
+            using const_pointer = const event_type*;
 
             command_stack& stack;
             unsigned_int_type nevents = 0;
@@ -82,21 +90,26 @@ namespace clx {
 
         };
 
-        struct queue_pair {
-            command_queue kernel_queue, data_queue;
-            inline queue_pair(command_queue q1, command_queue q2):
-            kernel_queue(q1), data_queue(q2) {}
-        };
-        typedef std::vector<queue_pair> queue_array;
-
     private:
-        queue_array _devices;
+        queue_pair_array _devices;
         unsigned_int_type _device_index = 0;
         event_array _events;
         unsigned_int_type _offset = 0;
         bool _sync = false;
 
     public:
+
+        command_stack() = default;
+
+        inline explicit
+        command_stack(queue_pair_array pairs): _devices(pairs) {
+            this->_events.reserve(4096 / sizeof(event_type));
+        }
+
+        inline explicit
+        command_stack(queue_pair_array&& pairs): _devices(std::move(pairs)) {
+            this->_events.reserve(4096 / sizeof(event_type));
+        }
 
         inline explicit
         command_stack(command_queue queue): _devices{{queue,queue}} {
