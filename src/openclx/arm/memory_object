@@ -17,6 +17,7 @@ namespace clx {
             #endif
 
             using ::clx::memory_object::memory_object;
+            memory_object() = default;
             inline memory_object(const ::clx::memory_object& rhs): ::clx::memory_object(rhs) {}
             inline memory_object(::clx::memory_object&& rhs): ::clx::memory_object(std::move(rhs)) {}
             inline memory_object& operator=(const ::clx::memory_object& rhs) {

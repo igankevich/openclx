@@ -12,19 +12,23 @@
 #endif
 
 #define CLX_DEVICE_PREFERRED_VECTOR_WIDTH(type, type2) \
-    template <> \
-    clx::unsigned_int_type \
-    clx::device::preferred_vector_width<clx::type>() const { \
-        CLX_BODY_SCALAR(::clGetDeviceInfo, unsigned_int_type, \
-            CL_DEVICE_PREFERRED_VECTOR_WIDTH_##type2) \
+    namespace clx { \
+        template <> \
+        unsigned_int_type \
+        device::preferred_vector_width<type>() const { \
+            CLX_BODY_SCALAR(::clGetDeviceInfo, unsigned_int_type, \
+                CL_DEVICE_PREFERRED_VECTOR_WIDTH_##type2) \
+        } \
     }
 
 #define CLX_DEVICE_NATIVE_VECTOR_WIDTH(type, type2) \
-    template <> \
-    clx::unsigned_int_type \
-    clx::device::native_vector_width<clx::type>() const { \
-        CLX_BODY_SCALAR(::clGetDeviceInfo, unsigned_int_type, \
-            CL_DEVICE_NATIVE_VECTOR_WIDTH_##type2) \
+    namespace clx { \
+        template <> \
+        unsigned_int_type \
+        device::native_vector_width<type>() const { \
+            CLX_BODY_SCALAR(::clGetDeviceInfo, unsigned_int_type, \
+                CL_DEVICE_NATIVE_VECTOR_WIDTH_##type2) \
+        } \
     }
 
 CLX_METHOD_STRING(clx::device::name, ::clGetDeviceInfo, CL_DEVICE_NAME)
@@ -273,22 +277,26 @@ CLX_METHOD_SCALAR(clx::device::min_data_alignment, ::clGetDeviceInfo, unsigned_i
 
 CLX_METHOD_SCALAR(clx::device::execution_capabilities, ::clGetDeviceInfo, execution_flags, CL_DEVICE_EXECUTION_CAPABILITIES)
 
-template <>
-clx::floating_point_flags
-clx::device::floating_point_capabilities<clx::half_type>() const {
-    CLX_BODY_SCALAR(::clGetDeviceInfo, floating_point_flags, CL_DEVICE_HALF_FP_CONFIG)
-}
+namespace clx {
 
-template <>
-clx::floating_point_flags
-clx::device::floating_point_capabilities<clx::float_type>() const {
-    CLX_BODY_SCALAR(::clGetDeviceInfo, floating_point_flags, CL_DEVICE_SINGLE_FP_CONFIG)
-}
+    template <>
+    floating_point_flags
+    device::floating_point_capabilities<half_type>() const {
+        CLX_BODY_SCALAR(::clGetDeviceInfo, floating_point_flags, CL_DEVICE_HALF_FP_CONFIG)
+    }
 
-template <>
-clx::floating_point_flags
-clx::device::floating_point_capabilities<clx::double_type>() const {
-    CLX_BODY_SCALAR(::clGetDeviceInfo, floating_point_flags, CL_DEVICE_DOUBLE_FP_CONFIG)
+    template <>
+    floating_point_flags
+    device::floating_point_capabilities<float_type>() const {
+        CLX_BODY_SCALAR(::clGetDeviceInfo, floating_point_flags, CL_DEVICE_SINGLE_FP_CONFIG)
+    }
+
+    template <>
+    floating_point_flags
+    device::floating_point_capabilities<double_type>() const {
+        CLX_BODY_SCALAR(::clGetDeviceInfo, floating_point_flags, CL_DEVICE_DOUBLE_FP_CONFIG)
+    }
+
 }
 
 CLX_DEVICE_PREFERRED_VECTOR_WIDTH(char_type, CHAR);

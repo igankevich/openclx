@@ -64,6 +64,7 @@ namespace clx {
             #endif
 
             using ::clx::context::context;
+            context() = default;
             inline context(const ::clx::context& rhs): ::clx::context(rhs) {}
             inline context(::clx::context&& rhs): ::clx::context(std::move(rhs)) {}
             inline context& operator=(const ::clx::context& rhs) {

@@ -19,6 +19,7 @@ namespace clx {
             #endif
 
             using ::clx::device::device;
+            device() = default;
             inline device(const ::clx::device& rhs): ::clx::device(rhs) {}
             inline device(::clx::device&& rhs): ::clx::device(std::move(rhs)) {}
             inline device& operator=(const ::clx::device& rhs) {

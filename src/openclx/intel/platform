@@ -23,6 +23,7 @@ namespace clx {
             #endif
 
             using ::clx::platform::platform;
+            platform() = default;
             inline platform(const ::clx::platform& rhs): ::clx::platform(rhs) {}
             inline platform(::clx::platform&& rhs): ::clx::platform(std::move(rhs)) {}
             inline platform& operator=(const ::clx::platform& rhs) {

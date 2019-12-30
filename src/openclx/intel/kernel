@@ -27,6 +27,7 @@ namespace clx {
             #endif
 
             using ::clx::kernel::kernel;
+            kernel() = default;
             inline kernel(const ::clx::kernel& rhs): ::clx::kernel(rhs) {}
             inline kernel(::clx::kernel&& rhs): ::clx::kernel(std::move(rhs)) {}
             inline kernel& operator=(const ::clx::kernel& rhs) {

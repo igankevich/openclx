@@ -281,6 +281,7 @@ namespace clx {
 
         class context;
         class device;
+        class memory_object;
         class platform;
 
         #if defined(cl_intel_accelerator)
@@ -316,8 +317,6 @@ namespace clx {
             preferred=CL_PREFERRED_DEVICES_FOR_D3D9_INTEL,
             all=CL_ALL_DEVICES_FOR_D3D9_INTEL,
         };
-
-        class memory_object;
         #endif
 
         #if defined(cl_intel_va_api_media_sharing)
