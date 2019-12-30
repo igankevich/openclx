@@ -93,11 +93,6 @@ namespace clx {
         std::vector<device>
         devices(device_flags types) const;
 
-        ::clx::context context(const array_view<device>& devices) const;
-        ::clx::context context(const context_properties&,const array_view<device>&) const;
-        ::clx::context context(device_flags types=device_flags::all) const;
-        ::clx::context context(const context_properties&,device_flags=device_flags::all) const;
-
         inline void
         unload_compiler() {
             #if CL_TARGET_VERSION >= 120

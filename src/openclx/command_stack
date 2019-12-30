@@ -102,7 +102,7 @@ namespace clx {
         command_stack() = default;
 
         inline explicit
-        command_stack(queue_pair_array pairs): _devices(pairs) {
+        command_stack(const queue_pair_array& pairs): _devices(pairs) {
             this->_events.reserve(4096 / sizeof(event_type));
         }
 
@@ -121,9 +121,6 @@ namespace clx {
         _devices{{kernel_queue,data_queue}} {
             this->_events.reserve(4096 / sizeof(event_type));
         }
-
-        explicit
-        command_stack(const device_array& devices, const command_queue_properties& properties);
 
         command_stack(const command_stack&) = default;
         command_stack& operator=(const command_stack&) = default;

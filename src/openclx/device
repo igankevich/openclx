@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 
-#include <openclx/command_queue>
 #include <openclx/command_queue_flags>
 #include <openclx/context>
 #include <openclx/device_affinity_domain>
@@ -84,40 +83,7 @@ namespace clx {
 
         unsigned_int_type vendor_id() const;
         ::clx::platform platform() const;
-        ::clx::context context() const;
         unsigned_int_type num_references() const;
-
-        inline ::clx::command_queue
-        queue(command_queue_flags flags) const {
-            command_queue_properties prop;
-            prop.flags(flags);
-            #if CL_TARGET_VERSION >= 200
-            return this->queue_200(this->context().get(), prop);
-            #else
-            return this->queue_100(this->context().get(), prop);
-            #endif
-        }
-
-        inline ::clx::command_queue
-        queue(command_queue_flags flags, unsigned_int_type size) const {
-            command_queue_properties prop;
-            prop.flags(flags);
-            prop.size(size);
-            #if CL_TARGET_VERSION >= 200
-            return this->queue_200(this->context().get(), prop);
-            #else
-            return this->queue_100(this->context().get(), prop);
-            #endif
-        }
-
-        inline ::clx::command_queue
-        queue(command_queue_properties properties) const {
-            #if CL_TARGET_VERSION >= 200
-            return this->queue_200(this->context().get(), properties);
-            #else
-            return this->queue_100(this->context().get(), properties);
-            #endif
-        }
 
         bool available() const;
         bool compiler_available() const;
@@ -319,18 +285,6 @@ namespace clx {
         std::vector<device_partition>
         supported_partitions_priv() const;
         #endif
-
-        #if CL_TARGET_VERSION >= 200
-        ::clx::command_queue
-        queue_200(context_type ctx, const command_queue_properties& prop) const;
-        #endif
-
-        #if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
-        ::clx::command_queue
-        queue_100(context_type ctx, const command_queue_properties& prop) const;
-        #endif
-
-        friend class context;
 
     };
 

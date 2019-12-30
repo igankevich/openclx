@@ -6,6 +6,7 @@
 #include <string>
 
 #include <openclx/compiler>
+#include <openclx/context>
 #include <openclx/extensions>
 #include <openclx/platform>
 
@@ -169,7 +170,7 @@ public:
         if (!platform.get()) {
             throw std::invalid_argument("platform not found");
         }
-        clx::compiler cc(platform.context());
+        clx::compiler cc{clx::context{platform}};
         cc.cache(true);
         cc.devices(platform.devices(clx::device_flags::all));
         cc.options(options);

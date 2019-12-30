@@ -133,48 +133,6 @@ CLX_METHOD_SCALAR(
 )
 #endif
 
-clx::context clx::device::context() const {
-    std::vector<context_properties_type> prop{
-        context_properties_type(CL_CONTEXT_PLATFORM),
-        context_properties_type(this->platform().get()),
-        context_properties_type(0)
-    };
-    int_type ret = 0;
-    auto ctx = ::clCreateContext(prop.data(), 1, &this->_ptr, nullptr, nullptr, &ret);
-    CLX_CHECK(ret);
-    return static_cast<clx::context>(ctx);
-}
-
-#if CL_TARGET_VERSION >= 200
-clx::command_queue
-clx::device::queue_200(context_type ctx, const command_queue_properties& prop) const {
-    const auto& props = prop(extensions());
-    int_type ret = 0;
-    auto result = ::clCreateCommandQueueWithProperties(ctx, this->_ptr, props.data(), &ret);
-    CLX_CHECK(ret);
-    return static_cast<::clx::command_queue>(result);
-}
-#endif
-
-#if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
-clx::command_queue
-clx::device::queue_100(context_type ctx, const command_queue_properties& prop) const {
-    int_type ret = 0;
-    #if defined(cl_khr_create_command_queue)
-    const auto& ext = extensions();
-    command_queue_type result;
-    if (ext("cl_khr_create_command_queue")) {
-        auto func = CLX_EXTENSION(clCreateCommandQueueWithPropertiesKHR, platform());
-        const auto& props = prop(extensions());
-        result = func(ctx, this->_ptr, props.data(), &ret);
-    } else
-    #endif
-    { result = ::clCreateCommandQueue(ctx, this->_ptr, downcast(prop.flags()), &ret); }
-    CLX_CHECK(ret);
-    return static_cast<::clx::command_queue>(result);
-}
-#endif
-
 CLX_METHOD_BOOL(
     clx::device::available,
     ::clGetDeviceInfo,

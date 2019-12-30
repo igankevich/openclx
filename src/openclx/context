@@ -4,8 +4,7 @@
 #include <string>
 #include <vector>
 
-#include <openclx/command_queue>
-#include <openclx/command_queue_flags>
+#include <openclx/array_view>
 #include <openclx/error>
 #include <openclx/forward>
 #include <openclx/gl/texture>
@@ -14,9 +13,9 @@
 #include <openclx/image_format>
 #include <openclx/memory_flags>
 #include <openclx/memory_objects>
+#include <openclx/platform>
 #include <openclx/sampler>
 #include <openclx/svm_flags>
-#include <openclx/platform>
 
 namespace clx {
 
@@ -30,18 +29,20 @@ namespace clx {
 
         inline explicit
         context(context_type ptr): _ptr(ptr) {}
+        explicit context(::clx::platform p, const array_view<device>& devices);
+        explicit context(
+            ::clx::platform p,
+            const context_properties&,
+            const array_view<device>&
+        );
+        explicit context(::clx::platform p, device_flags types=device_flags::all);
+        explicit context(
+            ::clx::platform p,
+            const context_properties&,
+            device_flags=device_flags::all
+        );
 
-        std::vector<device>
-        devices() const;
-
-        inline std::vector<command_queue>
-        command_queues(const command_queue_properties& prop) const {
-            #if CL_TARGET_VERSION >= 200
-            return this->command_queues_200(prop);
-            #else
-            return this->command_queues_100(prop);
-            #endif
-        }
+        std::vector<device> devices() const;
 
         ::clx::program program(const std::string& src) const;
         ::clx::program program(const array_view<binary>& binaries) const;
@@ -253,16 +254,6 @@ namespace clx {
             size_t size,
             size_t alignment
         ) const;
-        #endif
-
-        #if CL_TARGET_VERSION >= 200
-        std::vector<command_queue>
-        command_queues_200(const command_queue_properties& prop) const;
-        #endif
-
-        #if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
-        std::vector<command_queue>
-        command_queues_100(const command_queue_properties& prop) const;
         #endif
 
         #if CL_TARGET_VERSION >= 120

@@ -61,6 +61,12 @@ namespace clx {
         #endif
 
     public:
+        command_queue_properties() = default;
+        inline explicit
+        command_queue_properties(command_queue_flags flags): _flags(flags) {}
+        inline explicit
+        command_queue_properties(command_queue_flags flags, unsigned_int_type size):
+        _flags(flags), _size(size) {}
 
         inline command_queue_flags flags() const { return this->_flags; }
         inline void flags(command_queue_flags rhs) { this->_flags = rhs; }

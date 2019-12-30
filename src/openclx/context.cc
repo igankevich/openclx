@@ -3,6 +3,7 @@
 #include <openclx/buffer>
 #include <openclx/command_queue>
 #include <openclx/context>
+#include <openclx/context_properties>
 #include <openclx/device>
 #include <openclx/downcast>
 #include <openclx/event>
@@ -17,37 +18,81 @@
 #include <openclx/sampler_properties>
 #include <openclx/svm_block>
 
+clx::context::context(::clx::platform p, const array_view<device>& devices) {
+    std::vector<context_properties_type> prop{
+        context_properties_type(CL_CONTEXT_PLATFORM),
+        context_properties_type(p.get()),
+        context_properties_type(0)
+    };
+    int_type ret = 0;
+    auto ctx = ::clCreateContext(
+        prop.data(), devices.size(), downcast(devices.data()),
+        nullptr, nullptr, &ret
+    );
+    CLX_CHECK(ret);
+    this->_ptr = ctx;
+}
+
+clx::context::context(
+    ::clx::platform p,
+    const context_properties& properties,
+    const array_view<device>& devices
+) {
+    auto prop = properties(p.extensions());
+    prop << CL_CONTEXT_PLATFORM << p.get() << 0;
+    int_type ret = 0;
+    auto ctx = ::clCreateContext(
+        prop.data(), devices.size(), downcast(devices.data()),
+        nullptr, nullptr, &ret
+    );
+    CLX_CHECK(ret);
+    this->_ptr = ctx;
+}
+
+clx::context::context(::clx::platform p, device_flags types) {
+    std::vector<context_properties_type> prop{
+        context_properties_type(CL_CONTEXT_PLATFORM),
+        context_properties_type(p.get()),
+        context_properties_type(0)
+    };
+    int_type ret = 0;
+    auto ctx =
+        ::clCreateContextFromType(
+            prop.data(),
+            static_cast<device_flags_type>(types),
+            nullptr,
+            nullptr,
+            &ret
+        );
+    CLX_CHECK(ret);
+    this->_ptr = ctx;
+}
+
+clx::context::context(
+    ::clx::platform p,
+    const context_properties& properties,
+    device_flags types
+) {
+    auto prop = properties(p.extensions());
+    prop << CL_CONTEXT_PLATFORM << p.get() << 0;
+    int_type ret = 0;
+    auto ctx =
+        ::clCreateContextFromType(
+            prop.data(),
+            static_cast<device_flags_type>(types),
+            nullptr,
+            nullptr,
+            &ret
+        );
+    CLX_CHECK(ret);
+    this->_ptr = ctx;
+}
+
 CLX_METHOD_ARRAY(
     clx::context::devices,
     ::clGetContextInfo, CL_CONTEXT_DEVICES,
     device
 )
-
-#if CL_TARGET_VERSION >= 200
-std::vector<clx::command_queue>
-clx::context::command_queues_200(const command_queue_properties& prop) const {
-    const auto& devices = this->devices();
-    std::vector<command_queue> result;
-    result.reserve(devices.size());
-    for (const auto& device : devices) {
-        result.emplace_back(device.queue_200(this->_ptr, prop));
-    }
-    return result;
-}
-#endif
-
-#if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
-std::vector<clx::command_queue>
-clx::context::command_queues_100(const command_queue_properties& prop) const {
-    const auto& devices = this->devices();
-    std::vector<command_queue> result;
-    result.reserve(devices.size());
-    for (const auto& device : devices) {
-        result.emplace_back(device.queue_100(this->_ptr, prop));
-    }
-    return result;
-}
-#endif
 
 clx::program
 clx::context::program(const std::string& src) const {

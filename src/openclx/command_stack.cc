@@ -52,16 +52,6 @@
     events().emplace_back(std::move(ret)); \
     return ptr;
 
-clx::command_stack::command_stack(
-    const device_array& devices,
-    const command_queue_properties& properties
-) {
-    this->_events.reserve(4096 / sizeof(event_type));
-    for (const auto& dev : devices) {
-        this->_devices.emplace_back(dev.queue(properties), dev.queue(properties));
-    }
-}
-
 void
 clx::command_stack::wait() {
     CLX_CHECK(::clWaitForEvents(frame_size(), downcast(frame())));

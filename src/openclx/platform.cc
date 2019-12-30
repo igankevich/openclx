@@ -1,7 +1,5 @@
 #include <openclx/array_view>
 #include <openclx/bits/macros>
-#include <openclx/context>
-#include <openclx/context_properties>
 #include <openclx/device>
 #include <openclx/downcast>
 #include <openclx/error>
@@ -247,75 +245,6 @@ clx::platform::devices(d3d11::dxgi_adapter_type* object, d3d11::device_set set) 
 }
 #endif
 
-clx::context clx::platform::context(const array_view<device>& devices) const {
-    std::vector<context_properties_type> prop{
-        context_properties_type(CL_CONTEXT_PLATFORM),
-        context_properties_type(this->_ptr),
-        context_properties_type(0)
-    };
-    int_type ret = 0;
-    auto ctx = ::clCreateContext(
-        prop.data(), devices.size(), downcast(devices.data()),
-        nullptr, nullptr, &ret
-    );
-    CLX_CHECK(ret);
-    return static_cast<clx::context>(ctx);
-}
-
-clx::context
-clx::platform::context(
-    const context_properties& properties,
-    const array_view<device>& devices
-) const {
-    auto prop = properties(extensions());
-    prop << CL_CONTEXT_PLATFORM << this->_ptr << 0;
-    int_type ret = 0;
-    auto ctx = ::clCreateContext(
-        prop.data(), devices.size(), downcast(devices.data()),
-        nullptr, nullptr, &ret
-    );
-    CLX_CHECK(ret);
-    return static_cast<clx::context>(ctx);
-}
-
-clx::context clx::platform::context(device_flags types) const {
-    std::vector<context_properties_type> prop{
-        context_properties_type(CL_CONTEXT_PLATFORM),
-        context_properties_type(this->_ptr),
-        context_properties_type(0)
-    };
-    int_type ret = 0;
-    auto ctx =
-        ::clCreateContextFromType(
-            prop.data(),
-            static_cast<device_flags_type>(types),
-            nullptr,
-            nullptr,
-            &ret
-        );
-    CLX_CHECK(ret);
-    return static_cast<clx::context>(ctx);
-}
-
-clx::context clx::platform::context(
-    const context_properties& properties,
-    device_flags types
-) const {
-    auto prop = properties(extensions());
-    prop << CL_CONTEXT_PLATFORM << this->_ptr << 0;
-    int_type ret = 0;
-    auto ctx =
-        ::clCreateContextFromType(
-            prop.data(),
-            static_cast<device_flags_type>(types),
-            nullptr,
-            nullptr,
-            &ret
-        );
-    CLX_CHECK(ret);
-    return static_cast<clx::context>(ctx);
-}
-
 clx::platform::function_address
 clx::platform::do_function(extension_function func) const {
     if (this->_functions.empty()) {
@@ -327,4 +256,3 @@ clx::platform::do_function(extension_function func) const {
     if (!ptr) { throw std::runtime_error(extension_function_names[i]); }
     return ptr;
 }
-

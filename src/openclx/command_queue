@@ -3,6 +3,9 @@
 
 #include <vector>
 
+#include <openclx/command_queue_flags>
+#include <openclx/context>
+#include <openclx/device>
 #include <openclx/error>
 #include <openclx/forward>
 
@@ -18,15 +21,33 @@ namespace clx {
         inline explicit
         command_queue(command_queue_type ptr): _ptr(ptr) {}
 
-        inline void
-        flush() {
-            CLX_CHECK(::clFlush(this->_ptr));
-        }
+        inline explicit
+        command_queue(
+            clx::context context,
+            clx::device device,
+            const command_queue_properties& prop
+        ):
+        #if CL_TARGET_VERSION >= 200
+        _ptr(make_200(context.get(), device, prop)) {}
+        #else
+        _ptr(make_100(context.get(), device, prop)) {}
+        #endif
 
-        inline void
-        finish() {
-            CLX_CHECK(::clFinish(this->_ptr));
-        }
+        inline explicit
+        command_queue(clx::context context, clx::device device, command_queue_flags flags):
+        command_queue(context, device, command_queue_properties(flags)) {}
+
+        inline explicit
+        command_queue(
+            clx::context context,
+            clx::device device,
+            command_queue_flags flags,
+            unsigned_int_type size
+        ):
+        command_queue(context, device, command_queue_properties(flags, size)) {}
+
+        inline void flush() { CLX_CHECK(::clFlush(this->_ptr)); }
+        inline void finish() { CLX_CHECK(::clFinish(this->_ptr)); }
 
         #if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
         inline void
@@ -45,15 +66,8 @@ namespace clx {
         std::vector<command_queue_flags_type> properties() const;
         unsigned_int_type num_references() const;
 
-        inline command_queue_type
-        get() noexcept {
-            return this->_ptr;
-        }
-
-        inline const command_queue_type
-        get() const noexcept {
-            return this->_ptr;
-        }
+        inline command_queue_type get() noexcept { return this->_ptr; }
+        inline const command_queue_type get() const noexcept { return this->_ptr; }
 
         command_queue() = default;
         inline ~command_queue() { this->release(); }
@@ -93,6 +107,18 @@ namespace clx {
         swap(command_queue& rhs) {
             std::swap(this->_ptr, rhs._ptr);
         }
+
+    private:
+
+        #if CL_TARGET_VERSION >= 200
+        static command_queue_type
+        make_200(context_type ctx, ::clx::device dev, const command_queue_properties& prop);
+        #endif
+
+        #if CL_TARGET_VERSION <= 120 || defined(CL_USE_DEPRECATED_OPENCL_1_2_APIS)
+        static command_queue_type
+        make_100(context_type ctx, ::clx::device dev, const command_queue_properties& prop);
+        #endif
 
     };
 

@@ -36,11 +36,6 @@ namespace clx {
                 return *this;
             }
 
-            inline ::clx::qcom::context
-            context() const {
-                return ::clx::device::context();
-            }
-
         };
 
     }
