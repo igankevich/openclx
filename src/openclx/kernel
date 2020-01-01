@@ -34,8 +34,9 @@ namespace clx {
         inline explicit
         kernel(kernel_type ptr): _ptr(ptr) {}
 
-        kernel
-        copy() const;
+        #if CL_TARGET_VERSION >= 210
+        kernel copy() const;
+        #endif
 
         template <class T>
         inline void

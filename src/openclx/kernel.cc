@@ -5,6 +5,7 @@
 #include <openclx/kernel_argument>
 #include <openclx/program>
 
+#if CL_TARGET_VERSION >= 210
 clx::kernel
 clx::kernel::copy() const {
     int_type ret = 0;
@@ -12,6 +13,7 @@ clx::kernel::copy() const {
     CLX_CHECK(ret);
     return static_cast<kernel>(krnl);
 }
+#endif
 
 #if CL_TARGET_VERSION >= 120
 clx::kernel_argument
