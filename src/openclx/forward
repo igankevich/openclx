@@ -81,6 +81,7 @@ namespace clx {
 
     #if CL_TARGET_VERSION < 120 && defined(cl_ext_migrate_memobject)
     typedef ::cl_mem_migration_flags_ext migration_flags_type;
+    enum class migration_flags: migration_flags_type;
     #endif
 
     #if CL_TARGET_VERSION < 200 && defined(cl_khr_create_command_queue)

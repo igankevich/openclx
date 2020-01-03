@@ -6,7 +6,8 @@
 
 namespace clx {
 
-    #if CL_TARGET_VERSION >= 120
+    #if CL_TARGET_VERSION >= 120 || \
+        CL_TARGET_VERSION < 120 && defined(cl_ext_migrate_memobject)
     enum class migration_flags: migration_flags_type {
         host=CL_MIGRATE_MEM_OBJECT_HOST,
         content_undefined=CL_MIGRATE_MEM_OBJECT_CONTENT_UNDEFINED,

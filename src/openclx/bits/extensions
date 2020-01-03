@@ -154,4 +154,8 @@ using clEnqueueReleaseGrallocObjectsIMG_fn = decltype(&clEnqueueReleaseGrallocOb
 using clGetDeviceImageInfoQCOM_fn = decltype(&clGetDeviceImageInfoQCOM);
 #endif
 
+#if !defined(CLX_HAVE_cl_mem_migration_flags_ext)
+using cl_mem_migration_flags_ext = cl_bitfield;
+#endif
+
 #endif // vim:filetype=cpp

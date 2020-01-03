@@ -1,7 +1,7 @@
 project(
     'openclx',
     'cpp',
-    version: '0.1.16',
+    version: '0.1.17',
     meson_version: '>=0.46',
     default_options: ['cpp_std=c++11']
 )
@@ -54,18 +54,22 @@ foreach pair : [
         config.set(all_defines[-1], true)
     endif
 endforeach
-foreach arg : [
-    'clCreateEventFromGLsyncKHR',
-    'clGetKernelSubGroupInfo']
+foreach name : ['clCreateEventFromGLsyncKHR', 'clGetKernelSubGroupInfo']
     all_defines += 'CLX_HAVE_' + name
     if opencl_dependencies.length() == 0
-        if cpp.has_function(arg, args: '-lOpenCL')
+        if cpp.has_function(name, args: '-lOpenCL')
             config.set(all_defines[-1], true)
         endif
     else
-        if cpp.has_function(arg, dependencies: opencl_dependencies)
+        if cpp.has_function(name, dependencies: opencl_dependencies)
             config.set(all_defines[-1], true)
         endif
+    endif
+endforeach
+foreach name : ['cl_mem_migration_flags_ext']
+    all_defines += 'CLX_HAVE_' + name
+    if cpp.has_header_symbol('CL/opencl.h', name)
+        config.set(all_defines[-1], true)
     endif
 endforeach
 # }}}

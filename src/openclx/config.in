@@ -1,6 +1,7 @@
 #ifndef OPENCLX_CONFIG
 #define OPENCLX_CONFIG
 
+// headers
 #mesondefine CLX_HAVE_CL_EXT_INTEL
 #mesondefine CLX_HAVE_CL_DX9_MEDIA_SHARING
 #mesondefine CLX_HAVE_CL_DX9_MEDIA_SHARING_INTEL
@@ -8,5 +9,12 @@
 #mesondefine CLX_HAVE_CL_D3D11
 #mesondefine CLX_HAVE_CL_VA_API_MEDIA_SHARING_INTEL
 #mesondefine CLX_HAVE_VA
+
+// functions
+#mesondefine CLX_HAVE_clCreateEventFromGLsyncKHR
+#mesondefine CLX_HAVE_clGetKernelSubGroupInfo
+
+// types
+#mesondefine CLX_HAVE_cl_mem_migration_flags_ext
 
 #endif // vim:filetype=cpp
