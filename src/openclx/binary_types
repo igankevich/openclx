@@ -5,6 +5,7 @@
 
 namespace clx {
 
+    #if CL_TARGET_VERSION >= 120
     enum class binary_types: program_binary_type {
         none=CL_PROGRAM_BINARY_TYPE_NONE,
         compiled_object=CL_PROGRAM_BINARY_TYPE_COMPILED_OBJECT,
@@ -14,6 +15,7 @@ namespace clx {
         intermediate=CL_PROGRAM_BINARY_TYPE_INTERMEDIATE,
         #endif
     };
+    #endif
 
 }
 

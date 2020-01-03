@@ -35,7 +35,8 @@ namespace clx {
     #if CL_TARGET_VERSION >= 120
     CLX_MAKE_DOWNCAST_TYPE(migration_flags);
     #endif
-    #if CL_TARGET_VERSION >= 200
+    #if CL_TARGET_VERSION >= 200 || \
+        CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
     CLX_MAKE_DOWNCAST_TYPE(svm_flags);
     #endif
     #if defined(cl_khr_gl_sharing)

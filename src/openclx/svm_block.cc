@@ -1,3 +1,4 @@
+#include <openclx/bits/macros>
 #include <openclx/svm_block>
 
 #if CL_TARGET_VERSION >= 200 || \

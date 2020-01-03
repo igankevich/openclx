@@ -12,7 +12,9 @@ namespace clx {
 
         public:
 
+            #if CL_TARGET_VERSION >= 120 && defined(cl_arm_shared_virtual_memory)
             svm_flags supported_svm_flags() const;
+            #endif
 
             #if defined(cl_arm_core_id) && CL_TARGET_VERSION >= 120
             unsigned_long_type compute_units_mask() const;
