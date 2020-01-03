@@ -1,7 +1,7 @@
 project(
     'openclx',
     'cpp',
-    version: '0.1.15',
+    version: '0.1.16',
     meson_version: '>=0.46',
     default_options: ['cpp_std=c++11']
 )
@@ -26,8 +26,12 @@ if not opencl.found()
         error('Unable to find OpenCL library')
     endif
     opencl = declare_dependency(dependencies: [opencl_lib])
+    opencl_libraries = [opencl]
+    opencl_dependencies = []
 else
     opencl_lib = ''
+    opencl_libraries = []
+    opencl_dependencies = [opencl]
 endif
 
 # config {{{
@@ -54,8 +58,14 @@ foreach arg : [
     'clCreateEventFromGLsyncKHR',
     'clGetKernelSubGroupInfo']
     all_defines += 'CLX_HAVE_' + name
-    if cpp.has_function(arg, dependencies: opencl)
-        config.set(all_defines[-1], true)
+    if opencl_dependencies.length() == 0
+        if cpp.has_function(arg, args: '-lOpenCL')
+            config.set(all_defines[-1], true)
+        endif
+    else
+        if cpp.has_function(arg, dependencies: opencl_dependencies)
+            config.set(all_defines[-1], true)
+        endif
     endif
 endforeach
 # }}}
