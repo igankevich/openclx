@@ -1,7 +1,7 @@
 project(
     'openclx',
     'cpp',
-    version: '0.1.12',
+    version: '0.1.13',
     meson_version: '>=0.46',
     default_options: ['cpp_std=c++11']
 )
@@ -41,6 +41,17 @@ foreach pair : [
     endif
 endforeach
 # }}}
+
+opencl = dependency('OpenCL', required: false)
+if not opencl.found()
+    opencl_lib = cpp.find_library('OpenCL', required: false)
+    if not opencl_lib.found()
+        error('Unable to find OpenCL library')
+    endif
+    opencl = declare_dependency(dependencies: [opencl_lib])
+else
+    opencl_lib = ''
+endif
 
 src = include_directories('src')
 
