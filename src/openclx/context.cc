@@ -317,7 +317,9 @@ clx::context::event() const {
 }
 #endif
 
-#if CL_TARGET_VERSION >= 110 && defined(cl_khr_gl_sharing)
+#if CL_TARGET_VERSION >= 110 && \
+    defined(cl_khr_gl_sharing) && \
+    defined(CLX_HAVE_clCreateEventFromGLsyncKHR)
 clx::event
 clx::context::gl_event(gl::sync_type name) const {
     int_type ret = 0;

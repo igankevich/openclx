@@ -1,7 +1,7 @@
 project(
     'openclx',
     'cpp',
-    version: '0.1.14',
+    version: '0.1.15',
     meson_version: '>=0.46',
     default_options: ['cpp_std=c++11']
 )
@@ -13,12 +13,22 @@ cpp = meson.get_compiler('cpp')
 foreach arg : [
     '-Werror=return-type',
     '-Wno-ignored-attributes',
-    '-Wno-deprecated-declarations'
-]
+    '-Wno-deprecated-declarations']
     if cpp.has_argument(arg)
         add_global_arguments(arg, language: 'cpp')
     endif
 endforeach
+
+opencl = dependency('OpenCL', required: false)
+if not opencl.found()
+    opencl_lib = cpp.find_library('OpenCL', required: false)
+    if not opencl_lib.found()
+        error('Unable to find OpenCL library')
+    endif
+    opencl = declare_dependency(dependencies: [opencl_lib])
+else
+    opencl_lib = ''
+endif
 
 # config {{{
 config = configuration_data()
@@ -40,18 +50,15 @@ foreach pair : [
         config.set(all_defines[-1], true)
     endif
 endforeach
-# }}}
-
-opencl = dependency('OpenCL', required: false)
-if not opencl.found()
-    opencl_lib = cpp.find_library('OpenCL', required: false)
-    if not opencl_lib.found()
-        error('Unable to find OpenCL library')
+foreach arg : [
+    'clCreateEventFromGLsyncKHR',
+    'clGetKernelSubGroupInfo']
+    all_defines += 'CLX_HAVE_' + name
+    if cpp.has_function(arg, dependencies: opencl)
+        config.set(all_defines[-1], true)
     endif
-    opencl = declare_dependency(dependencies: [opencl_lib])
-else
-    opencl_lib = ''
-endif
+endforeach
+# }}}
 
 src = include_directories('src')
 

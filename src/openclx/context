@@ -77,7 +77,9 @@ namespace clx {
         ::clx::event event() const;
         #endif
 
-        #if CL_TARGET_VERSION >= 110 && defined(cl_khr_gl_sharing)
+        #if CL_TARGET_VERSION >= 110 && \
+            defined(cl_khr_gl_sharing) && \
+            defined(CLX_HAVE_clCreateEventFromGLsyncKHR)
         ::clx::event gl_event(gl::sync_type name) const;
         #endif
 
