@@ -5,6 +5,7 @@
 
 namespace clx {
 
+    #if CL_TARGET_VERSION >= 200
     class pipe: public memory_object {
 
     public:
@@ -18,6 +19,7 @@ namespace clx {
         max_packets() const;
 
     };
+    #endif
 
 }
 

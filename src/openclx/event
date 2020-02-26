@@ -32,7 +32,9 @@ namespace clx {
         nanoseconds time_submitted() const;
         nanoseconds time_started() const;
         nanoseconds time_ended() const;
+        #if CL_TARGET_VERSION >= 200
         nanoseconds time_completed() const;
+        #endif
 
         inline void
         status(int_type s) {

@@ -440,17 +440,17 @@ clx::command_stack::release(const intel_va_memory_object_array& objects) {
 }
 #endif
 
-#if defined(cl_img_use_gralloc_ptr)
+#if CL_TARGET_VERSION >= 120 && defined(cl_img_use_gralloc_ptr)
 void
 clx::command_stack::acquire_gralloc(const memory_object_array& objects) {
     auto func = CLX_EXTENSION(clEnqueueAcquireGrallocObjectsIMG, kernel_queue().context().platform());
-    CLX_BODY_ENQUEUE(func, objects.size(), downcast(objects.data()), downcast(flags));
+    CLX_BODY_ENQUEUE(func, objects.size(), downcast(objects.data()));
 }
 
 void
 clx::command_stack::release_gralloc(const memory_object_array& objects) {
     auto func = CLX_EXTENSION(clEnqueueReleaseGrallocObjectsIMG, kernel_queue().context().platform());
-    CLX_BODY_ENQUEUE(func, objects.size(), downcast(objects.data()), downcast(flags));
+    CLX_BODY_ENQUEUE(func, objects.size(), downcast(objects.data()));
 }
 #endif
 

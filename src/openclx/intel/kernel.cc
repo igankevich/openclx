@@ -16,7 +16,7 @@ clx::intel::kernel::work_group(const device& dev) const {
 }
 #endif
 
-#if CL_TARGET_VERSION >= 120 && \
+#if CL_TARGET_VERSION >= 210 && \
     defined(cl_intel_required_subgroup_size) && \
     defined(CLX_HAVE_clGetKernelSubGroupInfo)
 size_t

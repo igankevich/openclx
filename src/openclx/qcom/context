@@ -12,6 +12,9 @@ namespace clx {
 
         public:
 
+            using ::clx::context::buffer;
+            using ::clx::context::image;
+
             #if CL_TARGET_VERSION >= 110 && defined(CL_MEM_ANDROID_NATIVE_BUFFER_HOST_PTR_QCOM)
             inline ::clx::image
             image(
@@ -48,7 +51,7 @@ namespace clx {
                 return this->buffer(
                     flags | memory_flags::qcom_host_pointer | memory_flags::use_host_pointer,
                     size,
-                    ptr.get()
+                    const_cast<void*>(ptr.get())
                 );
             }
             #endif

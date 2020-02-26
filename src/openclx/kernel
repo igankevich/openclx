@@ -12,6 +12,8 @@ namespace clx {
     struct local {
         typedef T value_type;
         size_t size = 0;
+        local() = default;
+        inline explicit local(size_t n): size(n) {}
     };
 
     struct work_group {

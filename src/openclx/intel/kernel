@@ -22,7 +22,7 @@ namespace clx {
             ::clx::intel::work_group work_group(const device& dev) const;
             #endif
 
-            #if CL_TARGET_VERSION >= 120 && \
+            #if CL_TARGET_VERSION >= 210 && \
                 defined(cl_intel_required_subgroup_size) && \
                 defined(CLX_HAVE_clGetKernelSubGroupInfo)
             size_t sub_groups_size(const device& device) const;

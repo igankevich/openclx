@@ -63,6 +63,8 @@ namespace clx {
         clCreateFromVA_APIMediaSurfaceINTEL,
         clEnqueueAcquireVA_APIMediaSurfacesINTEL,
         clEnqueueReleaseVA_APIMediaSurfacesINTEL,
+        clEnqueueAcquireGrallocObjectsIMG,
+        clEnqueueReleaseGrallocObjectsIMG,
         size
     };
 

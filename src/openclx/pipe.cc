@@ -1,6 +1,7 @@
 #include <openclx/pipe>
 #include <openclx/bits/macros>
 
+#if CL_TARGET_VERSION >= 200
 CLX_METHOD_SCALAR(
     clx::pipe::packet_size,
     ::clGetPipeInfo,
@@ -14,3 +15,4 @@ CLX_METHOD_SCALAR(
     unsigned_int_type,
     CL_PIPE_PACKET_SIZE
 )
+#endif

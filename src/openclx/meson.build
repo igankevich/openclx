@@ -135,26 +135,17 @@ executable(
 
 if with_tests
     gtest = dependency('gtest', main: true)
-    test(
-        'device-test',
-        executable(
-            'device-test',
-            sources: 'device_test.cc',
-            include_directories: src,
-            dependencies: [openclx_deps,gtest],
-            link_with: libopenclx,
-            implicit_include_directories: false,
+    foreach name : ['device', 'extensions', 'kernel']
+        test(
+            name + '-test',
+            executable(
+                name + '-test',
+                sources: name + '_test.cc',
+                include_directories: src,
+                dependencies: [openclx_deps,gtest],
+                link_with: libopenclx,
+                implicit_include_directories: false,
+            )
         )
-    )
-    test(
-        'extensions-text',
-        executable(
-            'extensions-text',
-            sources: 'extensions_test.cc',
-            include_directories: src,
-            dependencies: [openclx_deps,gtest],
-            link_with: libopenclx,
-            implicit_include_directories: false,
-        )
-    )
+    endforeach
 endif

@@ -1,3 +1,4 @@
+#include <openclx/arm/import_properties>
 #include <openclx/binary>
 #include <openclx/bits/macros>
 #include <openclx/buffer>
@@ -356,7 +357,7 @@ clx::context::egl_image(memory_flags flags, const egl::image_properties& prop) c
 #endif
 
 #if defined(cl_arm_import_memory)
-::clx::buffer import(
+::clx::buffer clx::context::import(
     memory_flags flags,
     const arm::import_properties& prop,
     void* memory,

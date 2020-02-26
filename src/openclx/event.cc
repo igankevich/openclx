@@ -61,12 +61,14 @@ CLX_METHOD_SCALAR(
     CL_PROFILING_COMMAND_END
 );
 
+#if CL_TARGET_VERSION >= 200
 CLX_METHOD_SCALAR(
     clx::event::time_completed,
     ::clGetEventProfilingInfo,
     nanoseconds,
     CL_PROFILING_COMMAND_COMPLETE
 );
+#endif
 
 void
 clx::wait(const array_view<event>& events) {

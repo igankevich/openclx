@@ -1,6 +1,8 @@
 #ifndef OPENCLX_COLOR
 #define OPENCLX_COLOR
 
+#include <openclx/forward>
+
 namespace clx {
 
     #if CL_TARGET_VERSION >= 120
