@@ -10,9 +10,17 @@
 
 TEST(kernel, local) {
     for (const auto& platform : clx::platforms()) {
-        clx::context ctx(platform);
+        clx::context ctx;
+        std::vector<clx::device> devices;
+        try {
+            ctx = clx::context(platform);
+            devices = platform.devices(clx::device_flags::all);
+        } catch (const std::exception& err) {
+            std::clog << "skipping " << platform.name()
+                << ": " << err.what() << std::endl;
+            continue;
+        }
         clx::compiler cc(ctx);
-        auto devices = platform.devices(clx::device_flags::all);
         cc.devices(devices);
         clx::program prg = cc.compile("test", "kernel void test(local float* x) {}");
         clx::kernel kernel = prg.kernel("test");
