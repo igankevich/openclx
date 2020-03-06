@@ -115,7 +115,7 @@ libopenclx = library(
 pkgconfig = import('pkgconfig')
 pkgconfig.generate(
     libopenclx,
-    libraries: [libopenclx] + opencl_libraries,
+    libraries: [libopenclx] + ['-lOpenCL'],
     requires: opencl_dependencies,
     version: meson.project_version(),
     name: meson.project_name(),
