@@ -58,12 +58,12 @@ namespace clx {
             this->do_arguments(0, args...);
         }
 
-        #if CL_TARGET_VERSION >= 120
+        #if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clGetKernelArgInfo)
         kernel_argument
         argument(unsigned_int_type i) const;
         #endif
 
-        #if CL_TARGET_VERSION >= 200
+        #if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clGetKernelArgInfo)
         template <class T>
         inline void
         argument(unsigned_int_type i, const T* ptr) {

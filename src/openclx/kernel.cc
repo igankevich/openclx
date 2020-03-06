@@ -15,7 +15,7 @@ clx::kernel::copy() const {
 }
 #endif
 
-#if CL_TARGET_VERSION >= 120
+#if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clGetKernelArgInfo)
 clx::kernel_argument
 clx::kernel::argument(unsigned_int_type i) const {
     return kernel_argument{*this,i};
