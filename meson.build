@@ -1,7 +1,7 @@
 project(
     'openclx',
     'cpp',
-    version: '0.1.24',
+    version: '0.1.25',
     meson_version: '>=0.46',
     default_options: ['cpp_std=c++11']
 )
@@ -77,11 +77,13 @@ foreach name : [
 ]
     all_defines += 'CLX_HAVE_' + name
     if opencl_dependencies.length() == 0
-        if cpp.has_function(name, args: '-lOpenCL')
+        if cpp.has_function(name, args: '-lOpenCL') \
+            and cpp.has_header_symbol('CL/opencl.h', name)
             config.set(all_defines[-1], true)
         endif
     else
-        if cpp.has_function(name, dependencies: opencl_dependencies)
+        if cpp.has_function(name, dependencies: opencl_dependencies) \
+            and cpp.has_header_symbol('CL/opencl.h', name)
             config.set(all_defines[-1], true)
         endif
     endif
