@@ -11,8 +11,12 @@
 #mesondefine CLX_HAVE_VA
 
 // functions
+#mesondefine CLX_HAVE_clCompileProgram
 #mesondefine CLX_HAVE_clCreateEventFromGLsyncKHR
+#mesondefine CLX_HAVE_clCreateSubDevices
+#mesondefine CLX_HAVE_clGetKernelArgInfo
 #mesondefine CLX_HAVE_clGetKernelSubGroupInfo
+#mesondefine CLX_HAVE_clLinkProgram
 
 // types
 #mesondefine CLX_HAVE_cl_mem_migration_flags_ext

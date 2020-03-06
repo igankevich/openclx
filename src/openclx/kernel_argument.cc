@@ -1,7 +1,7 @@
 #include <openclx/bits/macros>
 #include <openclx/kernel_argument>
 
-#if CL_TARGET_VERSION >= 120
+#if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clGetKernelArgInfo)
 
 CLX_METHOD_STRING(
     clx::kernel_argument::name,

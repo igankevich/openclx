@@ -132,7 +132,7 @@ clx::program::binaries() const {
     return result;
 }
 
-#if CL_TARGET_VERSION >= 120
+#if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clCompileProgram)
 void
 clx::program::compile(
     const std::string& options,
@@ -210,7 +210,7 @@ clx::program::intermediate_language() const {
 }
 #endif
 
-#if CL_TARGET_VERSION >= 120
+#if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clLinkProgram)
 clx::program
 clx::link(
     const array_view<program>& programs,

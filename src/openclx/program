@@ -45,7 +45,7 @@ namespace clx {
         size_t size_of_global_variables(const device& dev) const;
         #endif
 
-        #if CL_TARGET_VERSION >= 120
+        #if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clCompileProgram)
         inline void
         compile(const std::string& options) {
             this->compile(options, {}, {});
@@ -141,7 +141,7 @@ namespace clx {
         lhs.swap(rhs);
     }
 
-    #if CL_TARGET_VERSION >= 120
+    #if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clLinkProgram)
     program
     link(
         const array_view<program>& programs,
@@ -150,7 +150,7 @@ namespace clx {
     );
     #endif
 
-    #if CL_TARGET_VERSION >= 120
+    #if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clLinkProgram)
     inline program
     link(const array_view<program>& programs, const std::string& options) {
         return link(programs, options, {});

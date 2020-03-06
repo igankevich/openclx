@@ -1,7 +1,7 @@
 project(
     'openclx',
     'cpp',
-    version: '0.1.20',
+    version: '0.1.21',
     meson_version: '>=0.46',
     default_options: ['cpp_std=c++11']
 )
@@ -54,7 +54,14 @@ foreach pair : [
         config.set(all_defines[-1], true)
     endif
 endforeach
-foreach name : ['clCreateEventFromGLsyncKHR', 'clGetKernelSubGroupInfo']
+foreach name : [
+    'clCompileProgram',
+    'clCreateEventFromGLsyncKHR',
+    'clCreateSubDevices',
+    'clGetKernelArgInfo',
+    'clGetKernelSubGroupInfo',
+    'clLinkProgram',
+]
     all_defines += 'CLX_HAVE_' + name
     if opencl_dependencies.length() == 0
         if cpp.has_function(name, args: '-lOpenCL')
