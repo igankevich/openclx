@@ -29,6 +29,7 @@
 #mesondefine CLX_HAVE_clLinkProgram
 #mesondefine CLX_HAVE_clReleaseDevice
 #mesondefine CLX_HAVE_clRetainDevice
+#mesondefine CLX_HAVE_clSetKernelArgSVMPointer
 #mesondefine CLX_HAVE_clUnloadPlatformCompiler
 
 // types

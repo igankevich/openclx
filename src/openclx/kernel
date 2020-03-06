@@ -63,7 +63,7 @@ namespace clx {
         argument(unsigned_int_type i) const;
         #endif
 
-        #if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clGetKernelArgInfo)
+        #if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clSetKernelArgSVMPointer)
         template <class T>
         inline void
         argument(unsigned_int_type i, const T* ptr) {

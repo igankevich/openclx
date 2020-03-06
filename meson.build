@@ -1,7 +1,7 @@
 project(
     'openclx',
     'cpp',
-    version: '0.1.23',
+    version: '0.1.24',
     meson_version: '>=0.46',
     default_options: ['cpp_std=c++11']
 )
@@ -57,21 +57,22 @@ endforeach
 foreach name : [
     'clCompileProgram',
     'clCreateEventFromGLsyncKHR',
-    'clCreateSubDevices',
-    'clGetKernelArgInfo',
-    'clGetKernelSubGroupInfo',
-    'clLinkProgram',
-    'clReleaseDevice',
-    'clRetainDevice',
     'clCreateFromGLTexture',
     'clCreateImage',
     'clCreateProgramWithBuiltInKernels',
+    'clCreateSubDevices',
     'clEnqueueBarrierWithWaitList',
     'clEnqueueFillBuffer',
     'clEnqueueFillImage',
     'clEnqueueMarkerWithWaitList',
     'clEnqueueMigrateMemObjects',
     'clGetExtensionFunctionAddressForPlatform',
+    'clGetKernelArgInfo',
+    'clGetKernelSubGroupInfo',
+    'clLinkProgram',
+    'clReleaseDevice',
+    'clRetainDevice',
+    'clSetKernelArgSVMPointer',
     'clUnloadPlatformCompiler',
 ]
     all_defines += 'CLX_HAVE_' + name
