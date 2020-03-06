@@ -2,7 +2,9 @@
 #include <openclx/downcast>
 #include <openclx/intel/device>
 
-#if CL_TARGET_VERSION >= 120 && defined(cl_intel_device_partition_by_names)
+#if CL_TARGET_VERSION >= 120 && \
+    defined(cl_intel_device_partition_by_names) && \
+    defined(CLX_HAVE_clCreateSubDevices)
 std::vector<clx::intel::device>
 clx::intel::device::partition_by_names(const std::vector<unsigned int>& names) const {
     std::vector<partition_property_type> prop;

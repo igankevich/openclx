@@ -5,7 +5,7 @@
 #include <openclx/compiler>
 #include <openclx/platform>
 
-#if CL_TARGET_VERSION >= 120
+#if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clCreateSubDevices)
 TEST(device, partition) {
     for (const auto& platform : clx::platforms()) {
         clx::device root;

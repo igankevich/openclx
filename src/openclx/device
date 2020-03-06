@@ -38,11 +38,15 @@ namespace clx {
         unsigned_int_type max_subordinate_devices() const;
         device_affinity_domain affinity_domain() const;
 
+        #if defined(CLX_HAVE_clCreateSubDevices)
         std::vector<device>
         partition(unsigned int num_compute_units) const;
+        #endif
 
+        #if defined(CLX_HAVE_clCreateSubDevices)
         std::vector<device>
         partition(const std::vector<unsigned int>& num_compute_units) const;
+        #endif
 
         std::vector<device_partition>
         supported_partitions() const;
@@ -256,7 +260,9 @@ namespace clx {
         inline void
         release() {
             if (this->_ptr) {
+                #if defined(CLX_HAVE_clReleaseDevice)
                 CLX_CHECK(::clReleaseDevice(this->_ptr));
+                #endif
                 this->_ptr = nullptr;
             }
         }
@@ -264,7 +270,9 @@ namespace clx {
         inline void
         retain() {
             if (this->_ptr) {
+                #if defined(CLX_HAVE_clRetainDevice)
                 CLX_CHECK(::clRetainDevice(this->_ptr));
+                #endif
             }
         }
 

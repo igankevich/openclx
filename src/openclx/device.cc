@@ -675,7 +675,7 @@ clx::device::supported_partitions() const {
 
 #endif
 
-#if CL_TARGET_VERSION >= 120
+#if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clCreateSubDevices)
 std::vector<clx::device>
 clx::device::partition(unsigned int num_compute_units) const {
     std::vector<partition_property_type> properties{
@@ -705,7 +705,7 @@ clx::device::partition(unsigned int num_compute_units) const {
 }
 #endif
 
-#if CL_TARGET_VERSION >= 120
+#if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clCreateSubDevices)
 std::vector<clx::device>
 clx::device::partition(const std::vector<unsigned int>& num_compute_units) const {
     std::vector<partition_property_type> properties;

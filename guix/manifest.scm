@@ -5,7 +5,8 @@
 
 (use-modules
   (guix packages)
-  (guix git-download))
+  (guix git-download)
+  (stables packages nvidia))
 
 (define-public pocl-1.3
   (package
@@ -25,9 +26,11 @@
 (packages->manifest
   (append
     (list
-      pocl-1.3 ;; for unit tests
+      (eval-string "nvidia-driver-@VERSION@")
+      ;;pocl-1.3 ;; for unit tests
       opencl-headers
-      ocl-icd
+      ;;ocl-icd
+      coreutils
       (list gcc-9 "lib")
       gcc-toolchain-9
       pkg-config

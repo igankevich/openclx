@@ -1,7 +1,7 @@
 project(
     'openclx',
     'cpp',
-    version: '0.1.22',
+    version: '0.1.23',
     meson_version: '>=0.46',
     default_options: ['cpp_std=c++11']
 )
@@ -61,6 +61,18 @@ foreach name : [
     'clGetKernelArgInfo',
     'clGetKernelSubGroupInfo',
     'clLinkProgram',
+    'clReleaseDevice',
+    'clRetainDevice',
+    'clCreateFromGLTexture',
+    'clCreateImage',
+    'clCreateProgramWithBuiltInKernels',
+    'clEnqueueBarrierWithWaitList',
+    'clEnqueueFillBuffer',
+    'clEnqueueFillImage',
+    'clEnqueueMarkerWithWaitList',
+    'clEnqueueMigrateMemObjects',
+    'clGetExtensionFunctionAddressForPlatform',
+    'clUnloadPlatformCompiler',
 ]
     all_defines += 'CLX_HAVE_' + name
     if opencl_dependencies.length() == 0

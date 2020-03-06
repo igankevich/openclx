@@ -97,7 +97,7 @@ namespace clx {
 
         inline void
         unload_compiler() {
-            #if CL_TARGET_VERSION >= 120
+            #if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clUnloadPlatformCompiler)
             CLX_CHECK(::clUnloadPlatformCompiler(this->_ptr));
             #else
             CLX_CHECK(::clUnloadCompiler());
@@ -106,7 +106,8 @@ namespace clx {
 
         inline void*
         extension_function_address(const char* name) const {
-            #if CL_TARGET_VERSION >= 120
+            #if CL_TARGET_VERSION >= 120 && \
+                defined(CLX_HAVE_clGetExtensionFunctionAddressForPlatform)
             return ::clGetExtensionFunctionAddressForPlatform(this->_ptr, name);
             #else
             return ::clGetExtensionFunctionAddress(name);

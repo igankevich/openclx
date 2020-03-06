@@ -132,7 +132,7 @@ namespace clx {
 
         inline void
         barrier() {
-            #if CL_TARGET_VERSION >= 120
+            #if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clEnqueueBarrierWithWaitList)
             this->barrier_120();
             #else
             this->barrier_100();
@@ -141,7 +141,7 @@ namespace clx {
 
         inline void
         marker() {
-            #if CL_TARGET_VERSION >= 120
+            #if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clEnqueueMarkerWithWaitList)
             this->marker_120();
             #else
             this->marker_100();
@@ -215,7 +215,7 @@ namespace clx {
             CL_TARGET_VERSION >= 120
         inline void
         migrate(migration_flags flags, const memory_object_array& objects) {
-            #if CL_TARGET_VERSION >= 120
+            #if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clEnqueueMigrateMemObjects)
             this->migrate_120(flags, objects);
             #else
             this->migrate_ext(flags, objects);
@@ -259,10 +259,14 @@ namespace clx {
         #endif
 
         #if CL_TARGET_VERSION >= 120
+        #if defined(CLX_HAVE_clEnqueueFillBuffer)
         void fill(const buffer_slice& dst, const pattern& pattern);
         void fill(const buffer& dst, const pattern& pattern);
+        #endif
+        #if defined(CLX_HAVE_clEnqueueFillImage)
         void fill(const image_slice_3d& dst, const color& col);
         void fill(const image& dst, const color& col);
+        #endif
         template <class ... Args> inline void
         migrate(migration_flags flags, const Args& ... objects) {
             memory_object arr[] {objects...};
@@ -400,32 +404,36 @@ namespace clx {
         void unmap_arm(svm_pointer ptr);
         #endif
 
-        #if CL_TARGET_VERSION >= 120
+        #if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clEnqueueBarrierWithWaitList)
         void
         barrier_120();
         #endif
 
-        #if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
+        #if CL_TARGET_VERSION <= 110 || \
+            defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS) || \
+            !defined(CLX_HAVE_clEnqueueBarrierWithWaitList)
         void
         barrier_100();
         #endif
 
-        #if CL_TARGET_VERSION >= 120
+        #if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clEnqueueMarkerWithWaitList)
         void
         marker_120();
         #endif
 
-        #if CL_TARGET_VERSION <= 110 || defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS)
+        #if CL_TARGET_VERSION <= 110 || \
+            defined(CL_USE_DEPRECATED_OPENCL_1_1_APIS) || \
+            !defined(CLX_HAVE_clEnqueueMarkerWithWaitList)
         void
         marker_100();
         #endif
 
-        #if CL_TARGET_VERSION >= 120
+        #if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clEnqueueMigrateMemObjects)
         void
         migrate_120(migration_flags flags, const memory_object_array& objects);
         #endif
 
-        #if defined(cl_ext_migrate_memobject)
+        #if defined(cl_ext_migrate_memobject) || !defined(CLX_HAVE_clEnqueueMigrateMemObjects)
         void
         migrate_ext(migration_flags flags, const memory_object_array& objects);
         #endif

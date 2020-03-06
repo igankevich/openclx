@@ -60,7 +60,7 @@ clx::command_stack::wait() {
     this->_sync = false;
 }
 
-#if CL_TARGET_VERSION >= 120
+#if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clEnqueueBarrierWithWaitList)
 void
 clx::command_stack::barrier_120() {
     CLX_BODY_ENQUEUE_NOARGS(::clEnqueueBarrierWithWaitList);
@@ -74,7 +74,7 @@ clx::command_stack::barrier_100() {
 }
 #endif
 
-#if CL_TARGET_VERSION >= 120
+#if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clEnqueueMarkerWithWaitList)
 void
 clx::command_stack::marker_120() {
     CLX_BODY_ENQUEUE_NOARGS(::clEnqueueMarkerWithWaitList);
@@ -261,7 +261,7 @@ clx::command_stack::copy(const buffer_slice_3d& src, const buffer_slice_3d& dst)
 }
 #endif
 
-#if CL_TARGET_VERSION >= 120
+#if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clEnqueueFillBuffer)
 void
 clx::command_stack::fill(const buffer_slice& dst, const pattern& pattern) {
     CLX_BODY_ENQUEUE(
@@ -272,14 +272,14 @@ clx::command_stack::fill(const buffer_slice& dst, const pattern& pattern) {
 }
 #endif
 
-#if CL_TARGET_VERSION >= 120
+#if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clEnqueueFillBuffer)
 void
 clx::command_stack::fill(const buffer& dst, const pattern& pattern) {
     this->fill(dst.slice(0,dst.size()), pattern);
 }
 #endif
 
-#if CL_TARGET_VERSION >= 120
+#if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clEnqueueFillImage)
 void
 clx::command_stack::fill(const image_slice_3d& dst, const color& col) {
     CLX_BODY_ENQUEUE(
@@ -289,14 +289,14 @@ clx::command_stack::fill(const image_slice_3d& dst, const color& col) {
 }
 #endif
 
-#if CL_TARGET_VERSION >= 120
+#if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clEnqueueFillImage)
 void
 clx::command_stack::fill(const image& dst, const color& col) {
     this->fill(dst.slice({0,0,0},dst.dimensions()), col);
 }
 #endif
 
-#if CL_TARGET_VERSION >= 120
+#if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clEnqueueMigrateMemObjects)
 void
 clx::command_stack::migrate_120(
     migration_flags flags,

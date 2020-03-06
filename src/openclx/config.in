@@ -13,10 +13,23 @@
 // functions
 #mesondefine CLX_HAVE_clCompileProgram
 #mesondefine CLX_HAVE_clCreateEventFromGLsyncKHR
+#mesondefine CLX_HAVE_clCreateFromGLTexture
+#mesondefine CLX_HAVE_clCreateImage
+#mesondefine CLX_HAVE_clCreateProgramWithBuiltInKernels
 #mesondefine CLX_HAVE_clCreateSubDevices
+#mesondefine CLX_HAVE_clCreateSubDevices
+#mesondefine CLX_HAVE_clEnqueueBarrierWithWaitList
+#mesondefine CLX_HAVE_clEnqueueFillBuffer
+#mesondefine CLX_HAVE_clEnqueueFillImage
+#mesondefine CLX_HAVE_clEnqueueMarkerWithWaitList
+#mesondefine CLX_HAVE_clEnqueueMigrateMemObjects
+#mesondefine CLX_HAVE_clGetExtensionFunctionAddressForPlatform
 #mesondefine CLX_HAVE_clGetKernelArgInfo
 #mesondefine CLX_HAVE_clGetKernelSubGroupInfo
 #mesondefine CLX_HAVE_clLinkProgram
+#mesondefine CLX_HAVE_clReleaseDevice
+#mesondefine CLX_HAVE_clRetainDevice
+#mesondefine CLX_HAVE_clUnloadPlatformCompiler
 
 // types
 #mesondefine CLX_HAVE_cl_mem_migration_flags_ext

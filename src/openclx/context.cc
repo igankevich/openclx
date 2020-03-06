@@ -152,7 +152,7 @@ clx::context::program(const intermediate_language& il) const {
 }
 #endif
 
-#if CL_TARGET_VERSION >= 120
+#if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clCreateProgramWithBuiltInKernels)
 clx::program
 clx::context::builtin_program(const std::string& names) const {
     const auto& devices = this->devices();
@@ -245,7 +245,7 @@ CLX_METHOD_SCALAR(
 )
 #endif
 
-#if CL_TARGET_VERSION >= 120
+#if CL_TARGET_VERSION >= 120 && defined(CLX_HAVE_clCreateImage)
 clx::image
 clx::context::image_120(
     memory_flags flags,
@@ -500,7 +500,9 @@ clx::context::gl_renderbuffer(memory_flags flags, gl::unsigned_int_type name) co
 }
 #endif
 
-#if CL_TARGET_VERSION >= 120 && defined(cl_khr_gl_sharing)
+#if CL_TARGET_VERSION >= 120 && \
+    defined(cl_khr_gl_sharing) && \
+    defined(CLX_HAVE_clCreateFromGLTexture)
 clx::gl::texture
 clx::context::gl_texture(
     memory_flags flags,
