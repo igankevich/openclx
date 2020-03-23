@@ -2,7 +2,6 @@
 #define OPENCLX_COMPILER
 
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 #include <openclx/context>
@@ -15,14 +14,12 @@ namespace clx {
 
     public:
         using device_array = std::vector<device>;
-        using program_map = std::unordered_map<std::string,program>;
 
     private:
         using hash_type = std::hash<std::string>;
 
     private:
         context _context;
-        program_map _programs;
         device_array _devices;
         std::string _options;
         std::string _source_directory{'.'};
@@ -101,11 +98,6 @@ namespace clx {
         inline const std::string&
         suffix() const {
             return this->_suffix;
-        }
-
-        inline const program_map&
-        programs() const {
-            return this->_programs;
         }
 
         inline void

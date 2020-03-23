@@ -82,22 +82,14 @@ clx::compiler::binary_path(
 
 clx::program
 clx::compiler::compile(const std::string& filename) {
-    auto& programs = this->_programs;
-    program_map::iterator it; bool success;
-    std::tie(it, success) = programs.insert({filename,{}});
-    if (!success) { return it->second; }
-    auto& prg = it->second;
+    program prg;
     this->compile(prg, filename, file_to_string(filename));
     return prg;
 }
 
 clx::program
 clx::compiler::compile(const std::string& filename, const std::string& src) {
-    auto& programs = this->_programs;
-    program_map::iterator it; bool success;
-    std::tie(it, success) = programs.insert({filename,{}});
-    if (!success) { return it->second; }
-    auto& prg = it->second;
+    program prg;
     this->compile(prg, filename, src);
     return prg;
 }
@@ -209,13 +201,11 @@ clx::compiler::errors(const program& prg) const {
 void
 clx::compiler::devices(const device_array& rhs) {
     this->_devices = rhs;
-    this->_programs.clear();
 }
 
 void
 clx::compiler::devices(device_array&& rhs) {
     this->_devices = std::move(rhs);
-    this->_programs.clear();
 }
 
 std::string
