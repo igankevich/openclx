@@ -219,6 +219,7 @@ clx::compiler::salt(const device& device) const {
     salt += device.name();
     salt += device.vendor();
     salt += device.version();
+    salt += options();
     return salt;
 }
 
