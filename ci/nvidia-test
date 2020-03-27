@@ -1,0 +1,16 @@
+#!/bin/sh
+
+set -ex
+manifest=$(mktemp)
+for version in   "340.107" "390.129" "390.132" "430.40" "440.31" "440.44" "440.59"
+do
+    sed "s/@VERSION@/$version/g" guix/manifest.scm > $manifest
+    guix environment --pure -m $manifest -- /bin/sh -c '
+    rm -rf build-opencl-debug
+    meson -Dbuildtype=debug -Dcpp_args=-DCL_TARGET_VERSION=120 build-opencl-debug >/dev/null 2>&1
+    cat build-opencl-debug/meson-private/openclx.pc
+    #ninja -C build-opencl-debug
+    '
+done
+rm $manifest
+
