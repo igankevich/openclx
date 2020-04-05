@@ -68,10 +68,7 @@ clx::compiler::file_to_string(const std::string& filename) const {
 }
 
 std::string
-clx::compiler::binary_path(
-    const std::string& filename,
-    hash_type::result_type number
-) const {
+clx::compiler::binary_path(const std::string& filename, size_t number) const {
     std::stringstream name;
     name << this->cache_directory();
     name << file_separator;
