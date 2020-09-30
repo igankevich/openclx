@@ -1,7 +1,7 @@
 project(
     'openclx',
     'cpp',
-    version: '0.1.29',
+    version: '0.1.30',
     meson_version: '>=0.46',
     default_options: ['cpp_std=c++11']
 )
@@ -137,7 +137,7 @@ clang_tidy = find_program('clang-tidy', required: false)
 if clang_tidy.found()
     run_target(
         'clang-tidy',
-        command: [clang_check] + openclx_src + [
+        command: [clang_tidy] + openclx_src + [
             '--',
             '-I' + join_paths(meson.source_root(), 'src'),
             '-I' + join_paths(meson.build_root(), 'src'),
