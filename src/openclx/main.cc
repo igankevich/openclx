@@ -153,23 +153,27 @@ public:
 
     void
     run() {
-        if (suffix.empty()) {
-            usage();
-            return;
-        }
         if (files.empty()) {
             throw std::invalid_argument("no input files specified");
         }
         clx::platform platform;
-        for (auto& p : clx::platforms()) {
-            if (suffix == p.suffix()) {
-                platform = std::move(p);
-                break;
+        auto platforms = clx::platforms();
+        if (suffix.empty()) {
+            if (!platform.get() && platforms.size() == 1) {
+                platform = std::move(platforms.front());
+            }
+        } else {
+            for (auto& p : platforms) {
+                if (suffix == p.suffix()) {
+                    platform = std::move(p);
+                    break;
+                }
             }
         }
         if (!platform.get()) {
             throw std::invalid_argument("platform not found");
         }
+        platforms.clear();
         clx::compiler cc{clx::context{platform}};
         cc.cache(true);
         cc.devices(platform.devices(clx::device_flags::all));
